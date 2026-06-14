@@ -1,0 +1,28 @@
+
+.footer-height {
+  height: 15rem;
+}
+
+
+/* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
+@media (min-width: 20em) {
+}
+
+/* Ноутбук 1199px */
+@media (max-width: 74.938em) {
+}
+
+/* Планшет 991px */
+@media (max-width: 61.938em) {
+}
+
+/* Телефон 767px */
+@media (max-width: 47.938em) {
+  .f-sb {
+    justify-content: center;
+  }
+
+  .bg-list {
+    background-color: var(--color-5);
+  }
+}

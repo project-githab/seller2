@@ -1,0 +1,262 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('../public/storage/static/fonts/Roboto-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../public/storage/static/fonts/Roboto-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../public/storage/static/fonts/Roboto-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+:root {
+  --color-1: #ffffff;
+  --color-2: #000000;
+  --color-3: #F6F7F8;
+  --color-4: #FFDC26;
+  --color-5: #e3e3e3;
+  --color-6: #e3c320;
+
+  --b-color-1: rgba(0, 93, 255, 0.05);
+}
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Roboto', Sans-Serif, Arial, serif;
+  font-size: 62.5%;
+  color: var(--color-2);
+  background-color: var(--color-1);
+
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  /*overflow-x: hidden;*/
+  font-size: 1.6rem;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+
+/* flex флекс */
+.flex {
+  display: flex;
+}
+
+.f-gro {
+  flex-grow: 1;
+}
+
+.f-wrap {
+  flex-wrap: wrap;
+}
+
+.f-jcc {
+  justify-content: center;
+}
+
+.f-aic {
+  align-items: center;
+}
+
+.f-sb {
+  justify-content: space-between;
+}
+
+.f-col {
+  flex-direction: column;
+}
+
+/*позиция*/
+/*.pr {*/
+/*  position: relative;*/
+/*}*/
+
+/*.pa {*/
+/*  position: absolute;*/
+/*}*/
+
+/*Скрытие*/
+
+.f-do {
+  display: none;
+}
+
+/*Ширина*/
+.f1 {
+  flex: 1
+}
+
+.w100p {
+  width: 100%;
+}
+
+.max-w1400 {
+  max-width: 140rem;
+}
+
+.min-w320 {
+  min-width: 32rem;
+}
+
+/*Высота*/
+.h100vh {
+  height: 100vh;
+}
+
+/*Кнопка*/
+.btn {
+  display: inline-flex;
+  width: fit-content;
+  padding: 1rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: var(--color-4);
+  cursor: pointer;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--color-6);
+}
+
+.btn2 {
+  display: inline-flex;
+  width: fit-content;
+  padding: 1rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: var(--color-3);
+  cursor: pointer;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition: background-color 0.2s ease;
+}
+
+.btn2:hover {
+  background-color: var(--b-color-1);
+}
+
+/*Цвет заливка*/
+.bc3 {
+  background-color: var(--color-3);
+}
+
+
+/*Шрифты*/
+.fw-700 {
+  font-weight: 700;
+}
+
+.fs24 {
+  font-size: 2.4rem;
+}
+
+.fs18 {
+  font-size: 1.8rem;
+}
+
+/*отступ внешний*/
+.g10 {
+  gap: 1rem;
+}
+
+.g20 {
+  gap: 2rem;
+}
+
+.mg-lr20 {
+  margin: 0 2rem;
+}
+
+.m-r10 {
+  margin-right: 1rem;
+}
+
+.m-l10 {
+  margin-left: 1rem;
+}
+
+.m-tb40 {
+  margin: 4rem 0;
+}
+
+/*отступ внутренний*/
+.p10 {
+  padding: 1rem;
+}
+
+/*Курсор*/
+.curs-p {
+  cursor: pointer;
+}
+
+/*Углы*/
+.br1 {
+  border-radius: 1rem;
+}
+
+/* Ноутбук 1199px */
+@media (max-width: 74.938em) {
+}
+
+/* Планшет 991px */
+@media (max-width: 61.938em) {
+}
+
+/* Телефон 767px */
+@media (max-width: 47.938em) {
+  .f-dn {
+    display: none;
+  }
+
+  .f-do {
+    display: flex;
+  }
+
+  .mg-lr20 {
+    margin: 0 1rem;
+  }
+}
