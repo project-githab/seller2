@@ -18,9 +18,6 @@
 
 /* Телефон 767px */
 @media (max-width: 47.938em) {
-  .f-sb {
-    justify-content: center;
-  }
 
   .bg-list {
     background-color: var(--color-5);

@@ -1,0 +1,47 @@
+
+.login-form {
+  max-width: 48rem;
+  width: 100%;
+}
+
+.block {
+  border-left: 0.1rem solid var(--color-5);
+  box-shadow: 0 0 0.8rem 0 rgb(191 191 191 / 50%);
+}
+
+.input-form {
+  height: 4rem;
+  border-radius: 0.8rem;
+  background-color: var(--color-7);
+  outline: none;
+  padding: 0 1rem;
+  border: 0.2rem solid transparent;
+  transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
+  font-size: 1.8rem;
+}
+
+.input-form:hover {
+  background-color: var(--color-8);
+}
+
+.input-form:focus {
+  background-color: var(--color-1);
+  border: 0.2rem solid var(--color-9);
+}
+
+
+/* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
+@media (min-width: 20em) {
+}
+
+/* Ноутбук 1199px */
+@media (max-width: 74.938em) {
+}
+
+/* Планшет 991px */
+@media (max-width: 61.938em) {
+}
+
+/* Телефон 767px */
+@media (max-width: 47.938em) {
+}

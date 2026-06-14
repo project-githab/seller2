@@ -40,6 +40,9 @@
   --color-4: #FFDC26;
   --color-5: #e3e3e3;
   --color-6: #e3c320;
+  --color-7: #e2e2e2;
+  --color-8: #d4d4d4;
+  --color-9: #ff9b00;
 
   --b-color-1: rgba(0, 93, 255, 0.05);
 }
@@ -99,9 +102,9 @@ h1 {
   align-items: center;
 }
 
-.f-sb {
-  justify-content: space-between;
-}
+/*.f-sb {*/
+/*  justify-content: space-between;*/
+/*}*/
 
 .f-col {
   flex-direction: column;
@@ -116,8 +119,13 @@ h1 {
 /*  position: absolute;*/
 /*}*/
 
-/*Скрытие*/
+/*Выравнивание*/
 
+.tac {
+  text-align: center;
+}
+
+/*Скрытие*/
 .f-do {
   display: none;
 }
@@ -137,6 +145,14 @@ h1 {
 
 .min-w320 {
   min-width: 32rem;
+}
+
+.min-w200 {
+  min-width: 20rem;
+}
+
+.max-w320 {
+  max-width: 32rem;
 }
 
 /*Высота*/
@@ -184,6 +200,10 @@ h1 {
   background-color: var(--color-3);
 }
 
+.bc4 {
+  background-color: var(--color-4);
+}
+
 
 /*Шрифты*/
 .fw-700 {
@@ -211,12 +231,16 @@ h1 {
   margin: 0 2rem;
 }
 
+.m-l10 {
+  margin-left: 1rem;
+}
+
 .m-r10 {
   margin-right: 1rem;
 }
 
-.m-l10 {
-  margin-left: 1rem;
+.m-t10 {
+  margin-top: 1rem;
 }
 
 .m-tb40 {
@@ -228,6 +252,10 @@ h1 {
   padding: 1rem;
 }
 
+.p40 {
+  padding: 4rem;
+}
+
 /*Курсор*/
 .curs-p {
   cursor: pointer;
@@ -236,6 +264,12 @@ h1 {
 /*Углы*/
 .br1 {
   border-radius: 1rem;
+}
+
+/*Другое*/
+
+.ovh {
+  overflow: hidden;
 }
 
 /* Ноутбук 1199px */

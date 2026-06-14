@@ -17,9 +17,6 @@
 
 /* Телефон 767px */
 @media (max-width: 47.938em) {
-  .f-sb {
-    justify-content: center;
-  }
 
   .burger {
     left: 0;
