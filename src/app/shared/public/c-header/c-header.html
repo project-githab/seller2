@@ -1,8 +1,17 @@
-<div class="flex min-w320 w100p f-jcc bc3">
+<div class="flex min-w320 w100p f-jcc bc3 pr">
+
+  <div class="flex-none f-col menu pa fs18 br2 ovh" [class.menu-open]="menuOpen">
+    <div class="flex menu-text curs-p">Рынок</div>
+    <div class="flex menu-text curs-p">Цены</div>
+    <div class="flex menu-text curs-p">Поддержка</div>
+    <div class="flex menu-text curs-p">Зарегистрироваться</div>
+  </div>
+
   <div class="flex header-height max-w1400 w100p f-aic mg-lr20">
     <div class="flex f1">
       <div class="flex f-do m-r10 m-l10 curs-p">
-        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000000">
+        <svg (click)="menuOpen = !menuOpen" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"
+             width="30px" fill="#000000">
           <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
         </svg>
       </div>
@@ -38,7 +47,7 @@
       <div class="flex btn2">Рынок</div>
       <div class="flex btn2">Цены</div>
       <div class="flex btn2">Поддержка</div>
-      <div class="btn">Начать работу</div>
+      <div class="btn3">Начать работу</div>
     </div>
 
   </div>

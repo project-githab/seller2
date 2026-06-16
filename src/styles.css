@@ -43,6 +43,7 @@
   --color-7: #e2e2e2;
   --color-8: #d4d4d4;
   --color-9: #ff9b00;
+  --color-10: #f1f1f1;
 
   --b-color-1: rgba(0, 93, 255, 0.05);
 }
@@ -102,6 +103,10 @@ h1 {
   align-items: center;
 }
 
+.f-jte {
+  justify-content: flex-end;
+}
+
 /*.f-sb {*/
 /*  justify-content: space-between;*/
 /*}*/
@@ -111,13 +116,13 @@ h1 {
 }
 
 /*позиция*/
-/*.pr {*/
-/*  position: relative;*/
-/*}*/
+.pr {
+  position: relative;
+}
 
-/*.pa {*/
-/*  position: absolute;*/
-/*}*/
+.pa {
+  position: absolute;
+}
 
 /*Выравнивание*/
 
@@ -161,18 +166,18 @@ h1 {
 }
 
 /*Кнопка*/
-.btn {
-  display: inline-flex;
-  width: fit-content;
-  padding: 1rem 1rem;
-  border: none;
-  border-radius: 1rem;
-  background-color: var(--color-4);
-  cursor: pointer;
-  text-align: center;
-  overflow-wrap: anywhere;
-  transition: background-color 0.2s ease;
-}
+/*.btn {*/
+/*  display: inline-flex;*/
+/*  width: fit-content;*/
+/*  padding: 1rem 1rem;*/
+/*  border: none;*/
+/*  border-radius: 1rem;*/
+/*  background-color: var(--color-4);*/
+/*  cursor: pointer;*/
+/*  text-align: center;*/
+/*  overflow-wrap: anywhere;*/
+/*  transition: background-color 0.2s ease;*/
+/*}*/
 
 .btn:hover {
   background-color: var(--color-6);
@@ -189,6 +194,23 @@ h1 {
   text-align: center;
   overflow-wrap: anywhere;
   transition: background-color 0.2s ease;
+}
+
+.btn3 {
+  align-items: stretch;
+  display: inline-flex;
+  padding: 1rem 1rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: var(--color-4);
+  cursor: pointer;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition: background-color 0.2s ease;
+}
+
+.btn3:hover {
+  background-color: var(--color-6);
 }
 
 .btn2:hover {
@@ -243,6 +265,14 @@ h1 {
   margin-top: 1rem;
 }
 
+.m-t35 {
+  margin-top: 3.5rem;
+}
+
+.m-t20 {
+  margin-top: 2rem;
+}
+
 .m-tb40 {
   margin: 4rem 0;
 }
@@ -266,10 +296,58 @@ h1 {
   border-radius: 1rem;
 }
 
+.br2 {
+  border-radius: 0 1rem 1rem 0;
+}
+
+/*чекбокс checkbox*/
+
+.checkbox {
+  width: 2.2rem;
+  height: 2.2rem;
+  background-color: var(--color-5);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: 0.1rem solid var(--color-9);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.checkbox:hover {
+  background-color: var(--color-8);
+}
+
+.check:checked + .checkbox {
+  background-color: var(--color-4);
+  border-color: var(--color-4);
+  box-shadow: 0 0 0 0.2rem rgba(255, 155, 0, 0.5);
+}
+
+.check:checked + .checkbox:hover {
+  background-color: var(--color-4);
+  border-color: var(--color-4);
+}
+
+.checkbox .scs {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.check:checked + .checkbox .scs {
+  opacity: 1;
+}
+
+.input-non {
+  display: none;
+}
+
 /*Другое*/
 
 .ovh {
   overflow: hidden;
+}
+
+.z1 {
+  z-index: 1;
 }
 
 /* Ноутбук 1199px */

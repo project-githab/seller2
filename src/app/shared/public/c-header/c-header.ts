@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './c-header.html',
   styleUrl: './c-header.css',
 })
-export class CHeader {}
+export class CHeader {
+  menuOpen = false;
+}
