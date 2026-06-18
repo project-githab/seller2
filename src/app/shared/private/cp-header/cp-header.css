@@ -3,37 +3,13 @@
   height: 9rem;
 }
 
-
 .flex-none {
-  display: none;
+  display: flex;
 }
 
-.menu {
-  left: 0;
-  top: 7rem;
-  background-color: var(--color-1);
-  box-shadow: 0 0 9px 0.2rem rgb(226 226 226);
-
-  transform: translateX(-110%);
-  opacity: 0;
-  pointer-events: none;
-
-
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.menu.menu-open {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.menu-text {
-  padding: 1rem;
-}
-
-.menu-text:hover {
-  background-color: var(--color-3);
+.size-logo {
+  width: 40px;
+  height: 40px;
 }
 
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
@@ -61,7 +37,7 @@
   }
 
   .flex-none {
-    display: flex;
+    display: none;
   }
 
 }

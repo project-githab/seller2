@@ -179,9 +179,9 @@ h1 {
 /*  transition: background-color 0.2s ease;*/
 /*}*/
 
-.btn:hover {
-  background-color: var(--color-6);
-}
+/*.btn:hover {*/
+/*  background-color: var(--color-6);*/
+/*}*/
 
 .btn2 {
   display: inline-flex;
@@ -194,6 +194,31 @@ h1 {
   text-align: center;
   overflow-wrap: anywhere;
   transition: background-color 0.2s ease;
+}
+
+.btn2:hover {
+  background-color: var(--b-color-1);
+}
+
+.btn4 {
+  display: inline-flex;
+  width: fit-content;
+  padding: 1rem 1rem;
+  border: none;
+  border-radius: 2.5rem;
+  background-color: var(--color-3);
+  cursor: pointer;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition: background-color 0.2s ease;
+}
+
+.btn4:hover {
+  background-color: var(--b-color-1);
+}
+
+.btn2:hover {
+  background-color: var(--b-color-1);
 }
 
 .btn3 {
@@ -211,10 +236,6 @@ h1 {
 
 .btn3:hover {
   background-color: var(--color-6);
-}
-
-.btn2:hover {
-  background-color: var(--b-color-1);
 }
 
 /*Цвет заливка*/
@@ -298,6 +319,10 @@ h1 {
 
 .br2 {
   border-radius: 0 1rem 1rem 0;
+}
+
+.br3 {
+  border-radius: 2.5rem;
 }
 
 /*чекбокс checkbox*/
