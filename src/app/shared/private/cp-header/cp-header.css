@@ -7,6 +7,10 @@
   display: flex;
 }
 
+.flex-some {
+  display: none;
+}
+
 .size-logo {
   width: 40px;
   height: 40px;
@@ -38,6 +42,10 @@
 
   .flex-none {
     display: none;
+  }
+
+  .flex-some {
+    display: flex;
   }
 
 }

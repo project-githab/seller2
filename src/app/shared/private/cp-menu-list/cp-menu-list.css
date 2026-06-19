@@ -1,0 +1,13 @@
+.menu-color:hover {
+  background-color: var(--b-color-1);
+}
+
+
+.active-menu {
+  background-color: var(--color-4);
+  cursor: default;
+}
+
+.active-menu:hover {
+  background-color: var(--color-4);
+}

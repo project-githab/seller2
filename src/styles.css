@@ -261,6 +261,14 @@ h1 {
   font-size: 1.8rem;
 }
 
+.fs14 {
+  font-size: 1.4rem;
+}
+
+.fs40 {
+  font-size: 4rem;
+}
+
 /*отступ внешний*/
 .g10 {
   gap: 1rem;
@@ -268,6 +276,10 @@ h1 {
 
 .g20 {
   gap: 2rem;
+}
+
+.m20 {
+  margin: 2rem;
 }
 
 .mg-lr20 {
@@ -282,9 +294,6 @@ h1 {
   margin-right: 1rem;
 }
 
-.m-t10 {
-  margin-top: 1rem;
-}
 
 .m-t35 {
   margin-top: 3.5rem;
@@ -292,6 +301,14 @@ h1 {
 
 .m-t20 {
   margin-top: 2rem;
+}
+
+.m-t10 {
+  margin-top: 1rem;
+}
+
+.m-t5 {
+  margin-top: 0.3rem;
 }
 
 .m-tb40 {
