@@ -80,6 +80,19 @@
       </div>
     </a>
 
+
+    <a [routerLink]="isActive('/add-product') ? null : '/add-product'">
+      <div class="flex g10 f-aic p10 br1 menu-color curs-p" [ngClass]="{ 'active-menu': isActive('/add-product') }">
+        <div class="flex">
+          <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#000000">
+            <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+          </svg>
+        </div>
+        <div class="flex">Добавить товар</div>
+      </div>
+    </a>
+
+
   </div>
 
 </div>

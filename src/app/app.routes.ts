@@ -27,6 +27,12 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'add-product',
+    loadComponent: () =>
+      import('./private/pw-add-product/pw-add-product').then((m) => m.PwAddProduct),
+    pathMatch: 'full',
+  },
+  {
     path: '',
     loadComponent: () => import('./public/w-home/w-home').then((m) => m.WHome),
     pathMatch: 'full',
