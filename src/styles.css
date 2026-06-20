@@ -44,8 +44,13 @@
   --color-8: #d4d4d4;
   --color-9: #ff9b00;
   --color-10: #f1f1f1;
+  --color-11: #0033ff;
 
   --b-color-1: rgba(0, 93, 255, 0.05);
+  --b-color-2: rgb(22 163 74);
+  --b-color-3: rgb(255 220 38 / 0.39);
+  --b-color-4: rgb(38 89 255 / 0.39);
+  --b-color-5: rgb(175 38 255 / 0.39);
 }
 
 
@@ -87,6 +92,10 @@ h1 {
   display: flex;
 }
 
+.flex-grid {
+  display: grid;
+}
+
 .f-gro {
   flex-grow: 1;
 }
@@ -103,9 +112,19 @@ h1 {
   align-items: center;
 }
 
+.f-ai-fs {
+  align-items: flex-start;
+}
+
+.f-jc-sb {
+  justify-content: space-between;
+}
+
+
 .f-jte {
   justify-content: flex-end;
 }
+
 
 /*.f-sb {*/
 /*  justify-content: space-between;*/
@@ -140,6 +159,10 @@ h1 {
   flex: 1
 }
 
+.f2 {
+  flex: 2.1
+}
+
 .w100p {
   width: 100%;
 }
@@ -158,6 +181,13 @@ h1 {
 
 .max-w320 {
   max-width: 32rem;
+}
+
+
+/*Блок*/
+
+.block {
+  box-shadow: 0 1px 1rem 0 rgb(191 191 191 / 50%);
 }
 
 /*Высота*/
@@ -247,6 +277,30 @@ h1 {
   background-color: var(--color-4);
 }
 
+.bc10 {
+  background-color: var(--color-10);
+}
+
+.bc11 {
+  color: var(--color-11);
+}
+
+.bbc1 {
+  background-color: var(--b-color-1);
+}
+
+.bbc3 {
+  background-color: var(--b-color-3);
+}
+
+.bbc4 {
+  background-color: var(--b-color-4);
+}
+
+.bbc5 {
+  background-color: var(--b-color-5);
+}
+
 
 /*Шрифты*/
 .fw-700 {
@@ -276,6 +330,10 @@ h1 {
 
 .g20 {
   gap: 2rem;
+}
+
+.g40 {
+  gap: 4rem;
 }
 
 .m20 {
@@ -316,8 +374,17 @@ h1 {
 }
 
 /*отступ внутренний*/
+
+.p05 {
+  padding: 0.5rem;
+}
+
 .p10 {
   padding: 1rem;
+}
+
+.p20 {
+  padding: 2rem;
 }
 
 .p40 {
@@ -332,6 +399,10 @@ h1 {
 /*Углы*/
 .br1 {
   border-radius: 1rem;
+}
+
+.br50p {
+  border-radius: 50%;
 }
 
 .br2 {
@@ -390,6 +461,13 @@ h1 {
 
 .z1 {
   z-index: 1;
+}
+
+.styled-hr {
+  border: none;
+  height: 0.2rem;
+  background-color: var(--color-5);
+  width: 100%;
 }
 
 /* Ноутбук 1199px */

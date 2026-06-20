@@ -1,7 +1,15 @@
+
+.menu-color {
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
 .menu-color:hover {
   background-color: var(--b-color-1);
 }
 
+.menu-color:active {
+  transform: scale(0.97);
+}
 
 .active-menu {
   background-color: var(--color-4);
@@ -10,4 +18,8 @@
 
 .active-menu:hover {
   background-color: var(--color-4);
+}
+
+.active-menu:active {
+  transform: scale(1);
 }
