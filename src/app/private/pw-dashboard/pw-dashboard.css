@@ -1,13 +1,13 @@
 
 .day {
-  padding: 10px 18px;
+  padding: 1rem 1.8rem;
   background-color: var(--color-1);
   justify-content: center;
   align-items: center;
 }
 
 .day2 {
-  padding: 10px 18px;
+  padding: 1rem 1.8rem;
   justify-content: center;
   align-items: center;
 }
@@ -18,7 +18,7 @@
 
 .exp {
   background-color: var(--b-color-1);
-  padding: 10px 18px;
+  padding: 1rem 1.8rem;
   justify-content: center;
   align-items: center;
 }
@@ -47,14 +47,14 @@
 
 
 .progress-card {
-  width: 280px;
-  height: 280px;
-  border-radius: 32px;
+  width: 28rem;
+  height: 28rem;
+  border-radius: 3.2rem;
 }
 
 .progress-ring {
-  width: 220px;
-  height: 220px;
+  width: 22rem;
+  height: 22rem;
   border-radius: 50%;
   background: conic-gradient(var(--color-4) calc(var(--value) * 1%), #ececf6 0);
 }
@@ -62,15 +62,15 @@
 .progress-ring::before {
   content: "";
   position: absolute;
-  width: 168px;
-  height: 168px;
+  width: 16.8rem;
+  height: 16.8rem;
   border-radius: 50%;
   background: var(--color-1);
-  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.04);
+  box-shadow: inset 0 0 1.8rem rgba(0, 0, 0, 0.04);
 }
 
 .progress-value {
-  font-size: 34px;
+  font-size: 3.4rem;
   color: #202020;
   line-height: 1;
 }
@@ -106,6 +106,37 @@
   display: flex;
 }
 
+.display-exp2 {
+  display: none;
+}
+
+.orders-mobile {
+  display: none;
+}
+
+.orders-img {
+  object-fit: contain;
+}
+
+.order-aspect {
+  aspect-ratio: 1 / 1;
+  max-width: 100px;
+  max-height: 100px;
+}
+
+
+.order-info-grid {
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem 1rem;
+  padding-left: 1rem;
+  align-content: start;
+}
+
+.order-info-label {
+  white-space: nowrap;
+}
+
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }
@@ -114,18 +145,18 @@
 @media (max-width: 74.938em) {
 
   .progress-card {
-    width: 260px;
-    height: 260px;
+    width: 26rem;
+    height: 26rem;
   }
 
   .progress-ring {
-    width: 160px;
-    height: 160px;
+    width: 16rem;
+    height: 16rem;
   }
 
   .progress-ring::before {
-    width: 120px;
-    height: 120px;
+    width: 12rem;
+    height: 12rem;
   }
 
 }
@@ -159,5 +190,31 @@
   .dashboard-top {
     grid-template-columns: 1fr;
   }
-  
+
+  .cf-col {
+    flex-direction: column;
+  }
+
+  .display-exp1 {
+    display: none;
+  }
+
+  .display-exp2 {
+    display: flex;
+  }
+
+  .cm-t20 {
+    margin-top: 2rem;
+  }
+
+
+  .orders-table {
+    display: none;
+  }
+
+  .orders-mobile {
+    display: flex;
+  }
+
+
 }

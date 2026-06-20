@@ -7,29 +7,45 @@
     <app-cp-menu-list class="display"></app-cp-menu-list>
 
     <div class="flex f1 p10 f-ai-fs f-col">
-      <div class="flex p-l20 w100p f-jc-sb">
-        <div class="flex fs40 fw-700">Панель</div>
 
-        <div class="flex">
-          <div class="flex bc10 p10 br1">
-            <div class="flex fs18">
-              <div class="flex fs18 day br1">1Д</div>
-              <div class="flex fs18 day2 br1 curs-p m-l10 m-r10">7Д</div>
-              <div class="flex fs18 day2 br1 curs-p">30Д</div>
+      <div class="flex p-l20 w100p">
+
+        <div class="flex w100p f-jc-sb cf-col">
+          <div class="flex f-jc-sb">
+            <div class="flex fs40 fw-700">Панель</div>
+            <div class="flex fs18 exp m-l10 br1 curs-p display-exp2">
+              <div class="flex fs18">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                     fill="#000000">
+                  <path
+                    d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                </svg>
+              </div>
+              <div class="flex fs18">Экспорт</div>
             </div>
           </div>
-          <div class="flex fs18 exp m-l10 br1 curs-p">
-            <div class="flex fs18">
-              <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
-                   fill="#000000">
-                <path
-                  d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-              </svg>
+
+          <div class="flex f-jte cm-t20">
+            <div class="flex bc10 p10 br1">
+              <div class="flex fs18">
+                <div class="flex fs18 day br1">1Д</div>
+                <div class="flex fs18 day2 br1 curs-p m-l10 m-r10">7Д</div>
+                <div class="flex fs18 day2 br1 curs-p">30Д</div>
+              </div>
             </div>
-            <div class="flex fs18">Экспорт</div>
+            <div class="flex fs18 exp m-l10 br1 curs-p display-exp1">
+              <div class="flex fs18">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                     fill="#000000">
+                  <path
+                    d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                </svg>
+              </div>
+              <div class="flex fs18">Экспорт</div>
+            </div>
           </div>
+
         </div>
-
       </div>
 
 
@@ -152,9 +168,9 @@
 
         <div class="flex col-span-8 f-ai-fs">
 
-          <div class="flex-grid col-span-8 w100p block br1">
+          <div class="flex-grid col-span-8 w100p block br1 orders-table">
             <div class="flex w100p f-jc-sb p20">
-              <div class="flex fs18 fw-700">Последние заказы</div>
+              <div class="flex fw-700 m-r10">Последние заказы</div>
               <div class="flex curs-p bc11">Смотреть все</div>
             </div>
 
@@ -214,6 +230,37 @@
               </div>
               <div class="flex fs16 f-jcc">12.03.2023</div>
               <div class="flex fs16 f-jcc">493,120</div>
+            </div>
+          </div>
+
+          <div class="flex-grid col-span-8 w100p block br1 orders-mobile">
+            <div class="flex f-col w100p p20">
+              <div class="flex w100p">
+                <div class="flex ovh w100p order-aspect">
+                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                       width="290">
+                </div>
+
+
+                <div class="order-info-grid flex-grid w100p">
+                  <div class="order-info-label fw-700">ИД:</div>
+                  <div>ORD-2850</div>
+
+                  <div class="order-info-label fw-700">Статус:</div>
+                  <div>Отправлено</div>
+
+                  <div class="order-info-label fw-700">Дата:</div>
+                  <div>12.12.1999</div>
+
+                  <div class="order-info-label fw-700">Сумма:</div>
+                  <div>249.00</div>
+                </div>
+
+
+              </div>
+              <div class="flex w100p f-co fs18l">
+                <div class="flex m-t10">Вакуленко Геннадий</div>
+              </div>
             </div>
           </div>
 
