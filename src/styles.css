@@ -272,6 +272,11 @@ h1 {
 }
 
 /*Цвет заливка*/
+
+.bc1 {
+  background-color: var(--color-1);
+}
+
 .bc3 {
   background-color: var(--color-3);
 }

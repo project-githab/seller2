@@ -1,8 +1,25 @@
 <div class="flex min-w320 w100p f-jcc bc3 pr">
 
+
+  <div #menuBlock class="flex pa menu" [class.menu-open]="menuOpen">
+    <app-cp-menu-list class="bc1 cf-do"></app-cp-menu-list>
+  </div>
+
   <div class="flex header-height max-w1400 w100p f-aic mg-lr20">
+
     <div class="flex f1">
+
+
       <div class="flex f-aic g10 f1 fc-jcc">
+
+        <div class="flex cf-do m-r10 m-l10 curs-p cf1">
+          <svg (click)="toggleMenu($event)" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"
+               width="30px" fill="#000000">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+          </svg>
+        </div>
+
+
         <div class="flex flex-none">
           <svg xmlns="http://www.w3.org/2000/svg" width="34px" viewBox="0 0 512 512" height="35px">
             <path fill="#D6E5F6"
@@ -27,10 +44,12 @@
           </svg>
         </div>
         <div class="flex fw-700 fs24 flex-none">Центр продавца</div>
-        <div class="flex fw-700 fs24 flex-some">Центр</div>
+        <div class="flex fw-700 fs24 flex-some f1">Центр</div>
       </div>
 
     </div>
+
+
     <div class="flex g20 fs18 f-aic">
       <div class="flex btn4">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">

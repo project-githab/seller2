@@ -16,6 +16,31 @@
   height: 40px;
 }
 
+.cf-do {
+  display: none;
+}
+
+
+.menu {
+  left: 2rem;
+  top: 11rem;
+  background-color: var(--color-1);
+  box-shadow: 0 0 9px 0.2rem rgb(226 226 226);
+
+  transform: translateX(-110%);
+  opacity: 0;
+  pointer-events: none;
+
+
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.menu.menu-open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }
@@ -26,6 +51,10 @@
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
+  .cf-do {
+    display: flex;
+  }
+
 }
 
 /* Телефон 767px */
@@ -46,6 +75,10 @@
 
   .flex-some {
     display: flex;
+  }
+
+  .cf1 {
+    flex: 1
   }
 
 }
