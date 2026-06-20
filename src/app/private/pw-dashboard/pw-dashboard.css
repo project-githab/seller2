@@ -90,6 +90,21 @@
   background-color: var(--b-color-1);
 }
 
+.cp-l20 {
+  padding-left: 2rem;
+}
+
+.cp-r20 {
+  padding-right: 2rem;
+}
+
+.cfs18 {
+  font-size: 1.8rem;
+}
+
+.display {
+  display: flex;
+}
 
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
@@ -97,12 +112,52 @@
 
 /* Ноутбук 1199px */
 @media (max-width: 74.938em) {
+
+  .progress-card {
+    width: 260px;
+    height: 260px;
+  }
+
+  .progress-ring {
+    width: 160px;
+    height: 160px;
+  }
+
+  .progress-ring::before {
+    width: 120px;
+    height: 120px;
+  }
+
 }
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
+  .display {
+    display: none;
+  }
+
+  .p-l20 {
+    padding-left: 0;
+  }
+
+  .cfs18 {
+    font-size: 1.7rem;
+  }
 }
 
 /* Телефон 767px */
 @media (max-width: 47.938em) {
+  .dashboard-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-bottom > .col-span-4,
+  .dashboard-bottom > .col-span-8 {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-top {
+    grid-template-columns: 1fr;
+  }
+  
 }

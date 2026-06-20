@@ -4,10 +4,10 @@
 <div class="flex min-w320 w100p f-jcc">
   <div class="flex max-w1400 w100p mg-lr20 m-t20">
 
-    <app-cp-menu-list></app-cp-menu-list>
+    <app-cp-menu-list class="display"></app-cp-menu-list>
 
     <div class="flex f1 p10 f-ai-fs f-col">
-      <div class="flex m20 w100p f-jc-sb">
+      <div class="flex p-l20 w100p f-jc-sb">
         <div class="flex fs40 fw-700">Панель</div>
 
         <div class="flex">
@@ -33,7 +33,7 @@
       </div>
 
 
-      <div class="flex-grid m20 w100p g40 grid-cols-3">
+      <div class="flex-grid p-l20 m-t40 w100p g40 grid-cols-3 dashboard-top">
         <div class="flex p20 block br1 f-col">
           <div class="flex w100p f-jc-sb f-aic">
             <div class="flex p10 br1 bbc3">
@@ -108,12 +108,12 @@
         </div>
       </div>
 
-      <div class="flex-grid m20 w100p g40 grid-cols-12">
+      <div class="flex-grid p-l20 m-t40 w100p g40 grid-cols-12 dashboard-bottom">
         <div class="flex col-span-4 block br1">
           <div class="flex w100p p20 f-col f-aic">
 
             <div class="flex w100p f-jc-sb">
-              <div class="flex fs18 fw-700">Цель по выручке</div>
+              <div class="flex cfs18 fw-700">Цель по выручке</div>
               <div class="flex curs-p">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                      fill="#000000">
@@ -127,18 +127,18 @@
               <div class="progress-ring flex f-aic f-jcc pr" style="--value: 75;">
                 <div class="pr z1 tac">
                   <div class="progress-value fw-700">75%</div>
-                  <div class="fs18">цель достигнута</div>
+                  <div class="fs18 owa cp-l20 cp-r20">цель достигнута</div>
                 </div>
               </div>
             </div>
 
             <div class="flex w100p f-jc-sb fs18">
-              <div class="flex">Цель на месяц</div>
+              <div class="flex m-r10">Цель на месяц</div>
               <div class="flex fw-700">₽60,000</div>
             </div>
 
             <div class="flex w100p f-jc-sb m-t20 fs18">
-              <div class="flex">Текущая выручка</div>
+              <div class="flex m-r10">Текущая выручка</div>
               <div class="flex fw-700">₽42,904</div>
             </div>
 
