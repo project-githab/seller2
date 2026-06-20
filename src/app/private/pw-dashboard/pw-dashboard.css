@@ -124,6 +124,11 @@
   max-height: 100px;
 }
 
+.order-aspect1 {
+  aspect-ratio: 1 / 1;
+  max-width: 7rem;
+  max-height: 7rem;
+}
 
 .order-info-grid {
   grid-template-columns: auto 1fr;
