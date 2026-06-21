@@ -555,6 +555,10 @@ ws-nowrap {
   z-index: 1;
 }
 
+.z2 {
+  z-index: 2;
+}
+
 .styled-hr {
   border: none;
   height: 0.2rem;
