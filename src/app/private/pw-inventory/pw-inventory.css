@@ -118,16 +118,12 @@
   object-fit: contain;
 }
 
-.order-aspect {
-  aspect-ratio: 1 / 1;
-  max-width: 100px;
-  max-height: 100px;
-}
 
-.order-aspect1 {
+.img-size {
+  width: 50px;
+  height: 50px;
   aspect-ratio: 1 / 1;
-  max-width: 7rem;
-  max-height: 7rem;
+  flex-shrink: 0;
 }
 
 .order-info-grid {
@@ -155,6 +151,76 @@
 
 .filter-btn {
   right: 0;
+}
+
+.cm-l10 {
+  margin-left: 1rem;
+}
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 0.5fr 1fr;
+  grid-template-rows: 50px auto;
+  /* Убрали отсюда background-color */
+}
+
+.grid-item {
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+}
+
+/* 1. Красим ТОЛЬКО первую строку (шапку) */
+.grid-item:nth-child(-n+5) {
+  background-color: var(--r-color-1);
+}
+
+/* 2. Красим ВСЕ ОСТАЛЬНЫЕ строки (товары) начиная с 6-го элемента */
+.grid-item:nth-child(n+6) {
+  background-color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+
+/* При наведении на любую ячейку товара, подсвечиваем её */
+.grid-item:nth-child(n+6):hover {
+  background-color: var(--r-color-1); /* Цвет ховера */
+}
+
+/* Убираем линию у самой последней строки */
+.grid-item:nth-last-child(-n+5) {
+  border-bottom: none;
+}
+
+/* Выравнивание первого столбца по левому краю (кроме шапки) */
+.grid-item:nth-child(5n + 1):not(:first-child) {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+
+/* Ограничение строго до 2-х строк с троеточием */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Количество строк */
+  -webkit-box-orient: vertical;
+  overflow: hidden; /* Прячет лишнее */
+  word-break: break-word; /* Корректно переносит длинные слова */
+
+  line-height: 1.3; /* Задаем четкую высоту строки */
+  max-height: 2.6em; /* 2 строки * 1.3 line-height = 2.6em */
+}
+
+
+.order-mob-color {
+  background-color: var(--color-1);
+  transition: background-color 0.2s ease;
+}
+
+.order-mob-color:hover {
+  background-color: var(--r-color-1);
 }
 
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
@@ -232,6 +298,7 @@
 
   .orders-mobile {
     display: flex;
+    border-bottom: 0.1rem solid var(--color-5);
   }
 
   .fs40 {
@@ -244,6 +311,32 @@
 
   .cf-aife {
     align-items: flex-end;
+  }
+
+  .filter-col {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+  .с-order1 {
+    order: 1;
+  }
+
+  .с-order2 {
+    order: 2;
+  }
+
+  .cg20 {
+    gap: 2rem;
+  }
+
+  .cm-l10 {
+    margin-left: 0;
+  }
+
+  .orders-mobile:last-of-type {
+    border-bottom: none;
   }
 
 }

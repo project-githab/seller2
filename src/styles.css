@@ -192,6 +192,10 @@ input {
   max-width: 140rem;
 }
 
+.max-w30 {
+  max-width: 30rem;
+}
+
 .min-w320 {
   min-width: 32rem;
 }
@@ -519,7 +523,23 @@ input {
   display: none;
 }
 
-/*Другое*/
+/*Текст*/
+
+tt-none {
+  text-transform: none;
+}
+
+.tove-el {
+  text-overflow: ellipsis; /* Добавляет три точки в конце */
+}
+
+ws-nowrap {
+  white-space: nowrap /* Запрещает перенос строки */
+}
+
+.ovh {
+  overflow: hidden; /* Прячет всё, что не помещается */
+}
 
 .owa {
   overflow-wrap: anywhere;
@@ -527,9 +547,9 @@ input {
   /*word-wrap: break-word;*/
 }
 
-.ovh {
-  overflow: hidden;
-}
+
+/*Другое*/
+
 
 .z1 {
   z-index: 1;
