@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CpHeader } from '../../shared/private/cp-header/cp-header';
-import { CpMenuList } from '../../shared/private/cp-menu-list/cp-menu-list';
 import { NgOptimizedImage } from '@angular/common';
+import { CpMenuList } from '../../shared/private/cp-menu-list/cp-menu-list';
 
 @Component({
   selector: 'app-pw-dashboard',

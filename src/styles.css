@@ -45,12 +45,16 @@
   --color-9: #ff9b00;
   --color-10: #f1f1f1;
   --color-11: #0033ff;
+  --color-12: #ff0000;
 
-  --b-color-1: rgba(0, 93, 255, 0.05);
-  --b-color-2: rgb(22 163 74);
-  --b-color-3: rgb(255 220 38 / 0.39);
-  --b-color-4: rgb(38 89 255 / 0.39);
-  --b-color-5: rgb(175 38 255 / 0.39);
+  --r-color-1: rgba(0, 93, 255, 0.05);
+  --r-color-2: rgb(22 163 74);
+  --r-color-3: rgb(255 220 38 / 0.39);
+  --r-color-4: rgb(38 89 255 / 0.39);
+  --r-color-5: rgb(175 38 255 / 0.39);
+  --r-color-6: rgb(38 255 73 / 39%);
+  --r-color-7: rgb(255 160 38 / 39%);;
+  --r-color-8: rgb(255 38 128 / 0.39);;
 }
 
 
@@ -86,6 +90,11 @@ h1 {
   font-weight: 700;
 }
 
+input {
+  outline: none;
+  border: 0.1rem solid #CDCDCD;
+  box-shadow: none;
+}
 
 /* flex флекс */
 .flex {
@@ -129,6 +138,11 @@ h1 {
   flex-direction: row;
 }
 
+.f-aife {
+  align-items: flex-end;
+}
+
+
 .f-col {
   flex-direction: column;
 }
@@ -170,6 +184,10 @@ h1 {
   height: 100%;
 }
 
+.h41 {
+  height: 4.1rem;
+}
+
 .max-w1400 {
   max-width: 140rem;
 }
@@ -187,7 +205,7 @@ h1 {
 }
 
 
-/*Блок*/
+/*Тень*/
 
 .block {
   box-shadow: 0 1px 1rem 0 rgb(191 191 191 / 50%);
@@ -230,7 +248,7 @@ h1 {
 }
 
 .btn2:hover {
-  background-color: var(--b-color-1);
+  background-color: var(--r-color-1);
 }
 
 .btn4 {
@@ -247,11 +265,11 @@ h1 {
 }
 
 .btn4:hover {
-  background-color: var(--b-color-1);
+  background-color: var(--r-color-1);
 }
 
 .btn2:hover {
-  background-color: var(--b-color-1);
+  background-color: var(--r-color-1);
 }
 
 .btn3 {
@@ -289,24 +307,45 @@ h1 {
   background-color: var(--color-10);
 }
 
-.bc11 {
+
+.oc9 {
+  color: var(--color-9);
+}
+
+.oc11 {
   color: var(--color-11);
 }
 
-.bbc1 {
-  background-color: var(--b-color-1);
+.oc12 {
+  color: var(--color-12);
 }
 
-.bbc3 {
-  background-color: var(--b-color-3);
+.rbc1 {
+  background-color: var(--r-color-1);
 }
 
-.bbc4 {
-  background-color: var(--b-color-4);
+.rbc3 {
+  background-color: var(--r-color-3);
 }
 
-.bbc5 {
-  background-color: var(--b-color-5);
+.rbc4 {
+  background-color: var(--r-color-4);
+}
+
+.rbc5 {
+  background-color: var(--r-color-5);
+}
+
+.rbc6 {
+  background-color: var(--r-color-6);
+}
+
+.rbc7 {
+  background-color: var(--r-color-7);
+}
+
+.rbc8 {
+  background-color: var(--r-color-8);
 }
 
 
@@ -358,6 +397,14 @@ h1 {
 
 .m-r10 {
   margin-right: 1rem;
+}
+
+.m-l05 {
+  margin-left: 0.5rem;
+}
+
+.m-r05 {
+  margin-right: 0.5rem;
 }
 
 .m-t40 {
