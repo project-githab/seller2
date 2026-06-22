@@ -31,7 +31,7 @@
   opacity: 0;
   pointer-events: none;
 
-
+  z-index: 99;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
