@@ -1,20 +1,4 @@
 
-.day {
-  padding: 1rem 1.8rem;
-  background-color: var(--color-1);
-  justify-content: center;
-  align-items: center;
-}
-
-.day2 {
-  padding: 1rem 1.8rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.day2:hover {
-  background-color: var(--r-color-1);
-}
 
 .exp {
   background-color: var(--r-color-1);
@@ -23,84 +7,11 @@
   align-items: center;
 }
 
-.g-color {
-  color: var(--r-color-2);
-}
-
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-
-.grid-cols-12 {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-}
-
-.col-span-4 {
-  grid-column: span 4 / span 4;
-}
-
-.col-span-8 {
-  grid-column: span 8 / span 8;
-}
-
-
-.progress-card {
-  width: 28rem;
-  height: 28rem;
-  border-radius: 3.2rem;
-}
-
-.progress-ring {
-  width: 22rem;
-  height: 22rem;
-  border-radius: 50%;
-  background: conic-gradient(var(--color-4) calc(var(--value) * 1%), #ececf6 0);
-}
-
-.progress-ring::before {
-  content: "";
-  position: absolute;
-  width: 16.8rem;
-  height: 16.8rem;
-  border-radius: 50%;
-  background: var(--color-1);
-  box-shadow: inset 0 0 1.8rem rgba(0, 0, 0, 0.04);
-}
-
-.progress-value {
-  font-size: 3.4rem;
-  color: #202020;
-  line-height: 1;
-}
-
-
-.grid-cols-5 {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-
-.order-color {
-  background-color: var(--color-1);
-  transition: background-color 0.2s ease;
-}
-
-.order-color:hover {
-  background-color: var(--r-color-1);
-}
-
-.cp-l20 {
-  padding-left: 2rem;
-}
-
-.cp-r20 {
-  padding-right: 2rem;
-}
-
-.cfs18 {
-  font-size: 1.8rem;
-}
 
 .display {
   display: flex;
@@ -124,17 +35,6 @@
   height: 50px;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
-}
-
-.order-info-grid {
-  grid-template-columns: auto 1fr;
-  gap: 0.8rem 1rem;
-  padding-left: 1rem;
-  align-content: start;
-}
-
-.order-info-label {
-  white-space: nowrap;
 }
 
 
@@ -228,24 +128,7 @@
 }
 
 /* Ноутбук 1199px */
-@media (max-width: 74.938em) {
-
-  .progress-card {
-    width: 26rem;
-    height: 26rem;
-  }
-
-  .progress-ring {
-    width: 16rem;
-    height: 16rem;
-  }
-
-  .progress-ring::before {
-    width: 12rem;
-    height: 12rem;
-  }
-
-}
+@media (max-width: 74.938em) { }
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
@@ -256,22 +139,10 @@
   .p-l20 {
     padding-left: 0;
   }
-
-  .cfs18 {
-    font-size: 1.7rem;
-  }
 }
 
 /* Телефон 767px */
 @media (max-width: 47.938em) {
-  .dashboard-bottom {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-bottom > .col-span-4,
-  .dashboard-bottom > .col-span-8 {
-    grid-column: 1 / -1;
-  }
 
   .dashboard-top {
     grid-template-columns: 1fr;
@@ -289,9 +160,6 @@
     display: flex;
   }
 
-  /*.cm-t20 {*/
-  /*  margin-top: 2rem;*/
-  /*}*/
   .orders-table {
     display: none;
   }
