@@ -55,6 +55,7 @@
   --r-color-6: rgb(38 255 73 / 39%);
   --r-color-7: rgb(255 160 38 / 39%);;
   --r-color-8: rgb(255 38 128 / 0.39);;
+  --r-color-9: rgb(0 93 255 / 0.13);;
 }
 
 
@@ -293,6 +294,31 @@ input {
   background-color: var(--color-6);
 }
 
+
+.btn5 {
+  padding: 1rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--r-color-1);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn5:hover {
+  background-color: rgb(0 93 255 / 0.13);
+}
+
+.btn5-active {
+  cursor: default;
+  padding: 1rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--color-4);
+}
+
+
+.btn-pagination {
+  width: 5rem;
+  height: 4rem;
+}
 /*Цвет заливка*/
 
 .bc1 {
@@ -375,6 +401,11 @@ input {
 }
 
 /*отступ внешний*/
+
+.g05 {
+  gap: 0.5rem;
+}
+
 .g10 {
   gap: 1rem;
 }
