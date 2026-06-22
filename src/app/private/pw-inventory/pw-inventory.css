@@ -60,7 +60,7 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 0.5fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr 0.5fr 0.5fr;
   grid-template-rows: 50px auto;
   /* Убрали отсюда background-color */
 }
