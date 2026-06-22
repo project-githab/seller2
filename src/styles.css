@@ -316,9 +316,10 @@ input {
 
 
 .btn-pagination {
-  width: 5rem;
-  height: 4rem;
+  width: 4.5rem;
+  height: 3.5rem;
 }
+
 /*Цвет заливка*/
 
 .bc1 {

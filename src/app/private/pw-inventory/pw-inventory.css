@@ -298,7 +298,7 @@
 
   .orders-mobile {
     display: flex;
-    border-bottom: 0.1rem solid var(--color-5);
+    border-bottom: 1rem solid var(--color-5);
   }
 
   .fs40 {
