@@ -53,9 +53,10 @@
   --r-color-4: rgb(38 89 255 / 0.39);
   --r-color-5: rgb(175 38 255 / 0.39);
   --r-color-6: rgb(38 255 73 / 39%);
-  --r-color-7: rgb(255 160 38 / 39%);;
-  --r-color-8: rgb(255 38 128 / 0.39);;
-  --r-color-9: rgb(0 93 255 / 0.13);;
+  --r-color-7: rgb(255 160 38 / 39%);
+  --r-color-8: rgb(255 38 128 / 0.39);
+  --r-color-9: rgb(0 93 255 / 0.13);
+  --r-color-10: rgb(0 0 0 / 0.3);
 }
 
 
@@ -485,6 +486,14 @@ input {
   padding: 4rem;
 }
 
+.p-l10 {
+  padding-left: 1rem;
+}
+
+.p-r10 {
+  padding-right: 1rem;
+}
+
 .p-l20 {
   padding-left: 2rem;
 }
@@ -513,6 +522,10 @@ input {
 
 .br3 {
   border-radius: 2.5rem;
+}
+
+.br-tl {
+  border-radius: 1rem 1rem 0 0;
 }
 
 /*чекбокс checkbox*/
