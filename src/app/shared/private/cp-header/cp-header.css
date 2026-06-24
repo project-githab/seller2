@@ -55,6 +55,12 @@
     display: flex;
   }
 
+  .menu {
+    left: 0.2rem;
+    top: 9.2rem;
+    padding: 18px;
+  }
+
 }
 
 /* Телефон 767px */

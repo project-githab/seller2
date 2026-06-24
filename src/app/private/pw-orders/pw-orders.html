@@ -73,7 +73,7 @@
                 <input type="date" id="2" class="h41 fs18 br1 p-l10 p-r10" [(ngModel)]="selectedDate">
 
 
-                <div class="flex fs18 exp m-l10 br1 curs-p orders-mobile">
+                <div class="flex fs18 exp m-l10 br1 curs-p orders-mobile" (click)="openFilter()">
                   <div class="flex fs18">
                     <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
@@ -302,9 +302,14 @@
       </div>
 
 
-      <div class="flex filter-mobile1"></div>
+      <div
+        class="flex filter-mobile1"
+        [class.filter-mobile1-active]="filterOpen()"
+        (click)="closeFilter()">
+      </div>
 
-      <div class="flex filter-mobile2 f-col f-aic bc1 p20 g10 display-exp2 br-tl">
+      <div class="flex filter-mobile2 f-col f-aic bc1 p20 g10 display-exp2 br-tl"
+           [class.filter-mobile2-active]="filterOpen()">
         <div class="flex">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
             <path d="M240-440v-80h480v80H240Z" />
@@ -312,7 +317,7 @@
         </div>
         <div class="flex f-jc-sb w100p">
           <div class="flex fs18 fw-700">Фильтр</div>
-          <div class="flex">
+          <div class="flex curs-p" (click)="closeFilter()">
             <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px" fill="#000000">
               <path
                 d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -328,7 +333,11 @@
             <div class="flex btn5">Отменены</div>
           </div>
         </div>
-        <div class="flex btn3 w100p f-jcc m-t10">Продолжить</div>
+        <div
+          class="flex btn3 w100p f-jcc m-t10"
+          (click)="closeFilter()">
+          Продолжить
+        </div>
       </div>
 
 

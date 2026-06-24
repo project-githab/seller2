@@ -1,5 +1,4 @@
 
-
 .exp {
   background-color: var(--r-color-1);
   padding: 0.8rem 1.8rem;
@@ -132,7 +131,8 @@
 }
 
 /* Ноутбук 1199px */
-@media (max-width: 74.938em) { }
+@media (max-width: 74.938em) {
+}
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
