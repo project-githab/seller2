@@ -51,10 +51,6 @@
   right: 0;
 }
 
-.cm-l10 {
-  margin-left: 1rem;
-}
-
 
 .grid-container {
   display: grid;
@@ -168,30 +164,9 @@
     margin-top: 2rem;
   }
 
-  .cf-aife {
-    align-items: flex-end;
-  }
-
-  .filter-col {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-
-  .с-order1 {
-    order: 1;
-  }
 
   .с-order2 {
     order: 2;
-  }
-
-  .cg20 {
-    gap: 2rem;
-  }
-
-  .cm-l10 {
-    margin-left: 0;
   }
 
   .orders-mobile:last-of-type {
