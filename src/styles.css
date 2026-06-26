@@ -211,10 +211,19 @@ input {
 }
 
 
-/*Тень*/
+/*Блок*/
 
 .block {
   box-shadow: 0 1px 1rem 0 rgb(191 191 191 / 50%);
+}
+
+.block-color {
+  background-color: var(--color-1);
+  transition: background-color 0.2s ease;
+}
+
+.block-color:hover {
+  background-color: var(--r-color-1);
 }
 
 /*Высота*/
@@ -578,7 +587,7 @@ tt-none {
   text-overflow: ellipsis; /* Добавляет три точки в конце */
 }
 
-ws-nowrap {
+.ws-nowrap {
   white-space: nowrap /* Запрещает перенос строки */
 }
 

@@ -1,0 +1,63 @@
+
+.exp {
+  background-color: var(--r-color-1);
+  padding: 0.8rem 1.8rem;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.exp:hover {
+  background-color: var(--r-color-9);
+}
+
+.display {
+  display: flex;
+}
+
+.display-exp2 {
+  display: none;
+}
+
+
+/* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
+@media (min-width: 20em) {
+}
+
+/* Ноутбук 1199px */
+@media (max-width: 74.938em) {
+}
+
+/* Планшет 991px */
+@media (max-width: 61.938em) {
+  .display {
+    display: none;
+  }
+
+  .p-l20 {
+    padding-left: 0;
+  }
+}
+
+/* Телефон 767px */
+@media (max-width: 47.938em) {
+
+  .cf-col {
+    flex-direction: column;
+  }
+
+  .display-exp1 {
+    display: none;
+  }
+
+  .display-exp2 {
+    display: flex;
+  }
+
+
+  .fs40 {
+    font-size: 2.5rem;
+  }
+
+
+}
