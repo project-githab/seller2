@@ -175,7 +175,11 @@ input {
 }
 
 .f2 {
-  flex: 2.1
+  flex: 0.5
+}
+
+.f3 {
+  flex: 0.30
 }
 
 .w100p {
@@ -250,37 +254,15 @@ input {
 /*}*/
 
 .btn2 {
-  display: inline-flex;
-  width: fit-content;
-  padding: 1rem 1rem;
+  padding: 0 1rem;
+  height: 4rem;
+  justify-content: center;
+  align-items: center;
   border: none;
   border-radius: 1rem;
   background-color: var(--color-3);
   cursor: pointer;
-  text-align: center;
-  overflow-wrap: anywhere;
   transition: background-color 0.2s ease;
-}
-
-.btn2:hover {
-  background-color: var(--r-color-1);
-}
-
-.btn4 {
-  display: inline-flex;
-  width: fit-content;
-  padding: 1rem 1rem;
-  border: none;
-  border-radius: 2.5rem;
-  background-color: var(--color-3);
-  cursor: pointer;
-  text-align: center;
-  overflow-wrap: anywhere;
-  transition: background-color 0.2s ease;
-}
-
-.btn4:hover {
-  background-color: var(--r-color-1);
 }
 
 .btn2:hover {
@@ -288,15 +270,15 @@ input {
 }
 
 .btn3 {
-  align-items: stretch;
-  display: inline-flex;
-  padding: 1rem 1rem;
+
+  padding: 0 1rem;
+  height: 4rem;
+  justify-content: center;
+  align-items: center;
   border: none;
   border-radius: 1rem;
   background-color: var(--color-4);
   cursor: pointer;
-  text-align: center;
-  overflow-wrap: anywhere;
   transition: background-color 0.2s ease;
 }
 
@@ -304,12 +286,31 @@ input {
   background-color: var(--color-6);
 }
 
+.btn4 {
+  padding: 0 1rem;
+  height: 4rem;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 2.5rem;
+  background-color: var(--color-3);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn4:hover {
+  background-color: var(--r-color-1);
+}
+
 
 .btn5 {
-  padding: 1rem 1rem;
+  padding: 0 1rem;
+  height: 4rem;
   border-radius: 1rem;
   background-color: var(--r-color-1);
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
   transition: background-color 0.2s ease;
 }
 
@@ -319,11 +320,36 @@ input {
 
 .btn5-active {
   cursor: default;
-  padding: 1rem 1rem;
+  padding: 0 1rem;
+  height: 4rem;
   border-radius: 1rem;
+  justify-content: center;
+  align-items: center;
   background-color: var(--color-4);
 }
 
+.btn6 {
+  background-color: var(--r-color-1);
+  padding: 0 1.8rem;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  height: 4rem;
+}
+
+.btn6:hover {
+  background-color: var(--r-color-9);
+}
+
+.btn7-in-active {
+  cursor: default;
+  padding: 0 1rem;
+  height: 4rem;
+  border-radius: 1rem;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-8);
+}
 
 .btn-pagination {
   width: 4.5rem;
@@ -601,6 +627,16 @@ tt-none {
   /*word-wrap: break-word;*/
 }
 
+
+/*Инпут*/
+
+.input-txt {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.input-txt:focus {
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
+}
 
 /*Другое*/
 

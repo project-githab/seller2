@@ -1,16 +1,4 @@
 
-.exp {
-  background-color: var(--r-color-1);
-  padding: 0.8rem 1.8rem;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.exp:hover {
-  background-color: var(--r-color-9);
-}
-
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -41,16 +29,11 @@
 }
 
 
-.input-search {
-  /*max-width: 25rem;*/
+.input-pad {
   padding-left: 3.2rem;
   padding-right: 7.5rem;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-.input-search:focus {
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
-}
 
 .filter-btn {
   right: 0;
