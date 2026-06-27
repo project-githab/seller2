@@ -82,6 +82,10 @@
   justify-content: center;
 }
 
+.arrow {
+  right: 0;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }

@@ -98,6 +98,12 @@ input {
   box-shadow: none;
 }
 
+textarea {
+  outline: none;
+  border: 0.1rem solid #CDCDCD;
+  box-shadow: none;
+}
+
 /* flex флекс */
 .flex {
   display: flex;
@@ -214,6 +220,10 @@ input {
   max-width: 32rem;
 }
 
+.min-h100 {
+  min-height: 10rem;
+}
+
 
 /*Блок*/
 
@@ -228,6 +238,21 @@ input {
 
 .block-color:hover {
   background-color: var(--r-color-1);
+}
+
+/*.block-in-active {*/
+/*  height: 4.1rem;*/
+/*  background-color: var(--color-5);*/
+/*}*/
+
+.block-in-active {
+  height: 4.1rem;
+  background-color: var(--r-color-1);
+}
+
+.block-border {
+  height: 4.1rem;
+  border: 2px solid rgb(191 191 191 / 50%)
 }
 
 /*Высота*/
@@ -505,6 +530,10 @@ input {
 
 /*отступ внутренний*/
 
+.pg-lr20 {
+  padding: 0 2rem;
+}
+
 .p05 {
   padding: 0.5rem;
 }
@@ -677,4 +706,9 @@ tt-none {
   .mg-lr20 {
     margin: 0 1rem;
   }
+
+  .pg-lr20 {
+    padding: 0 1rem;
+  }
+
 }
