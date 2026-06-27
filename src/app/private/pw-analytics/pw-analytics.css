@@ -1,16 +1,4 @@
 
-.exp {
-  background-color: var(--r-color-1);
-  padding: 0.8rem 1.8rem;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.exp:hover {
-  background-color: var(--r-color-9);
-}
-
 .display {
   display: flex;
 }
