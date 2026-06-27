@@ -188,6 +188,10 @@ textarea {
   flex: 0.30
 }
 
+.f4 {
+  flex: 0.7
+}
+
 .w100p {
   width: 100%;
 }
@@ -198,6 +202,10 @@ textarea {
 
 .h41 {
   height: 4.1rem;
+}
+
+.max-w150 {
+  max-width: 15rem;
 }
 
 .max-w1400 {
@@ -412,6 +420,10 @@ textarea {
   color: var(--color-12);
 }
 
+.roc2 {
+  color: var(--r-color-2);
+}
+
 .rbc1 {
   background-color: var(--r-color-1);
 }
@@ -448,6 +460,10 @@ textarea {
 
 .fs24 {
   font-size: 2.4rem;
+}
+
+.fs16 {
+  font-size: 1.6rem;
 }
 
 .fs18 {

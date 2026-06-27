@@ -49,7 +49,7 @@
 
 .top-grid-container {
   display: grid;
-  grid-template-columns: 0.2fr 1fr 0.4fr;
+  grid-template-columns: 1fr 0.5fr 0.5fr;
 }
 
 
@@ -86,6 +86,51 @@
   right: 0;
 }
 
+
+.picker {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3rem;
+  height: 3rem;
+  right: 0.5rem;
+  top: 0.5rem;
+}
+
+/* Скругление внутренней заливки для WebKit (Chrome, Safari, Edge) */
+.picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 1rem;
+}
+
+/* Скругление внутренней заливки для Firefox */
+.picker::-moz-color-swatch {
+  border: none;
+  border-radius: 1rem;
+}
+
+
+.banner {
+  min-width: 0;
+  width: 100%;
+  max-width: 50rem;
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }
@@ -103,14 +148,15 @@
   .p-l20 {
     padding-left: 0;
   }
-}
-
-/* Телефон 767px */
-@media (max-width: 47.938em) {
 
   .cf-col {
     flex-direction: column;
   }
+
+}
+
+/* Телефон 767px */
+@media (max-width: 47.938em) {
 
   .display-exp1 {
     display: none;
