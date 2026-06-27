@@ -131,6 +131,10 @@
   object-fit: contain;
 }
 
+.security-row {
+  display: contents;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }
@@ -158,6 +162,10 @@
 /* Телефон 767px */
 @media (max-width: 47.938em) {
 
+  .cfs16 {
+    font-size: 1.6rem;
+  }
+
   .display-exp1 {
     display: none;
   }
@@ -171,4 +179,28 @@
     font-size: 2.5rem;
   }
 
+  .top-grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .security-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-3);
+  }
+
+  .security-row .btn2 {
+    width: 100%;
+  }
+
+  .security-row .p-r10,
+  .security-row .p-l10 {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
