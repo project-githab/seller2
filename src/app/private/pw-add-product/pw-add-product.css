@@ -80,12 +80,25 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
 }
 
+
+.wi1 {
+  display: none;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }
 
 /* Ноутбук 1199px */
 @media (max-width: 74.938em) {
+
+  .wi1 {
+    display: flex;
+  }
+
+  .wi2 {
+    display: none;
+  }
 }
 
 /* Планшет 991px */

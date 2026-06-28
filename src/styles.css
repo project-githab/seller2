@@ -232,6 +232,10 @@ textarea {
   min-height: 10rem;
 }
 
+.min-h154 {
+  min-height: 15.4rem;
+}
+
 
 /*Блок*/
 
@@ -261,6 +265,14 @@ textarea {
 .block-border {
   height: 4.1rem;
   border: 2px solid rgb(191 191 191 / 50%)
+}
+
+.block-shrink {
+  transition: transform 0.2s ease;
+}
+
+.block-shrink:active {
+  transform: scale(0.98);
 }
 
 /*Высота*/
@@ -452,7 +464,6 @@ textarea {
   background-color: var(--r-color-8);
 }
 
-
 /*Шрифты*/
 .fw-700 {
   font-weight: 700;
@@ -506,6 +517,10 @@ textarea {
 
 .m-l10 {
   margin-left: 1rem;
+}
+
+.m-l35 {
+  margin-left: 3.5rem;
 }
 
 .m-r10 {
@@ -642,6 +657,11 @@ textarea {
 
 .check:checked + .checkbox .scs {
   opacity: 1;
+}
+
+.radio {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .input-non {
