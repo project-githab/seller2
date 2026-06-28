@@ -372,12 +372,19 @@
       <div class="flex w100p m-t20">
         <div class="flex g20 w100p">
 
-          <div class="flex f1 p20 f-col block fs18 rbc1 curs-p block-shrink">
+          <div class="flex f1 p20 f-col block fs18 rbc1 curs-p block-shrink" [class.rbc1]="productType === 'simple'"
+               [class.block-color]="productType !== 'simple'"
+               (click)="setProductType('simple')">
 
 
             <div class="flex m-t20">
               <div class="flex f-aic">
-                <input type="radio" class="radio" checked>
+                <input
+                  type="radio"
+                  class="radio"
+                  name="productType"
+                  [checked]="productType === 'simple'"
+                >
               </div>
               <div class="flex f-aic m-l10 fs24 fw-700">Простой товар</div>
             </div>
@@ -400,12 +407,15 @@
 
           </div>
 
-          <div class="flex f1 p20 f-col block fs18 block-color curs-p block-shrink">
+          <div class="flex f1 p20 f-col block fs18 block-color curs-p block-shrink"
+               [class.rbc1]="productType === 'variant'"
+               [class.block-color]="productType !== 'variant'"
+               (click)="setProductType('variant')">
 
 
             <div class="flex m-t20">
               <div class="flex f-aic">
-                <input type="radio" class="radio">
+                <input type="radio" class="radio" name="productType" [checked]="productType === 'variant'">
               </div>
               <div class="flex f-aic m-l10 fs24 fw-700">Товар с вариантами</div>
             </div>

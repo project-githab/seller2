@@ -8,4 +8,10 @@ import { CpMenuList } from '../../shared/private/cp-menu-list/cp-menu-list';
   templateUrl: './pw-add-product.html',
   styleUrl: './pw-add-product.css',
 })
-export class PwAddProduct {}
+export class PwAddProduct {
+  productType: 'simple' | 'variant' = 'simple';
+
+  setProductType(type: 'simple' | 'variant') {
+    this.productType = type;
+  }
+}
