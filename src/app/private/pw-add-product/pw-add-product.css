@@ -70,6 +70,16 @@
   border-radius: 1rem;
 }
 
+input[type="number"] {
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
 @media (min-width: 20em) {
 }

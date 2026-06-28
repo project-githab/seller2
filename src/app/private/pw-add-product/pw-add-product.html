@@ -11,20 +11,19 @@
       <div class="flex p-l20 w100p">
 
         <div class="flex w100p f-jc-sb">
-          <div class="flex f-aic">
+
+          <div class="flex f-aic display-exp1">
+            <div class="flex fs40 fw-700">Добавить новый товар</div>
+          </div>
+          <div class="flex f-aic display-exp2">
             <div class="flex fs40 fw-700">Добавить</div>
           </div>
 
           <div class="flex f-jte cm-t20">
 
 
-            <div class="flex fs18 btn6 m-l10 br1 curs-p">
-              <div class="flex fs18 m-l10">Отмена</div>
-            </div>
-
-
-            <div class="flex fs18 btn6 m-l10 br1 curs-p">
-              <div class="flex fs18">Экспорт</div>
+            <div class="flex fs18 btn7-in-active m-l10 br1">
+              <div class="flex fs18">Сохранить</div>
             </div>
 
 
@@ -36,12 +35,147 @@
 
       <div class="flex w100p m-t20">
         <div class="flex g20 w100p p-l20 cf-col">
-          <div class="flex f1 f-jcc p10 f-col block">
-            <div class="flex w100p f-jc-sb">
-              <div class="flex f-aic">Выручка</div>
-              <div class="flex p05 rbc6">+12.5%</div>
+          <div class="flex f1 f-jcc p20 f-col block fs18">
+
+            <div class="flex">
+              <div class="flex f-aic">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                     fill="#000000">
+                  <path
+                    d="M200-440h240v-160H200v160Zm0-240h560v-80H200v80Zm0 560q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v252q-19-8-39.5-10.5t-40.5.5q-21 4-40.5 13.5T684-479l-39 39-205 204v116H200Zm0-80h240v-160H200v160Zm320-240h125l39-39q16-16 35.5-25.5T760-518v-82H520v160Zm0 360v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-300L643-80H520Zm300-263-37-37 37 37ZM580-140h38l121-122-37-37-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+                </svg>
+              </div>
+              <div class="flex f-aic m-l10 fs24 fw-700">Основная информация</div>
             </div>
-            <div class="flex w100p fs18 m-t10 fw-700">₽142,384.50</div>
+
+
+            <div class="flex m-t20 f-col">
+              <div class="flex">Название товара</div>
+              <input id="3" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                     placeholder="Укажите название товара">
+            </div>
+
+            <div class="flex m-t20">
+              <div class="flex w100p g20">
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Категория</div>
+                    <div class="flex h41 br1 block-border m-t10">
+                      <div class="flex f-aic m-l10 w100p">Одежда</div>
+                      <div class="flex f-aic f-jte">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                             fill="#000000">
+                          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Бренд</div>
+                    <div class="flex h41 br1 block-border m-t10">
+                      <div class="flex f-aic m-l10">Андромеда</div>
+                      <div class="flex f-aic w100p f-jte">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                             fill="#000000">
+                          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex m-t20">
+              <div class="flex w100p g20">
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Артикул (SKU)</div>
+                    <input id="3" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt" placeholder="TOOL-SET-120-PRO">
+                  </div>
+                </div>
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">ID товара (EAN/GTIN)</div>
+
+                    <div class="flex g10">
+
+                      <div class="flex f1">
+                        <input id="3" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                               placeholder="1234567891011">
+                      </div>
+
+                      <div class="flex f3">
+                        <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
+                          <div class="flex f-aic m-l10">EAN</div>
+                          <div class="flex f-aic f-jte">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                                 fill="#000000">
+                              <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex m-t20">
+              <div class="flex f-aic">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                     fill="#000000">
+                  <path
+                    d="M600-320h120q17 0 28.5-11.5T760-360v-240q0-17-11.5-28.5T720-640H600q-17 0-28.5 11.5T560-600v240q0 17 11.5 28.5T600-320Zm40-80v-160h40v160h-40Zm-280 80h120q17 0 28.5-11.5T520-360v-240q0-17-11.5-28.5T480-640H360q-17 0-28.5 11.5T320-600v240q0 17 11.5 28.5T360-320Zm40-80v-160h40v160h-40Zm-200 80h80v-320h-80v320ZM80-160v-640h800v640H80Zm80-560v480-480Zm0 480h640v-480H160v480Z" />
+                </svg>
+              </div>
+              <div class="flex f-aic m-l10 fs24 fw-700">Цена и наличие</div>
+            </div>
+
+            <div class="flex m-t20">
+              <div class="flex w100p g20">
+
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Цена (Рубли)</div>
+                    <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                           placeholder="₽ 0.00">
+                  </div>
+                </div>
+
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Количество</div>
+                    <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                           placeholder="100">
+                  </div>
+                </div>
+
+                <div class="flex f1">
+                  <div class="flex m-t20 f-col w100p">
+                    <div class="flex">Состояние</div>
+                    <div class="flex h41 br1 block-border m-t10">
+                      <div class="flex f-aic m-l10 w100p">Новый</div>
+                      <div class="flex f-aic f-jte">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                             fill="#000000">
+                          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
