@@ -10,9 +10,21 @@ import { NgOptimizedImage } from '@angular/common';
   styleUrl: './pw-add-product.css',
 })
 export class PwAddProduct {
+  /*Переключение блоков "Простой товар", "Товар с вариантами"*/
   productType: 'simple' | 'variant' = 'simple';
 
   setProductType(type: 'simple' | 'variant') {
+    /*Переключение блоков "Простой товар", "Товар с вариантами"*/
     this.productType = type;
+
+    /*Для плавного опускания страницы (скролла) для блока который появляется с варинтами*/
+    if (type === 'variant') {
+      setTimeout(() => {
+        document.getElementById('variant-block')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 0);
+    }
   }
 }
