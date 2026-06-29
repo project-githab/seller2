@@ -372,69 +372,67 @@
       <div class="flex w100p m-t20">
         <div class="flex g20 w100p">
 
-          <div class="flex f1 p20 f-col block fs18 rbc1 curs-p block-shrink" [class.rbc1]="productType === 'simple'"
+          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink" [class.rbc1]="productType === 'simple'"
                [class.block-color]="productType !== 'simple'"
                (click)="setProductType('simple')">
 
-
-            <div class="flex m-t20">
-              <div class="flex f-aic">
-                <input
-                  type="radio"
-                  class="radio"
-                  name="productType"
-                  [checked]="productType === 'simple'"
-                >
-              </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Простой товар</div>
-            </div>
-
-            <div class="flex m-t20">
-              <div class="flex w100p g20">
-
-                <div class="flex f1 m-l35 f-aic">Товар без вариантов</div>
-                <div class="flex f1 m-l10 f-jcc f-aic">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
-                       fill="#000000">
-                    <path
-                      d="M440-183v-274L200-596v274l240 139Zm80 0 240-139v-274L520-457v274Zm-40-343 237-137-237-137-237 137 237 137ZM160-252q-19-11-29.5-29T120-321v-318q0-22 10.5-40t29.5-29l280-161q19-11 40-11t40 11l280 161q19 11 29.5 29t10.5 40v318q0 22-10.5 40T800-252L520-91q-19 11-40 11t-40-11L160-252Zm320-228Z" />
-                  </svg>
+            <div class="flex m-t20 f-col">
+              <div class="flex">
+                <div class="flex f-aic">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="productType"
+                    [checked]="productType === 'simple'"
+                  >
                 </div>
-
+                <div class="flex f-aic m-l10 fs24 fw-700">Простой товар</div>
+              </div>
+              <div class="flex m-t20">
+                <div class="flex w100p g20">
+                  <div class="flex f1 m-l35 f-aic">Товар без вариантов</div>
+                </div>
               </div>
             </div>
 
+            <div class="flex f1 f-jte f-aic">
+              <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
+                   fill="#000000">
+                <path
+                  d="M440-183v-274L200-596v274l240 139Zm80 0 240-139v-274L520-457v274Zm-40-343 237-137-237-137-237 137 237 137ZM160-252q-19-11-29.5-29T120-321v-318q0-22 10.5-40t29.5-29l280-161q19-11 40-11t40 11l280 161q19 11 29.5 29t10.5 40v318q0 22-10.5 40T800-252L520-91q-19 11-40 11t-40-11L160-252Zm320-228Z" />
+              </svg>
+            </div>
 
           </div>
 
-          <div class="flex f1 p20 f-col block fs18 block-color curs-p block-shrink"
+          <div class="flex f1 p20 g20 block fs18 block-color curs-p block-shrink"
                [class.rbc1]="productType === 'variant'"
                [class.block-color]="productType !== 'variant'"
                (click)="setProductType('variant')">
 
-
-            <div class="flex m-t20">
-              <div class="flex f-aic">
-                <input type="radio" class="radio" name="productType" [checked]="productType === 'variant'">
-              </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Товар с вариантами</div>
-            </div>
-
-            <div class="flex m-t20">
-              <div class="flex w100p g20">
-
-                <div class="flex f1 m-l35 f-aic">Товар с вариантами (размер, цвет и т.д.)</div>
-                <div class="flex f1 m-l10 f-jcc f-aic">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
-                       fill="#000000">
-                    <path
-                      d="m240-522-40 22q-14 8-30 4t-24-18L66-654q-8-14-4-30t18-24l230-132h70q9 0 14.5 5.5T400-820v20q0 33 23.5 56.5T480-720q33 0 56.5-23.5T560-800v-20q0-9 5.5-14.5T580-840h70l230 132q14 8 18 24t-4 30l-80 140q-8 14-23.5 17.5T760-501l-40-20v361q0 17-11.5 28.5T680-120H280q-17 0-28.5-11.5T240-160v-362Zm80-134v456h320v-456l124 68 42-70-172-100q-15 51-56.5 84.5T480-640q-56 0-97.5-33.5T326-758L154-658l42 70 124-68Zm160 177Z" />
-                  </svg>
+            <div class="flex m-t20 f-col">
+              <div class="flex">
+                <div class="flex f-aic">
+                  <input type="radio" class="radio" name="productType" [checked]="productType === 'variant'">
                 </div>
+                <div class="flex f-aic m-l10 fs24 fw-700">Товар с вариантами</div>
+              </div>
+              <div class="flex m-t20">
+                <div class="flex w100p g20">
 
+                  <div class="flex f1 m-l35 f-aic">Товар с вариантами (размер, цвет и т.д.)</div>
+
+                </div>
               </div>
             </div>
 
+            <div class="flex f1 f-jte f-aic">
+              <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
+                   fill="#000000">
+                <path
+                  d="m240-522-40 22q-14 8-30 4t-24-18L66-654q-8-14-4-30t18-24l230-132h70q9 0 14.5 5.5T400-820v20q0 33 23.5 56.5T480-720q33 0 56.5-23.5T560-800v-20q0-9 5.5-14.5T580-840h70l230 132q14 8 18 24t-4 30l-80 140q-8 14-23.5 17.5T760-501l-40-20v361q0 17-11.5 28.5T680-120H280q-17 0-28.5-11.5T240-160v-362Zm80-134v456h320v-456l124 68 42-70-172-100q-15 51-56.5 84.5T480-640q-56 0-97.5-33.5T326-758L154-658l42 70 124-68Zm160 177Z" />
+              </svg>
+            </div>
 
           </div>
 
