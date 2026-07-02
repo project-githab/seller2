@@ -1,7 +1,7 @@
 <app-cp-header></app-cp-header>
 
 
-<div class="flex min-w320 w100p f-jcc">
+<div class="flex min-w320 f-jcc">
   <div class="flex max-w1400 w100p mg-lr20 m-t20">
 
     <app-cp-menu-list class="display"></app-cp-menu-list>
@@ -34,7 +34,7 @@
 
 
       <div class="flex w100p m-t20">
-        <div class="flex g20 w100p p-l20">
+        <div class="flex g20 w100p p-l20 cf-col">
 
           <div class="flex f1 p20 f-col block fs18">
 
@@ -128,28 +128,33 @@
               </div>
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
-                    <div class="flex">Цена</div>
-                    <input id="2" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
-                           placeholder="₽ 0.00">
+            @if (productType === 'simple') {
+
+              <div class="flex m-t20">
+                <div class="flex w100p g20">
+
+                  <div class="flex f1">
+                    <div class="flex m-t20 f-col w100p">
+                      <div class="flex">Цена</div>
+                      <input id="2" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                             placeholder="₽ 0.00">
+                    </div>
                   </div>
-                </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
-                    <div class="flex wi2">Количество</div>
-                    <div class="flex wi1">Кол.</div>
-                    <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
-                           placeholder="100">
+                  <div class="flex f1">
+                    <div class="flex m-t20 f-col w100p">
+                      <div class="flex wi2">Количество</div>
+                      <div class="flex wi1">Кол.</div>
+                      <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                             placeholder="100">
+                    </div>
                   </div>
-                </div>
 
+                </div>
               </div>
-            </div>
+
+            }
 
 
           </div>
@@ -175,44 +180,73 @@
 
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20 f-col">
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
-                    <div class="flex">Артикул (SKU)</div>
-                    <input id="4" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt" placeholder="TOOL-SET-120-PRO">
-                  </div>
-                </div>
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
-                    <div class="flex">ID товара (EAN/GTIN)</div>
+            @if (productType === 'simple') {
 
-                    <div class="flex g10">
+              <div class="flex m-t20">
+                <div class="flex w100p g20 f-col">
 
-                      <div class="flex f1">
-                        <input id="5" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
-                               placeholder="1234567891011">
-                      </div>
 
-                      <div class="flex f3">
-                        <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
-                          <div class="flex f-aic m-l10">EAN</div>
-                          <div class="flex f-aic f-jte">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                 fill="#000000">
-                              <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
+                  <div class="flex f1 g20">
 
+                    <div class="flex m-t20 f-col w100p">
+                      <div class="flex">Артикул (SKU)</div>
+                      <input id="4" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                             placeholder="TOOL-SET-120-PRO">
                     </div>
 
+                    <div class="flex m-t20 f-col">
+                      <div class="flex">Цвет</div>
+                      <div class="flex h41 br1 block-border w100p f-aic m-t10">
+                        <div class="flex color-size m-l10"></div>
+                        <div class="flex f-aic m-l10">Чёрный</div>
+                        <div class="flex f-aic w100p f-jte m-r10">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                               fill="#000000">
+                            <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
 
                   </div>
+
+
+                  <div class="flex f1">
+                    <div class="flex m-t20 f-col w100p">
+                      <div class="flex">ID товара (EAN/GTIN)</div>
+
+                      <div class="flex g10">
+
+                        <div class="flex f1">
+                          <input id="5" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                                 placeholder="1234567891011">
+                        </div>
+
+                        <div class="flex f3">
+                          <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
+                            <div class="flex f-aic m-l10">EAN</div>
+                            <div class="flex f-aic f-jte">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                   width="24px"
+                                   fill="#000000">
+                                <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+
+                    </div>
+                  </div>
+
+
                 </div>
               </div>
-            </div>
+
+            }
+
 
           </div>
 
@@ -226,16 +260,90 @@
 
 
 <!-- - - - - - - - - -->
+@if (productType === 'simple') {
+
+  <div class="flex min-w320 f-jcc">
+
+    <div class="flex max-w1400 w100p mg-lr20 m-t20">
+      <div class="flex w100p p10 f-ai-fs f-col">
+        <div class="flex p20 block fs18 w100p g20 f-wrap pr">
 
 
-<div class="flex min-w320 w100p f-jcc">
+          <div class="flex f-col">
+            <div class="flex ovh w100p img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                   width="290">
+            </div>
+            <div class="flex w100p f-jcc m-t10">
+              Главное
+            </div>
+            <div class="flex w100p f-jcc m-t10">
+              <div class="flex btn3">Выбрать</div>
+            </div>
+          </div>
+
+          <div class="flex f-col">
+            <div class="flex ovh w100p img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                   width="290">
+            </div>
+            <div class="flex w100p f-jcc m-t10">2</div>
+            <div class="flex w100p f-jcc m-t10">
+              <div class="flex btn3">Выбрать</div>
+            </div>
+          </div>
+
+          <div class="flex f-col">
+            <div class="flex ovh w100p img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                   width="290">
+            </div>
+            <div class="flex w100p f-jcc m-t10">3</div>
+            <div class="flex w100p f-jcc m-t10">
+              <div class="flex btn3">Выбрать</div>
+            </div>
+          </div>
+
+          <div class="flex f-col">
+            <div class="flex ovh w100p img-size">
+              <img ngSrc="/img/default.webp" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                   width="290">
+            </div>
+            <div class="flex w100p f-jcc m-t10">4</div>
+            <div class="flex w100p f-jcc m-t10">
+              <div class="flex btn3">Выбрать</div>
+            </div>
+          </div>
+
+          <div class="flex f-col">
+            <div class="flex ovh w100p img-size">
+              <img ngSrc="/img/default.webp" alt="Изображение товара" class="orders-img w100p h100p" height="290"
+                   width="290">
+            </div>
+            <div class="flex w100p f-jcc m-t10">5</div>
+            <div class="flex w100p f-jcc m-t10">
+              <div class="flex btn3">Выбрать</div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+}
+<!-- - - - - - - - - -->
+
+<div class="flex min-w320 f-jcc">
   <div class="flex max-w1400 w100p mg-lr20 m-t20">
 
     <div class="flex f1 p10 f-ai-fs f-col">
 
 
       <div class="flex w100p m-t20">
-        <div class="flex g20 w100p">
+        <div class="flex g20 w100p cf-col">
 
           <div class="flex f1 p20 f-col block fs18">
 
@@ -363,16 +471,16 @@
 </div>
 
 
-<div class="flex min-w320 w100p f-jcc">
+<div class="flex min-w320 f-jcc">
   <div class="flex max-w1400 w100p mg-lr20 m-t20">
 
     <div class="flex f1 p10 f-ai-fs f-col">
 
 
       <div class="flex w100p m-t20">
-        <div class="flex g20 w100p">
+        <div class="flex g20 w100p cf-col">
 
-          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink" [class.rbc1]="productType === 'simple'"
+          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink cf-col" [class.rbc1]="productType === 'simple'"
                [class.block-color]="productType !== 'simple'"
                (click)="setProductType('simple')">
 
@@ -405,7 +513,7 @@
 
           </div>
 
-          <div class="flex f1 p20 g20 block fs18 block-color curs-p block-shrink"
+          <div class="flex f1 p20 g20 block fs18 block-color curs-p block-shrink cf-col"
                [class.rbc1]="productType === 'variant'"
                [class.block-color]="productType !== 'variant'"
                (click)="setProductType('variant')">
@@ -564,7 +672,7 @@
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex ovh w100p img-size">
+                <div class="flex ovh w100p variant-img-size">
                   <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
                        width="290">
                 </div>
@@ -636,7 +744,7 @@
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex ovh w100p img-size">
+                <div class="flex ovh w100p variant-img-size">
                   <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="orders-img w100p h100p" height="290"
                        width="290">
                 </div>

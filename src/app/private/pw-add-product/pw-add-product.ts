@@ -11,7 +11,7 @@ import { NgOptimizedImage } from '@angular/common';
 })
 export class PwAddProduct {
   /*Переключение блоков "Простой товар", "Товар с вариантами"*/
-  productType: 'simple' | 'variant' = 'simple';
+  productType: 'simple' | 'variant' = 'variant';
 
   setProductType(type: 'simple' | 'variant') {
     /*Переключение блоков "Простой товар", "Товар с вариантами"*/

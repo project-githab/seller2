@@ -91,10 +91,21 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .img-size {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
+}
+
+.variant-img-size {
+  width: 60px;
+  height: 60px;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+.orders-img {
+  object-fit: contain;
 }
 
 .color-size {
@@ -103,6 +114,13 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 20px;
   background-color: black;
   border-radius: 0.5rem;
+}
+
+.in-activ-block {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* Телефон от 320px "Этот breakpoint просто показывает в среде разработчика данную точку для удобства " */
