@@ -4,7 +4,7 @@
 <div class="flex min-w320 f-jcc">
   <div class="flex max-w1400 w100p mg-lr20 m-t20">
 
-    <app-cp-menu-list class="display"></app-cp-menu-list>
+    <app-cp-menu-list class="open-display"></app-cp-menu-list>
 
     <div class="flex f1 p10 f-ai-fs f-col">
 
@@ -327,7 +327,6 @@
           </div>
 
 
-
         </div>
       </div>
     </div>
@@ -480,7 +479,8 @@
       <div class="flex w100p m-t20">
         <div class="flex g20 w100p cf-col">
 
-          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink cf-col" [class.rbc1]="productType === 'simple'"
+          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink cf-col"
+               [class.rbc1]="productType === 'simple'"
                [class.block-color]="productType !== 'simple'"
                (click)="setProductType('simple')">
 
@@ -603,23 +603,29 @@
 
           <div class="flex m-t20 fw-700">2. Варианты товаров</div>
 
-          <div class="flex m-t20">
+          <div class="flex m-t20 display-exp1">
 
-            <div class="variant-grid-container w100p g10">
+            <div class="variant-grid-container w100p g10 cfs16">
 
-              <div class="flex f-jcc">Цвет</div>
-              <div class="flex f-jcc">Размер</div>
-              <div class="flex f-jcc">Артикул (SKU)</div>
-              <div class="flex f-jcc">EAN/GTIN</div>
-              <div class="flex f-jcc">Цена</div>
-              <div class="flex f-jcc">Количество</div>
-              <div class="flex f-jcc">IMG</div>
-              <div class="flex f-jcc">Удалить</div>
+              <div class="flex f-jcc f-aic">Цвет</div>
+              <div class="flex f-jcc f-aic">Размер</div>
+              <div class="flex f-jcc tac f-aic">Артикул (SKU)</div>
+              <div class="flex f-jcc f-aic">EAN/GTIN</div>
+              <div class="flex f-jcc f-aic">Цена</div>
+              <div class="flex f-jcc f-aic">Количество</div>
+              <div class="flex f-jcc f-aic">IMG</div>
+              <div class="flex f-jcc">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
+                     fill="#000000">
+                  <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg>
+              </div>
 
               <div class="flex f-jcc m-t10 f-aic">
                 <div class="flex h41 br1 block-border w100p f-aic">
                   <div class="flex color-size m-l10"></div>
-                  <div class="flex f-aic m-l10">Чёрный</div>
+                  <div class="flex f-aic m-l10 open-display">Чёрный</div>
                   <div class="flex f-aic w100p f-jte m-r10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
@@ -642,15 +648,13 @@
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">TOOL-SET-120-PRO</div>
-                </div>
+                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                       value="TOOL-SET-120-PRO">
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">12345678910114</div>
-                </div>
+                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                       value="12345678910114">
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
@@ -691,7 +695,7 @@
               <div class="flex f-jcc m-t10 f-aic">
                 <div class="flex h41 br1 block-border w100p f-aic">
                   <div class="flex color-size m-l10"></div>
-                  <div class="flex f-aic m-l10">Чёрный</div>
+                  <div class="flex f-aic m-l10 open-display">Чёрный</div>
                   <div class="flex f-aic w100p f-jte m-r10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
@@ -714,15 +718,13 @@
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">TOOL-SET-120-PRO</div>
-                </div>
+                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                       value="TOOL-SET-120-PRO">
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">12345678910114</div>
-                </div>
+                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                       value="12345678910114">
               </div>
 
               <div class="flex f-jcc m-t10 f-aic">

@@ -54,7 +54,7 @@
 
 .variant-grid-container {
   display: grid;
-  grid-template-columns: 0.5fr 0.2fr 0.7fr 0.7fr 0.4fr 0.3fr 0.3fr 0.2fr;
+  grid-template-columns: 0.5fr 0.2fr 0.7fr 0.7fr 0.4fr 0.3fr 0.3fr 0.1fr;
 }
 
 
@@ -137,17 +137,35 @@ input[type="number"]::-webkit-inner-spin-button {
   .wi2 {
     display: none;
   }
+
+  .cfs16 {
+    font-size: 1.6rem;
+  }
+
 }
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
-  .display {
+  .open-display {
     display: none;
   }
 
   .p-l20 {
     padding-left: 0;
   }
+
+  .tablet-variant-grid-container {
+    display: grid;
+    grid-template-columns: 0.5fr 0.2fr 0.7fr 0.7fr 0.4fr 0.3fr 0.3fr 0.1fr;
+  }
+
+  .variant-img-size {
+    width: 40px;
+    height: 40px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+  }
+
 }
 
 /* Телефон 767px */
