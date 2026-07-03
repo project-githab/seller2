@@ -104,10 +104,6 @@ input[type="number"]::-webkit-inner-spin-button {
   flex-shrink: 0;
 }
 
-.orders-img {
-  object-fit: contain;
-}
-
 .color-size {
   aspect-ratio: 1 / 1;
   width: 20px;
@@ -166,6 +162,13 @@ input[type="number"]::-webkit-inner-spin-button {
     flex-shrink: 0;
   }
 
+  .variant-img-size2 {
+    width: 70px;
+    height: 70px;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+  }
+
 }
 
 /* Телефон 767px */
@@ -189,7 +192,19 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   .cf-jcc {
-  justify-content: center;
-}
+    justify-content: center;
+  }
+
+  .cf-jc-sb {
+    justify-content: space-between;
+  }
+
+  .f-reverse {
+    flex-direction: column-reverse;
+  }
+
+  .p20 {
+    padding: 1rem;
+  }
 
 }

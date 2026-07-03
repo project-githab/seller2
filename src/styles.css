@@ -692,6 +692,10 @@ tt-none {
   /*word-wrap: break-word;*/
 }
 
+.ofit-contain {
+  object-fit: contain;
+}
+
 
 /*Инпут*/
 
