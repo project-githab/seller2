@@ -1,8 +1,9 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-c-header',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './c-header.html',
   styleUrl: './c-header.css',
 })
