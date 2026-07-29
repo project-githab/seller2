@@ -1,4 +1,13 @@
 
+.password-mask {
+  position: absolute;
+  background-color: var(--color-2);
+  width: 2.2rem;
+  height: 1.2rem;
+  margin-left: 0.4rem;
+  margin-top: 1rem;
+}
+
 .login-form {
   max-width: 48rem;
   width: 100%;

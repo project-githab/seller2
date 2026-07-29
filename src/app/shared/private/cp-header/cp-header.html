@@ -1,18 +1,18 @@
-<div class="flex min-w320 w100p f-jcc bc3 pr">
+<div class="flex min-width-320 width-full justify-center bg-page relative">
 
 
-  <div #menuBlock class="flex pa menu" [class.menu-open]="menuOpen">
-    <app-cp-menu-list class="bc1 cf-do"></app-cp-menu-list>
+  <div #menuBlock class="flex absolute menu" [class.menu-open]="menuOpen">
+    <app-cp-menu-list class="bg-white cf-do"></app-cp-menu-list>
   </div>
 
-  <div class="flex header-height max-w1400 w100p f-aic mg-lr20">
+  <div class="flex header-height max-width-1400 width-full items-center margin-x-20-phone">
 
-    <div class="flex f1">
+    <div class="flex flex-1">
 
 
-      <div class="flex f-aic g10 f1 fc-jcc">
+      <div class="flex items-center gap-10 flex-1 fc-jcc">
 
-        <div class="flex cf-do m-r10 m-l10 curs-p cf1">
+        <div class="flex cf-do margin-right-10 margin-left-10 pointer cf1">
           <svg (click)="toggleMenu($event)" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960"
                width="30px" fill="#000000">
             <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
@@ -43,31 +43,31 @@
                   d="M452.432 196.431H256V314.29h196.431c10.848 0 19.643-8.795 19.643-19.643v-78.573c0-.361-.034-.715-.054-1.073-.013-.241-.016-.486-.037-.724a20 20 0 0 0-.323-2.174 19 19 0 0 0-.563-2.128c-2.567-7.86-9.946-13.544-18.665-13.544" />
           </svg>
         </div>
-        <div class="flex fw-700 fs24 flex-none">Центр продавца</div>
-        <div class="flex fw-700 fs24 flex-some f1">Центр</div>
+        <div class="flex font-weight-700 font-size-24 flex-none">Центр продавца</div>
+        <div class="flex font-weight-700 font-size-24 flex-some flex-1">Центр</div>
       </div>
 
     </div>
 
 
-    <div class="flex g10 fs18 f-aic">
-      <div class="flex btn4">
+    <div class="flex gap-10 font-size-18 items-center">
+      <div class="flex button-disabled">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
           <path
             d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
         </svg>
       </div>
-      <div class="flex btn4">
+      <div class="flex button-disabled">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
           <path
             d="M513.5-254.5Q528-269 528-290t-14.5-35.5Q499-340 478-340t-35.5 14.5Q428-311 428-290t14.5 35.5Q457-240 478-240t35.5-14.5ZM442-394h74q0-33 7.5-52t42.5-52q26-26 41-49.5t15-56.5q0-56-41-86t-97-30q-57 0-92.5 30T342-618l66 26q5-18 22.5-39t53.5-21q32 0 48 17.5t16 38.5q0 20-12 37.5T506-526q-44 39-54 59t-10 73Zm38 314q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
         </svg>
       </div>
-      <div class="flex btn4 f-aic">
-        <div class="flex br3 ovh m-r10">
+      <div class="flex button-disabled items-center">
+        <div class="flex radius-25 overflow-hidden margin-right-10">
           <img ngSrc="/img/250x250.jpg" alt="Изображение товара" class="size-logo" height="250" width="250" priority>
         </div>
-        <div class="flex f-dn">Иванов Максим</div>
+        <div class="flex close-phone">Иванов Максим</div>
       </div>
     </div>
 

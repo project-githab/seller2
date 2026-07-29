@@ -1,29 +1,29 @@
 <app-cp-header></app-cp-header>
 
 
-<div class="flex min-w320 f-jcc">
-  <div class="flex max-w1400 w100p mg-lr20 m-t20">
+<div class="flex min-width-320 justify-center">
+  <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
 
     <app-cp-menu-list class="open-display"></app-cp-menu-list>
 
-    <div class="flex f1 p10 f-ai-fs f-col">
+    <div class="flex flex-1 padding-10 items-start flex-col">
 
-      <div class="flex p-l20 w100p">
+      <div class="flex padding-left-20 width-full">
 
-        <div class="flex w100p f-jc-sb">
+        <div class="flex width-full between">
 
-          <div class="flex f-aic display-exp1">
-            <div class="flex fs40 fw-700">Добавить новый товар</div>
+          <div class="flex items-center display-exp1">
+            <div class="flex font-size-40 font-weight-700">Добавить новый товар</div>
           </div>
-          <div class="flex f-aic display-exp2">
-            <div class="flex fs40 fw-700">Добавить</div>
+          <div class="flex items-center display-exp2">
+            <div class="flex font-size-40 font-weight-700">Добавить</div>
           </div>
 
-          <div class="flex f-jte cm-t20">
+          <div class="flex justify-end cm-t20">
 
 
-            <div class="flex fs18 btn7-in-active m-l10 br1">
-              <div class="flex fs18">Сохранить</div>
+            <div class="flex font-size-18 button-in-active margin-left-10 radius-10">
+              <div class="flex font-size-18">Сохранить</div>
             </div>
 
 
@@ -33,37 +33,38 @@
       </div>
 
 
-      <div class="flex w100p m-t20">
-        <div class="flex g20 w100p p-l20 cf-col">
+      <div class="flex width-full margin-top-20">
+        <div class="flex gap-20 width-full padding-left-20 cf-col">
 
-          <div class="flex f1 p20 f-col block fs18">
+          <div class="flex flex-1 padding-20 flex-col block font-size-18">
 
             <div class="flex">
-              <div class="flex f-aic">
+              <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
                     d="M200-440h240v-160H200v160Zm0-240h560v-80H200v80Zm0 560q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v252q-19-8-39.5-10.5t-40.5.5q-21 4-40.5 13.5T684-479l-39 39-205 204v116H200Zm0-80h240v-160H200v160Zm320-240h125l39-39q16-16 35.5-25.5T760-518v-82H520v160Zm0 360v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-300L643-80H520Zm300-263-37-37 37 37ZM580-140h38l121-122-37-37-122 121v38Zm141-141-19-18 37 37-18-19Z" />
                 </svg>
               </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Основная информация</div>
+              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Основная информация</div>
             </div>
 
 
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">Название товара</div>
-              <input id="1" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+              <input id="1"
+                     class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                      placeholder="Укажите название товара">
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20">
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+            <div class="flex margin-top-20">
+              <div class="flex width-full gap-20">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Категория</div>
-                    <div class="flex h41 br1 block-border m-t10">
-                      <div class="flex f-aic m-l10 w100p">Одежда</div>
-                      <div class="flex f-aic f-jte">
+                    <div class="flex height-41 radius-10 block-border margin-top-10">
+                      <div class="flex items-center margin-left-10 width-full">Одежда</div>
+                      <div class="flex items-center justify-end">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                              fill="#000000">
                           <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -72,12 +73,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Бренд</div>
-                    <div class="flex h41 br1 block-border m-t10">
-                      <div class="flex f-aic m-l10">Андромеда</div>
-                      <div class="flex f-aic w100p f-jte">
+                    <div class="flex height-41 radius-10 block-border margin-top-10">
+                      <div class="flex items-center margin-left-10">Андромеда</div>
+                      <div class="flex items-center width-full justify-end">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                              fill="#000000">
                           <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -89,15 +90,15 @@
               </div>
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20">
+            <div class="flex margin-top-20">
+              <div class="flex width-full gap-20">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Состояние</div>
-                    <div class="flex h41 br1 block-border m-t10">
-                      <div class="flex f-aic m-l10 w100p">Новый</div>
-                      <div class="flex f-aic f-jte">
+                    <div class="flex height-41 radius-10 block-border margin-top-10">
+                      <div class="flex items-center margin-left-10 width-full">Новый</div>
+                      <div class="flex items-center justify-end">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                              fill="#000000">
                           <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -108,13 +109,13 @@
                 </div>
 
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex wi2">Единицы измерения</div>
                     <div class="flex wi1">Единицы изм.</div>
-                    <div class="flex h41 br1 block-border m-t10">
-                      <div class="flex f-aic m-l10 w100p">ШТ.</div>
-                      <div class="flex f-aic f-jte">
+                    <div class="flex height-41 radius-10 block-border margin-top-10">
+                      <div class="flex items-center margin-left-10 width-full">ШТ.</div>
+                      <div class="flex items-center justify-end">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                              fill="#000000">
                           <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -131,22 +132,24 @@
 
             @if (productType === 'simple') {
 
-              <div class="flex m-t20">
-                <div class="flex w100p g20">
+              <div class="flex margin-top-20">
+                <div class="flex width-full gap-20">
 
-                  <div class="flex f1">
-                    <div class="flex m-t20 f-col w100p">
+                  <div class="flex flex-1">
+                    <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex">Цена</div>
-                      <input id="2" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                      <input id="2" type="number"
+                             class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                              placeholder="₽ 0.00">
                     </div>
                   </div>
 
-                  <div class="flex f1">
-                    <div class="flex m-t20 f-col w100p">
+                  <div class="flex flex-1">
+                    <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex wi2">Количество</div>
                       <div class="flex wi1">Кол.</div>
-                      <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                      <input id="3" type="number"
+                             class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                              placeholder="100">
                     </div>
                   </div>
@@ -159,47 +162,49 @@
 
           </div>
 
-          <div class="flex f1 p20 f-col block fs18">
+          <div class="flex flex-1 padding-20 flex-col block font-size-18">
 
             <div class="flex">
-              <div class="flex f-aic">
+              <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
                     d="M600-320h120q17 0 28.5-11.5T760-360v-240q0-17-11.5-28.5T720-640H600q-17 0-28.5 11.5T560-600v240q0 17 11.5 28.5T600-320Zm40-80v-160h40v160h-40Zm-280 80h120q17 0 28.5-11.5T520-360v-240q0-17-11.5-28.5T480-640H360q-17 0-28.5 11.5T320-600v240q0 17 11.5 28.5T360-320Zm40-80v-160h40v160h-40Zm-200 80h80v-320h-80v320ZM80-160v-640h800v640H80Zm80-560v480-480Zm0 480h640v-480H160v480Z" />
                 </svg>
               </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Опиаание товара</div>
+              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Опиаание товара</div>
             </div>
 
 
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">Опиаание</div>
 
-              <textarea class="h41 fs18 br1 w100p p10 m-t10 input-txt min-h154">Очень хороший товар</textarea>
+              <textarea
+                class="height-41 font-size-18 radius-10 width-full padding-10 margin-top-10 input-txt min-height-154">Очень хороший товар</textarea>
 
             </div>
 
             @if (productType === 'simple') {
 
-              <div class="flex m-t20">
-                <div class="flex w100p g20 f-col">
+              <div class="flex margin-top-20">
+                <div class="flex width-full gap-20 flex-col">
 
 
-                  <div class="flex f1 g20">
+                  <div class="flex flex-1 gap-20">
 
-                    <div class="flex m-t20 f-col w100p">
+                    <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex">Артикул</div>
-                      <input id="4" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                      <input id="4"
+                             class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                              placeholder="TOOL-SET-120-PRO">
                     </div>
 
-                    <div class="flex m-t20 f-col">
+                    <div class="flex margin-top-20 flex-col">
                       <div class="flex">Цвет</div>
-                      <div class="flex h41 br1 block-border w100p f-aic m-t10">
-                        <div class="flex color-size m-l10"></div>
-                        <div class="flex f-aic m-l10">Чёрный</div>
-                        <div class="flex f-aic w100p f-jte m-r10">
+                      <div class="flex height-41 radius-10 block-border width-full items-center margin-top-10">
+                        <div class="flex color-size margin-left-10"></div>
+                        <div class="flex items-center margin-left-10">Чёрный</div>
+                        <div class="flex items-center width-full justify-end margin-right-10">
                           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                fill="#000000">
                             <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -211,21 +216,22 @@
                   </div>
 
 
-                  <div class="flex f1">
-                    <div class="flex m-t20 f-col w100p">
+                  <div class="flex flex-1">
+                    <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex">ID товара (EAN/GTIN)</div>
 
-                      <div class="flex g10">
+                      <div class="flex gap-10">
 
-                        <div class="flex f1">
-                          <input id="5" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                        <div class="flex flex-1">
+                          <input id="5"
+                                 class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                                  placeholder="1234567891011">
                         </div>
 
-                        <div class="flex f3">
-                          <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
-                            <div class="flex f-aic m-l10">EAN</div>
-                            <div class="flex f-aic f-jte">
+                        <div class="flex flex-0-30">
+                          <div class="flex height-41 radius-10 block-border margin-top-10 width-full between">
+                            <div class="flex items-center margin-left-10">EAN</div>
+                            <div class="flex items-center justify-end">
                               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                                    width="24px"
                                    fill="#000000">
@@ -262,67 +268,72 @@
 <!-- - - - - - - - - -->
 @if (productType === 'simple') {
 
-  <div class="flex min-w320 f-jcc">
+  <div class="flex min-width-320 justify-center">
 
-    <div class="flex max-w1400 w100p mg-lr20 m-t20">
-      <div class="flex w100p p10 f-ai-fs f-col">
-        <div class="flex p20 block fs18 w100p g20 f-wrap pr cf-jcc">
+    <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
+      <div class="flex width-full padding-10 items-start flex-col">
+        <div class="flex padding-20 block font-size-18 width-full gap-20 flex-wrap relative cf-jcc">
 
 
-          <div class="flex f-col">
-            <div class="flex ovh w100p img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+          <div class="flex flex-col">
+            <div class="flex overflow-hidden width-full img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
                    width="290">
             </div>
-            <div class="flex w100p f-jcc m-t10">
+            <div class="flex width-full justify-center margin-top-10">
               Главное
             </div>
-            <div class="flex w100p f-jcc m-t10">
-              <div class="flex btn3">Выбрать</div>
+            <div class="flex width-full justify-center margin-top-10">
+              <div class="flex button-primary">Выбрать</div>
             </div>
           </div>
 
-          <div class="flex f-col">
-            <div class="flex ovh w100p img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+          <div class="flex flex-col">
+            <div class="flex overflow-hidden width-full img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
                    width="290">
             </div>
-            <div class="flex w100p f-jcc m-t10">2</div>
-            <div class="flex w100p f-jcc m-t10">
-              <div class="flex btn3">Выбрать</div>
+            <div class="flex width-full justify-center margin-top-10">2</div>
+            <div class="flex width-full justify-center margin-top-10">
+              <div class="flex button-primary">Выбрать</div>
             </div>
           </div>
 
-          <div class="flex f-col">
-            <div class="flex ovh w100p img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+          <div class="flex flex-col">
+            <div class="flex overflow-hidden width-full img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
                    width="290">
             </div>
-            <div class="flex w100p f-jcc m-t10">3</div>
-            <div class="flex w100p f-jcc m-t10">
-              <div class="flex btn3">Выбрать</div>
+            <div class="flex width-full justify-center margin-top-10">3</div>
+            <div class="flex width-full justify-center margin-top-10">
+              <div class="flex button-primary">Выбрать</div>
             </div>
           </div>
 
-          <div class="flex f-col">
-            <div class="flex ovh w100p img-size">
-              <img ngSrc="/img/default.webp" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+          <div class="flex flex-col">
+            <div class="flex overflow-hidden width-full img-size">
+              <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
                    width="290">
             </div>
-            <div class="flex w100p f-jcc m-t10">4</div>
-            <div class="flex w100p f-jcc m-t10">
-              <div class="flex btn3">Выбрать</div>
+            <div class="flex width-full justify-center margin-top-10">4</div>
+            <div class="flex width-full justify-center margin-top-10">
+              <div class="flex button-primary">Выбрать</div>
             </div>
           </div>
 
-          <div class="flex f-col">
-            <div class="flex ovh w100p img-size">
-              <img ngSrc="/img/default.webp" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+          <div class="flex flex-col">
+            <div class="flex overflow-hidden width-full img-size">
+              <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
                    width="290">
             </div>
-            <div class="flex w100p f-jcc m-t10">5</div>
-            <div class="flex w100p f-jcc m-t10">
-              <div class="flex btn3">Выбрать</div>
+            <div class="flex width-full justify-center margin-top-10">5</div>
+            <div class="flex width-full justify-center margin-top-10">
+              <div class="flex button-primary">Выбрать</div>
             </div>
           </div>
 
@@ -335,64 +346,69 @@
 }
 <!-- - - - - - - - - -->
 
-<div class="flex min-w320 f-jcc">
-  <div class="flex max-w1400 w100p mg-lr20 m-t20">
+<div class="flex min-width-320 justify-center">
+  <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
 
-    <div class="flex f1 p10 f-ai-fs f-col">
-
-
-      <div class="flex w100p m-t20">
-        <div class="flex g20 w100p cf-col">
-
-          <div class="flex f1 p20 f-col block fs18">
+    <div class="flex flex-1 padding-10 items-start flex-col">
 
 
-            <div class="flex m-t20">
-              <div class="flex f-aic">
+      <div class="flex width-full margin-top-20">
+        <div class="flex gap-20 width-full cf-col">
+
+          <div class="flex flex-1 padding-20 flex-col block font-size-18">
+
+
+            <div class="flex margin-top-20">
+              <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
                     d="M480-560h200v-80H480v80Zm0 240h200v-80H480v80Zm-63.5-223.5Q440-567 440-600t-23.5-56.5Q393-680 360-680t-56.5 23.5Q280-633 280-600t23.5 56.5Q327-520 360-520t56.5-23.5Zm0 240Q440-327 440-360t-23.5-56.5Q393-440 360-440t-56.5 23.5Q280-393 280-360t23.5 56.5Q327-280 360-280t56.5-23.5ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
                 </svg>
               </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Основные тезисы</div>
+              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Основные тезисы</div>
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20 f-col">
+            <div class="flex margin-top-20">
+              <div class="flex width-full gap-20 flex-col">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 1</div>
-                    <input id="6" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="6" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 2</div>
-                    <input id="7" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="7" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 3</div>
-                    <input id="8" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="8" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 4</div>
-                    <input id="9" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="9" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 5</div>
-                    <input id="10" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="10" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
@@ -403,55 +419,60 @@
 
           </div>
 
-          <div class="flex f1 p20 f-col block fs18">
+          <div class="flex flex-1 padding-20 flex-col block font-size-18">
 
 
-            <div class="flex m-t20">
-              <div class="flex f-aic">
+            <div class="flex margin-top-20">
+              <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
                     d="M600-320h120q17 0 28.5-11.5T760-360v-240q0-17-11.5-28.5T720-640H600q-17 0-28.5 11.5T560-600v240q0 17 11.5 28.5T600-320Zm40-80v-160h40v160h-40Zm-280 80h120q17 0 28.5-11.5T520-360v-240q0-17-11.5-28.5T480-640H360q-17 0-28.5 11.5T320-600v240q0 17 11.5 28.5T360-320Zm40-80v-160h40v160h-40Zm-200 80h80v-320h-80v320ZM80-160v-640h800v640H80Zm80-560v480-480Zm0 480h640v-480H160v480Z" />
                 </svg>
               </div>
-              <div class="flex f-aic m-l10 fs24 fw-700">Ключевые слова</div>
+              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Ключевые слова</div>
             </div>
 
-            <div class="flex m-t20">
-              <div class="flex w100p g20 f-col">
+            <div class="flex margin-top-20">
+              <div class="flex width-full gap-20 flex-col">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Ключевале слово 1</div>
-                    <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="11" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Ключевале слово 2</div>
-                    <input id="12" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="12" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Ключевале слово 3</div>
-                    <input id="13" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="13" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Ключевале слово 4</div>
-                    <input id="14" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="14" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Ключевале слово 5</div>
-                    <input id="15" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt">
+                    <input id="15" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
                 </div>
 
@@ -470,40 +491,40 @@
 </div>
 
 
-<div class="flex min-w320 f-jcc">
-  <div class="flex max-w1400 w100p mg-lr20 m-t20">
+<div class="flex min-width-320 justify-center">
+  <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
 
-    <div class="flex f1 p10 f-ai-fs f-col">
+    <div class="flex flex-1 padding-10 items-start flex-col">
 
 
-      <div class="flex w100p m-t20">
-        <div class="flex g20 w100p cf-col">
+      <div class="flex width-full margin-top-20">
+        <div class="flex gap-20 width-full cf-col">
 
-          <div class="flex f1 p20 g20 block fs18 rbc1 curs-p block-shrink cf-col"
-               [class.rbc1]="productType === 'simple'"
-               [class.block-color]="productType !== 'simple'"
+          <div class="flex flex-1 padding-20 gap-20 block font-size-18 bg-blue-soft pointer block-shrink cf-col"
+               [class.bg-blue-soft]="productType === 'simple'"
+               [class.bg-white-transition]="productType !== 'simple'"
                (click)="setProductType('simple')">
 
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">
-                <div class="flex f-aic">
+                <div class="flex items-center">
                   <input
                     type="radio"
-                    class="radio"
+                    class="size-25"
                     name="productType"
                     [checked]="productType === 'simple'"
                   >
                 </div>
-                <div class="flex f-aic m-l10 fs24 fw-700">Простой товар</div>
+                <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Простой товар</div>
               </div>
-              <div class="flex m-t20">
-                <div class="flex w100p g20">
-                  <div class="flex f1 m-l35 f-aic">Товар без вариантов</div>
+              <div class="flex margin-top-20">
+                <div class="flex width-full gap-20">
+                  <div class="flex flex-1 margin-left-35 items-center">Товар без вариантов</div>
                 </div>
               </div>
             </div>
 
-            <div class="flex f1 f-jte f-aic">
+            <div class="flex flex-1 justify-end items-center">
               <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
                    fill="#000000">
                 <path
@@ -513,28 +534,28 @@
 
           </div>
 
-          <div class="flex f1 p20 g20 block fs18 block-color curs-p block-shrink cf-col"
-               [class.rbc1]="productType === 'variant'"
-               [class.block-color]="productType !== 'variant'"
+          <div class="flex flex-1 padding-20 gap-20 block font-size-18 bg-white-transition pointer block-shrink cf-col"
+               [class.bg-blue-soft]="productType === 'variant'"
+               [class.bg-white-transition]="productType !== 'variant'"
                (click)="setProductType('variant')">
 
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">
-                <div class="flex f-aic">
-                  <input type="radio" class="radio" name="productType" [checked]="productType === 'variant'">
+                <div class="flex items-center">
+                  <input type="radio" class="size-25" name="productType" [checked]="productType === 'variant'">
                 </div>
-                <div class="flex f-aic m-l10 fs24 fw-700">Товар с вариантами</div>
+                <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Товар с вариантами</div>
               </div>
-              <div class="flex m-t20">
-                <div class="flex w100p g20">
+              <div class="flex margin-top-20">
+                <div class="flex width-full gap-20">
 
-                  <div class="flex f1 m-l35 f-aic">Товар с вариантами (размер, цвет и т.д.)</div>
+                  <div class="flex flex-1 margin-left-35 items-center">Товар с вариантами (размер, цвет и т.д.)</div>
 
                 </div>
               </div>
             </div>
 
-            <div class="flex f1 f-jte f-aic">
+            <div class="flex flex-1 justify-end items-center">
               <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px"
                    fill="#000000">
                 <path
@@ -555,19 +576,19 @@
 
 @if (productType === 'variant') {
 
-  <div id="variant-block" class="flex min-w320 w100p f-jcc">
-    <div class="flex max-w1400 w100p mg-lr20 m-t20">
-      <div class="flex f1 p10 f-ai-fs f-col">
-        <div class="flex w100p p20 f-col block fs18">
+  <div id="variant-block" class="flex min-width-320 width-full justify-center">
+    <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
+      <div class="flex flex-1 padding-10 items-start flex-col">
+        <div class="flex width-full padding-20 flex-col block font-size-18">
 
           <div class="flex">Настройка вариантов</div>
-          <div class="flex fw-700 m-t20">1. Добавить опции</div>
+          <div class="flex font-weight-700 margin-top-20">1. Добавить опции</div>
 
-          <div class="flex m-t10 g20 cf-col f-reverse">
+          <div class="flex margin-top-10 gap-20 cf-col f-reverse">
 
-            <div class="flex btn6 br1 cf-jc-sb">
+            <div class="flex button-blue2 radius-10 cf-jc-sb">
               <div class="flex">Цвет</div>
-              <div class="flex curs-p m-l10">
+              <div class="flex pointer margin-left-10">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
@@ -576,9 +597,9 @@
               </div>
             </div>
 
-            <div class="flex btn6 br1 cf-jc-sb">
+            <div class="flex button-blue2 radius-10 cf-jc-sb">
               <div class="flex">Размер</div>
-              <div class="flex curs-p m-l10">
+              <div class="flex pointer margin-left-10">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
@@ -588,33 +609,33 @@
             </div>
 
 
-            <div class="flex btn3">
+            <div class="flex button-primary">
               <div class="flex">
                 <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px"
                      fill="#000000">
                   <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
                 </svg>
               </div>
-              <div class="flex m-l10">Добавить опции</div>
+              <div class="flex margin-left-10">Добавить опции</div>
             </div>
 
 
           </div>
 
-          <div class="flex m-t20 fw-700">2. Варианты товаров</div>
+          <div class="flex margin-top-20 font-weight-700">2. Варианты товаров</div>
 
-          <div class="flex m-t20 display-exp1">
+          <div class="flex margin-top-20 display-exp1">
 
-            <div class="variant-grid-container w100p g10 cfs16">
+            <div class="variant-grid-container width-full gap-10 cfs16">
 
-              <div class="flex f-jcc f-aic">Цвет</div>
-              <div class="flex f-jcc f-aic">Размер</div>
-              <div class="flex f-jcc tac f-aic">Артикул</div>
-              <div class="flex f-jcc f-aic">EAN/GTIN</div>
-              <div class="flex f-jcc f-aic">Цена</div>
-              <div class="flex f-jcc f-aic">Количество</div>
-              <div class="flex f-jcc f-aic">IMG</div>
-              <div class="flex f-jcc">
+              <div class="flex justify-center items-center">Цвет</div>
+              <div class="flex justify-center items-center">Размер</div>
+              <div class="flex justify-center text-center items-center">Артикул</div>
+              <div class="flex justify-center items-center">EAN/GTIN</div>
+              <div class="flex justify-center items-center">Цена</div>
+              <div class="flex justify-center items-center">Количество</div>
+              <div class="flex justify-center items-center">IMG</div>
+              <div class="flex justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
                      fill="#000000">
                   <path
@@ -622,11 +643,11 @@
                 </svg>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p f-aic">
-                  <div class="flex color-size m-l10"></div>
-                  <div class="flex f-aic m-l10 open-display">Чёрный</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full items-center">
+                  <div class="flex color-size margin-left-10"></div>
+                  <div class="flex items-center margin-left-10 open-display">Чёрный</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
                       <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -635,10 +656,10 @@
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">S</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">S</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
                       <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -647,42 +668,45 @@
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+              <div class="flex justify-center margin-top-10 items-center">
+                <input id="11" type="text"
+                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                        value="TOOL-SET-120-PRO">
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+              <div class="flex justify-center margin-top-10 items-center">
+                <input id="11" type="text"
+                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                        value="12345678910114">
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">294.00</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">294.00</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     ₽.
                   </div>
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">10</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">10</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     ШТ.
                   </div>
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex ovh w100p variant-img-size">
-                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex overflow-hidden width-full variant-img-size">
+                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                       height="290"
                        width="290">
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
+              <div class="flex justify-center margin-top-10 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                      fill="#ff0000">
                   <path
@@ -692,11 +716,11 @@
 
               <!-- - - - - - - -->
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p f-aic">
-                  <div class="flex color-size m-l10"></div>
-                  <div class="flex f-aic m-l10 open-display">Чёрный</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full items-center">
+                  <div class="flex color-size margin-left-10"></div>
+                  <div class="flex items-center margin-left-10 open-display">Чёрный</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
                       <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -705,10 +729,10 @@
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">S</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">S</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
                       <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -717,42 +741,45 @@
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+              <div class="flex justify-center margin-top-10 items-center">
+                <input id="11" type="text"
+                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                        value="TOOL-SET-120-PRO">
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <input id="11" type="text" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+              <div class="flex justify-center margin-top-10 items-center">
+                <input id="11" type="text"
+                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                        value="12345678910114">
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">294.00</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">294.00</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     ₽.
                   </div>
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex h41 br1 block-border w100p">
-                  <div class="flex f-aic m-l10">10</div>
-                  <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex height-41 radius-10 block-border width-full">
+                  <div class="flex items-center margin-left-10">10</div>
+                  <div class="flex items-center width-full justify-end margin-right-10">
                     ШТ.
                   </div>
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
-                <div class="flex ovh w100p variant-img-size">
-                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+              <div class="flex justify-center margin-top-10 items-center">
+                <div class="flex overflow-hidden width-full variant-img-size">
+                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                       height="290"
                        width="290">
                 </div>
               </div>
 
-              <div class="flex f-jcc m-t10 f-aic">
+              <div class="flex justify-center margin-top-10 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                      fill="#ff0000">
                   <path
@@ -769,33 +796,37 @@
           <!-- - - - - - - - -->
 
           <!--Вариант товара мобила-->
-          <div class="flex m-t20 display-exp2 f-col br1" style="border: 2px #e6e6e6 solid; padding: 10px">
+          <div class="flex margin-top-20 display-exp2 flex-col radius-10"
+               style="border: 2px #e6e6e6 solid; padding: 10px">
 
             <!--Изображение-->
-            <div class="flex f-jcc">
-              <div class="flex ovh w100p variant-img-size2">
-                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+            <div class="flex justify-center">
+              <div class="flex overflow-hidden width-full variant-img-size2">
+                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                     height="290"
                      width="290">
               </div>
             </div>
 
             <!--Цена и количество товара-->
             <div class="flex">
-              <div class="flex w100p g20">
+              <div class="flex width-full gap-20">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Цена</div>
-                    <input id="2" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="2" type="number"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="₽ 0.00">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex wi2">Количество</div>
                     <div class="flex wi1">Кол.</div>
-                    <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="3" type="number"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="100">
                   </div>
                 </div>
@@ -805,32 +836,34 @@
 
             <!--Артикл и ID товара-->
             <div class="flex">
-              <div class="flex w100p g20 f-col">
-                <div class="flex f1 g20">
-                  <div class="flex m-t20 f-col w100p">
+              <div class="flex width-full gap-20 flex-col">
+                <div class="flex flex-1 gap-20">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Артикул</div>
-                    <input id="4" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="4"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="TOOL-SET-120-PRO">
                   </div>
 
                 </div>
 
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">ID товара (EAN/GTIN)</div>
 
-                    <div class="flex g10">
+                    <div class="flex gap-10">
 
-                      <div class="flex f1">
-                        <input id="5" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                      <div class="flex flex-1">
+                        <input id="5"
+                               class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                                placeholder="1234567891011">
                       </div>
 
-                      <div class="flex f3">
-                        <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
-                          <div class="flex f-aic m-l10">EAN</div>
-                          <div class="flex f-aic f-jte">
+                      <div class="flex flex-0-30">
+                        <div class="flex height-41 radius-10 block-border margin-top-10 width-full between">
+                          <div class="flex items-center margin-left-10">EAN</div>
+                          <div class="flex items-center justify-end">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                                  width="24px"
                                  fill="#000000">
@@ -851,12 +884,12 @@
             </div>
 
             <!--Цвет-->
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">Цвет</div>
-              <div class="flex h41 br1 block-border w100p f-aic m-t10">
-                <div class="flex color-size m-l10"></div>
-                <div class="flex f-aic m-l10">Чёрный</div>
-                <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex height-41 radius-10 block-border width-full items-center margin-top-10">
+                <div class="flex color-size margin-left-10"></div>
+                <div class="flex items-center margin-left-10">Чёрный</div>
+                <div class="flex items-center width-full justify-end margin-right-10">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                        fill="#000000">
                     <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -867,9 +900,9 @@
 
 
             <!--Размер-->
-            <div class="flex h41 br1 block-border w100p m-t20">
-              <div class="flex f-aic m-l10">S</div>
-              <div class="flex f-aic w100p f-jte m-r10">
+            <div class="flex height-41 radius-10 block-border width-full margin-top-20">
+              <div class="flex items-center margin-left-10">S</div>
+              <div class="flex items-center width-full justify-end margin-right-10">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                      fill="#000000">
                   <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -880,33 +913,37 @@
 
           </div>
 
-          <div class="flex m-t20 display-exp2 f-col br1" style="border: 2px #e6e6e6 solid; padding: 10px">
+          <div class="flex margin-top-20 display-exp2 flex-col radius-10"
+               style="border: 2px #e6e6e6 solid; padding: 10px">
 
             <!--Изображение-->
-            <div class="flex f-jcc">
-              <div class="flex ovh w100p variant-img-size2">
-                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="ofit-contain w100p h100p" height="290"
+            <div class="flex justify-center">
+              <div class="flex overflow-hidden width-full variant-img-size2">
+                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                     height="290"
                      width="290">
               </div>
             </div>
 
             <!--Цена и количество товара-->
             <div class="flex">
-              <div class="flex w100p g20">
+              <div class="flex width-full gap-20">
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Цена</div>
-                    <input id="2" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="2" type="number"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="₽ 0.00">
                   </div>
                 </div>
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex wi2">Количество</div>
                     <div class="flex wi1">Кол.</div>
-                    <input id="3" type="number" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="3" type="number"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="100">
                   </div>
                 </div>
@@ -916,32 +953,34 @@
 
             <!--Артикл и ID товара-->
             <div class="flex">
-              <div class="flex w100p g20 f-col">
-                <div class="flex f1 g20">
-                  <div class="flex m-t20 f-col w100p">
+              <div class="flex width-full gap-20 flex-col">
+                <div class="flex flex-1 gap-20">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Артикул</div>
-                    <input id="4" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                    <input id="4"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                            placeholder="TOOL-SET-120-PRO">
                   </div>
 
                 </div>
 
 
-                <div class="flex f1">
-                  <div class="flex m-t20 f-col w100p">
+                <div class="flex flex-1">
+                  <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">ID товара (EAN/GTIN)</div>
 
-                    <div class="flex g10">
+                    <div class="flex gap-10">
 
-                      <div class="flex f1">
-                        <input id="5" class="h41 fs18 br1 w100p p-l10 p-r10 m-t10 input-txt"
+                      <div class="flex flex-1">
+                        <input id="5"
+                               class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
                                placeholder="1234567891011">
                       </div>
 
-                      <div class="flex f3">
-                        <div class="flex h41 br1 block-border m-t10 w100p f-jc-sb">
-                          <div class="flex f-aic m-l10">EAN</div>
-                          <div class="flex f-aic f-jte">
+                      <div class="flex flex-0-30">
+                        <div class="flex height-41 radius-10 block-border margin-top-10 width-full between">
+                          <div class="flex items-center margin-left-10">EAN</div>
+                          <div class="flex items-center justify-end">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                                  width="24px"
                                  fill="#000000">
@@ -962,12 +1001,12 @@
             </div>
 
             <!--Цвет-->
-            <div class="flex m-t20 f-col">
+            <div class="flex margin-top-20 flex-col">
               <div class="flex">Цвет</div>
-              <div class="flex h41 br1 block-border w100p f-aic m-t10">
-                <div class="flex color-size m-l10"></div>
-                <div class="flex f-aic m-l10">Чёрный</div>
-                <div class="flex f-aic w100p f-jte m-r10">
+              <div class="flex height-41 radius-10 block-border width-full items-center margin-top-10">
+                <div class="flex color-size margin-left-10"></div>
+                <div class="flex items-center margin-left-10">Чёрный</div>
+                <div class="flex items-center width-full justify-end margin-right-10">
                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                        fill="#000000">
                     <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -978,9 +1017,9 @@
 
 
             <!--Размер-->
-            <div class="flex h41 br1 block-border w100p m-t20">
-              <div class="flex f-aic m-l10">S</div>
-              <div class="flex f-aic w100p f-jte m-r10">
+            <div class="flex height-41 radius-10 block-border width-full margin-top-20">
+              <div class="flex items-center margin-left-10">S</div>
+              <div class="flex items-center width-full justify-end margin-right-10">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                      fill="#000000">
                   <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
@@ -994,8 +1033,8 @@
 
           <!-- - - - - - - - -->
 
-          <div class="flex m-t20">
-            <div class="flex btn3">Добавить вариант</div>
+          <div class="flex margin-top-20">
+            <div class="flex button-primary">Добавить вариант</div>
           </div>
 
 

@@ -112,7 +112,7 @@
     display: none;
   }
 
-  .p-l20 {
+  .padding-left-20 {
     padding-left: 0;
   }
 }
@@ -141,11 +141,11 @@
     border-bottom: 1rem solid var(--color-5);
   }
 
-  .fs40 {
+  .font-size-40 {
     font-size: 2.5rem;
   }
 
-  .m-t40 {
+  .margin-top-40 {
     margin-top: 2rem;
   }
 

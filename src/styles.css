@@ -114,129 +114,141 @@ textarea {
   display: grid;
 }
 
-.f-gro {
+.flex-1 {
+  flex: 1;
+}
+
+.flex-grow {
   flex-grow: 1;
 }
 
-.f-wrap {
+.flex-wrap {
   flex-wrap: wrap;
 }
 
-.f-jcc {
+.justify-center {
   justify-content: center;
 }
 
-.f-aic {
+.items-center {
   align-items: center;
 }
 
-.f-ai-fs {
+.items-start {
   align-items: flex-start;
 }
 
-.f-jc-sb {
+.between {
   justify-content: space-between;
 }
 
 
-.f-jte {
+.justify-end {
   justify-content: flex-end;
 }
 
-.f-row {
+.flex-row {
   flex-direction: row;
 }
 
-.f-aife {
+.items-end {
   align-items: flex-end;
 }
 
 
-.f-col {
+.flex-col {
   flex-direction: column;
 }
 
 /*позиция*/
-.pr {
+.relative {
   position: relative;
 }
 
-.pa {
+.absolute {
   position: absolute;
 }
 
 /*Выравнивание*/
 
-.tac {
+.text-center {
   text-align: center;
 }
 
 /*Скрытие*/
-.f-do {
+.open-phone {
   display: none;
 }
 
 /*Ширина*/
-.f1 {
+.flex-1 {
   flex: 1
 }
 
-.f2 {
+.flex-0-5 {
   flex: 0.5
 }
 
-.f3 {
+.flex-0-30 {
   flex: 0.30
 }
 
-.f4 {
+.flex-0-7 {
   flex: 0.7
 }
 
-.w100p {
+.width-full {
   width: 100%;
 }
 
-.h100p {
+.height-full {
   height: 100%;
 }
 
-.h41 {
+.height-41 {
   height: 4.1rem;
 }
 
-.max-w150 {
+.height-80 {
+  height: 8rem;
+}
+
+.max-width-150 {
   max-width: 15rem;
 }
 
-.max-w1400 {
+.max-width-1400 {
   max-width: 140rem;
 }
 
-.max-w30 {
+.max-width-30 {
   max-width: 30rem;
 }
 
-.min-w320 {
+.min-width-320 {
   min-width: 32rem;
 }
 
-.min-w200 {
+.min-width-200 {
   min-width: 20rem;
 }
 
-.max-w320 {
+.max-width-32 {
   max-width: 32rem;
 }
 
-.min-h100 {
+.min-height-10 {
   min-height: 10rem;
 }
 
-.min-h154 {
+.min-height-154 {
   min-height: 15.4rem;
 }
 
+
+.width-60 {
+  width: 6rem;
+}
 
 /*Блок*/
 
@@ -244,12 +256,12 @@ textarea {
   box-shadow: 0 1px 1rem 0 rgb(191 191 191 / 50%);
 }
 
-.block-color {
+.bg-white-transition {
   background-color: var(--color-1);
   transition: background-color 0.2s ease;
 }
 
-.block-color:hover {
+.bg-white-transition:hover {
   background-color: var(--r-color-1);
 }
 
@@ -277,7 +289,7 @@ textarea {
 }
 
 /*Высота*/
-.h100vh {
+.height-screen {
   height: 100vh;
 }
 
@@ -315,7 +327,7 @@ textarea {
   background-color: var(--r-color-1);
 }
 
-.btn3 {
+.button-primary {
   padding: 0 1rem;
   height: 4rem;
   justify-content: center;
@@ -327,11 +339,11 @@ textarea {
   transition: background-color 0.2s ease;
 }
 
-.btn3:hover {
+.button-primary:hover {
   background-color: var(--color-6);
 }
 
-.btn4 {
+.button-disabled {
   padding: 0 1rem;
   height: 4rem;
   justify-content: center;
@@ -343,12 +355,12 @@ textarea {
   transition: background-color 0.2s ease;
 }
 
-.btn4:hover {
+.button-disabled:hover {
   background-color: var(--r-color-1);
 }
 
 
-.btn5 {
+.button-blue {
   padding: 0 1rem;
   height: 4rem;
   border-radius: 1rem;
@@ -359,7 +371,7 @@ textarea {
   transition: background-color 0.2s ease;
 }
 
-.btn5:hover {
+.button-blue:hover {
   background-color: rgb(0 93 255 / 0.13);
 }
 
@@ -373,7 +385,7 @@ textarea {
   background-color: var(--color-4);
 }
 
-.btn6 {
+.button-blue2 {
   background-color: var(--r-color-1);
   padding: 0 1.8rem;
   justify-content: center;
@@ -382,11 +394,11 @@ textarea {
   height: 4rem;
 }
 
-.btn6:hover {
+.button-blue2:hover {
   background-color: var(--r-color-9);
 }
 
-.btn7-in-active {
+.button-in-active {
   cursor: default;
   padding: 0 1rem;
   height: 4rem;
@@ -396,230 +408,256 @@ textarea {
   background-color: var(--color-8);
 }
 
-.btn-pagination {
+.button-pagination {
   width: 4.5rem;
   height: 3.5rem;
 }
 
 /*Цвет заливка*/
 
-.bc1 {
+.bg-white {
   background-color: var(--color-1);
 }
 
-.bc3 {
+.bg-page {
   background-color: var(--color-3);
 }
 
-.bc4 {
+.bg-yellow {
   background-color: var(--color-4);
 }
 
-.bc10 {
+.bg-light {
   background-color: var(--color-10);
 }
 
 
-.oc9 {
+.bg-orange {
   color: var(--color-9);
 }
 
-.oc11 {
+.bg-blue {
   color: var(--color-11);
 }
 
-.oc12 {
+.bg-red {
   color: var(--color-12);
 }
 
-.roc2 {
+.bg-green {
   color: var(--r-color-2);
 }
 
-.rbc1 {
+.bg-blue-soft {
   background-color: var(--r-color-1);
 }
 
-.rbc3 {
+.bg-amber-translucent {
   background-color: var(--r-color-3);
 }
 
-.rbc4 {
+.bg-azure-alpha {
   background-color: var(--r-color-4);
 }
 
-.rbc5 {
+.bg-violet-neon-alpha {
   background-color: var(--r-color-5);
 }
 
-.rbc6 {
+.bg-lime-bright-alpha {
   background-color: var(--r-color-6);
 }
 
-.rbc7 {
+.bg-amber-alpha {
   background-color: var(--r-color-7);
 }
 
-.rbc8 {
+.bf-magenta-bright-alpha {
   background-color: var(--r-color-8);
 }
 
 /*Шрифты*/
-.fw-700 {
+.font-weight-700 {
   font-weight: 700;
 }
 
-.fs24 {
+.font-size-12 {
+  font-size: 1.2rem;
+}
+
+
+.font-size-24 {
   font-size: 2.4rem;
 }
 
-.fs16 {
+.font-size-16 {
   font-size: 1.6rem;
 }
 
-.fs18 {
+.font-size-18 {
   font-size: 1.8rem;
 }
 
-.fs14 {
+.font-size-14 {
   font-size: 1.4rem;
 }
 
-.fs40 {
+.font-size-40 {
   font-size: 4rem;
 }
 
 /*отступ внешний*/
 
-.g05 {
+.gap-5 {
   gap: 0.5rem;
 }
 
-.g10 {
+.gap-10 {
   gap: 1rem;
 }
 
-.g20 {
+.gap-20 {
   gap: 2rem;
 }
 
-.g40 {
+.gap-40 {
   gap: 4rem;
 }
 
-.m20 {
+.margin-30 {
   margin: 2rem;
 }
 
-.mg-lr20 {
+.margin-x-20-phone {
   margin: 0 2rem;
 }
 
-.m-l10 {
-  margin-left: 1rem;
-}
-
-.m-l35 {
-  margin-left: 3.5rem;
-}
-
-.m-r10 {
-  margin-right: 1rem;
-}
-
-.m-l05 {
-  margin-left: 0.5rem;
-}
-
-.m-r05 {
-  margin-right: 0.5rem;
-}
-
-.m-t40 {
-  margin-top: 4rem;
-}
-
-.m-t35 {
-  margin-top: 3.5rem;
-}
-
-.m-t20 {
-  margin-top: 2rem;
-}
-
-.m-t10 {
-  margin-top: 1rem;
-}
-
-.m-t5 {
-  margin-top: 0.3rem;
-}
-
-.m-tb40 {
+.margin-y-40 {
   margin: 4rem 0;
 }
 
+.margin-left-10 {
+  margin-left: 1rem;
+}
+
+.margin-left-35 {
+  margin-left: 3.5rem;
+}
+
+.margin-right-10 {
+  margin-right: 1rem;
+}
+
+.margin-left-5 {
+  margin-left: 0.5rem;
+}
+
+.margin-right-5 {
+  margin-right: 0.5rem;
+}
+
+.margin-top-5 {
+  margin-top: 0.5rem;
+}
+
+.margin-top-40 {
+  margin-top: 4rem;
+}
+
+.margin-top-35 {
+  margin-top: 3.5rem;
+}
+
+.margin-top-20 {
+  margin-top: 2rem;
+}
+
+.margin-top-10 {
+  margin-top: 1rem;
+}
+
+.margin-top-3 {
+  margin-top: 0.3rem;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 2rem;
+}
+
+
 /*отступ внутренний*/
 
-.pg-lr20 {
+.padding-right-15-bottom-5 {
+  padding: 0 1.5rem 0.5rem 0;
+}
+
+.padding-x-20-phone {
   padding: 0 2rem;
 }
 
-.p05 {
+.padding-x-5 {
   padding: 0.5rem;
 }
 
-.p10 {
+.padding-10 {
   padding: 1rem;
 }
 
-.p20 {
+.padding-20 {
   padding: 2rem;
 }
 
-.p40 {
+.padding-40 {
   padding: 4rem;
 }
 
-.p-l10 {
+.padding-left-10 {
   padding-left: 1rem;
 }
 
-.p-r10 {
+.padding-right-10 {
   padding-right: 1rem;
 }
 
-.p-l20 {
+.padding-left-20 {
   padding-left: 2rem;
 }
 
-.p-r20 {
+.padding-right-15 {
+  padding-right: 1.5rem;
+}
+
+.padding-right-20 {
   padding-right: 2rem;
 }
 
+.padding-top-20 {
+  padding: 2rem 0 0 0;
+}
+
 /*Курсор*/
-.curs-p {
+.pointer {
   cursor: pointer;
 }
 
 /*Углы*/
-.br1 {
+.radius-10 {
   border-radius: 1rem;
 }
 
-.br50p {
+.radius-50p {
   border-radius: 50%;
 }
 
-.br2 {
+.radius-right {
   border-radius: 0 1rem 1rem 0;
 }
 
-.br3 {
+.radius-25 {
   border-radius: 2.5rem;
 }
 
-.br-tl {
+.radius-top-10 {
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -659,40 +697,36 @@ textarea {
   opacity: 1;
 }
 
-.radio {
+.size-25 {
   width: 2.5rem;
   height: 2.5rem;
 }
 
-.input-non {
+.display-open {
   display: none;
 }
 
 /*Текст*/
 
-tt-none {
-  text-transform: none;
-}
-
-.tove-el {
+.overflow-ellipsis {
   text-overflow: ellipsis; /* Добавляет три точки в конце */
 }
 
-.ws-nowrap {
+.white-space-nowrap {
   white-space: nowrap /* Запрещает перенос строки */
 }
 
-.ovh {
+.overflow-hidden {
   overflow: hidden; /* Прячет всё, что не помещается */
 }
 
-.owa {
+.overflow-wrap-anywhere {
   overflow-wrap: anywhere;
   /*overflow-wrap: break-word;*/
   /*word-wrap: break-word;*/
 }
 
-.ofit-contain {
+.object-fit-contain {
   object-fit: contain;
 }
 
@@ -710,11 +744,11 @@ tt-none {
 /*Другое*/
 
 
-.z1 {
+.z-index-1 {
   z-index: 1;
 }
 
-.z2 {
+.z-index-2 {
   z-index: 2;
 }
 
@@ -735,19 +769,19 @@ tt-none {
 
 /* Телефон 767px */
 @media (max-width: 47.938em) {
-  .f-dn {
+  .close-phone {
     display: none;
   }
 
-  .f-do {
+  .open-phone {
     display: flex;
   }
 
-  .mg-lr20 {
+  .margin-x-20-phone {
     margin: 0 1rem;
   }
 
-  .pg-lr20 {
+  .padding-x-20-phone {
     padding: 0 1rem;
   }
 

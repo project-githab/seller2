@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './w-home.html',
   styleUrl: './w-home.css',
   host: {
-    class: 'flex f-col h100vh',
+    class: 'flex flex-col height-screen',
   },
 })
 export class WHome {}

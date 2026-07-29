@@ -72,7 +72,7 @@ input[type="number"]::-webkit-inner-spin-button {
     display: none;
   }
 
-  .p-l20 {
+  .padding-left-20 {
     padding-left: 0;
   }
 
@@ -108,7 +108,7 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
 
-  .fs40 {
+  .font-size-40 {
     font-size: 2.5rem;
   }
 
@@ -124,7 +124,7 @@ input[type="number"]::-webkit-inner-spin-button {
     flex-direction: column-reverse;
   }
 
-  .p20 {
+  .padding-20 {
     padding: 1rem;
   }
 

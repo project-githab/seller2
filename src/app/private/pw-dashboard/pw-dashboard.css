@@ -165,7 +165,7 @@
     display: none;
   }
 
-  .p-l20 {
+  .padding-left-20 {
     padding-left: 0;
   }
 
@@ -212,11 +212,11 @@
     display: flex;
   }
 
-  .fs40 {
+  .font-size-40 {
     font-size: 2.5rem;
   }
 
-  .m-t40 {
+  .margin-top-40 {
     margin-top: 2rem;
   }
 
