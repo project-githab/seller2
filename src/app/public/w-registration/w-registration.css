@@ -44,20 +44,6 @@
 }
 
 /*/////////////*/
-.header-button-form {
-  transition: background-color 0.2s ease;
-}
-
-.header-button-form:hover {
-  background-color: var(--color-9);
-}
-
-.registration-panel {
-  border-left: 0.1rem solid var(--color-5);
-  box-shadow: 0 0 0.8rem 0 rgb(191 191 191 / 50%);
-  border-radius: 2.4rem 2.4rem 0 0;
-  overflow: hidden;
-}
 
 
 .password-mask {
@@ -75,10 +61,6 @@
 
 .icon-bottom {
   bottom: 8px;
-}
-
-.field-padding {
-  padding: 0 4.3rem 0 1rem;
 }
 
 .field-divider {
