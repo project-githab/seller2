@@ -43,9 +43,10 @@
 
         <div class="flex width-full margin-top-20">
           <div class="flex margin-right-10">
-            <input class="display-open check" id="item" type="checkbox" name="checkbox" value="Выбор товаров">
+            <input class="display-close check" id="item" type="checkbox" name="checkbox" value="Выбор товаров">
             <label class="checkbox z-index-1 bg-page" for="item">
-              <svg class="scs" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                   width="20px">
                 <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
               </svg>
             </label>
@@ -56,9 +57,10 @@
         <div class="flex width-full">
           <div class="flex height-80 margin-bottom-20 bg-page margin-top-20">
             <div class="flex width-60 items-center justify-center">
-              <input class="display-open check" id="robot" type="checkbox" name="checkbox" value="Выбор товаров">
+              <input class="display-close check" id="robot" type="checkbox" name="checkbox" value="Выбор товаров">
               <label class="checkbox z-index-1 bg-page" for="robot">
-                <svg class="scs" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
+                <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                     width="20px">
                   <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
                 </svg>
               </label>
@@ -90,7 +92,16 @@
 
 
         <div class="flex width-full justify-end">
-          <div class="flex font-size-18 button-primary margin-top-20 width-full" routerLink="/inventory">Войти</div>
+          <div class="flex font-size-18 padding-x-24 bg-hover-gray height-50 items-center radius-10"
+               routerLink="/inventory">Войти
+          </div>
+        </div>
+
+        <div class="flex width-full justify-end margin-top-20">
+          <div
+            class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center"
+            routerLink="/registration">Зарегистрироваться
+          </div>
         </div>
 
       </div>
@@ -101,6 +112,14 @@
 
 </div>
 
+<!--Для для сообщений на странице-->
+<!--<<div class="overlay">-->
+<!--  <div class="centered-box">-->
+<!--    <h2>Заголовок</h2>-->
+<!--    <p class="font-size-18">Блок для сообщений</p>-->
+<!--    <div class="flex button-primary margin-top-20 font-size-18 pointer text-center">Ясно</div>-->
+<!--  </div>-->
+<!--</div>-->
 
 <div class="flex flex-grow"></div>
 <app-c-footer></app-c-footer>

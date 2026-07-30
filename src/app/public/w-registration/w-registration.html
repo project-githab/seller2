@@ -1,0 +1,207 @@
+<app-c-header></app-c-header>
+
+
+<main class="flex justify-center margin-bottom-20 margin-top-20 padding-x-24 font-size-16">
+  <div class="flex max-width-1400 width-full items-center flex-col">
+
+    <div
+      class="flex margin-y-40 login-form padding-40 radius-10 justify-center overflow-hidden block flex-col items-center">
+      <div class="flex flex-col items-center max-width-32 width-full">
+        <div class="flex padding-10 bg-yellow radius-10">
+          <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000">
+            <path
+              d="M200-80q-33 0-56.5-23.5T120-160v-480q0-33 23.5-56.5T200-720h80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720h80q33 0 56.5 23.5T840-640v480q0 33-23.5 56.5T760-80H200Zm0-80h560v-480H200v480Zm421.5-298.5Q680-517 680-600h-80q0 50-35 85t-85 35q-50 0-85-35t-35-85h-80q0 83 58.5 141.5T480-400q83 0 141.5-58.5ZM360-720h240q0-50-35-85t-85-35q-50 0-85 35t-35 85ZM200-160v-480 480Z" />
+          </svg>
+        </div>
+
+        <div class="flex font-size-24 font-weight-700 margin-top-10 text-center">Регистрация продавца</div>
+
+        <div class="flex width-full pt35 margin-top-35">Email</div>
+        <div class="flex width-full relative">
+          <input name="email" type="email" class="input-form width-full" autocomplete="username"
+                 placeholder="Укажите email"
+                 required>
+          <div class="flex absolute email-position">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+              <path
+                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480v58q0 59-40.5 100.5T740-280q-35 0-66-15t-52-43q-29 29-65.5 43.5T480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480v58q0 26 17 44t43 18q26 0 43-18t17-44v-58q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93h200v80H480Zm85-315q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Z" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Повторите Email</div>
+        <div class="flex width-full relative">
+          <input name="email" type="email" class="input-form width-full" autocomplete="username"
+                 placeholder="Укажите email"
+                 required>
+          <div class="flex absolute email-position">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+              <path
+                d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480v58q0 59-40.5 100.5T740-280q-35 0-66-15t-52-43q-29 29-65.5 43.5T480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480v58q0 26 17 44t43 18q26 0 43-18t17-44v-58q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93h200v80H480Zm85-315q35-35 35-85t-35-85q-35-35-85-35t-85 35q-35 35-35 85t35 85q35 35 85 35t85-35Z" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35 margin-top-20">Пароль</div>
+        <div class="flex width-full relative">
+          <input name="pass2" type="password" class="input-form width-full" autocomplete="username"
+                 placeholder="Пароль" required>
+          <div class="flex absolute icon-right icon-bottom field-divider password-actions">
+
+            <div class="flex pointer">
+              <svg id="pass" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+                <path
+                  d="M280-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 120q-100 0-170-70T40-480q0-100 70-170t170-70q81 0 141.5 46T506-560h335l79 79-140 160-100-79-80 80-80-80h-14q-25 72-87 116t-139 44Z"></path>
+              </svg>
+            </div>
+
+
+            <div class="flex pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                   width="24px">
+                <path
+                  d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm.04-77.02q-42.89 0-72.95-30.02-30.07-30.03-30.07-72.92t30.02-72.95q30.03-30.07 72.92-30.07t72.95 30.02q30.07 30.03 30.07 72.92t-30.02 72.95q-30.03 30.07-72.92 30.07ZM480-192.59q-148.87 0-270.66-83.89Q87.54-360.37 32.59-500q54.95-139.63 176.75-223.52Q331.13-807.41 480-807.41t270.66 83.89Q872.46-639.63 927.41-500q-54.95 139.63-176.75 223.52Q628.87-192.59 480-192.59ZM480-500Zm.02 220q112.74 0 207-59.62T831.28-500q-50-100.76-144.28-160.38Q592.72-720 479.98-720q-112.74 0-207 59.62T128.72-500q50 100.76 144.28 160.38Q367.28-280 480.02-280Z" />
+              </svg>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35 margin-top-20">Повторите Пароль</div>
+        <div class="flex width-full relative">
+          <input name="pass2" type="password" class="input-form width-full" autocomplete="username"
+                 placeholder="Укажите пароль" required>
+          <div class="flex absolute icon-right icon-bottom field-divider password-actions">
+
+            <div class="flex pointer">
+              <svg id="pass" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+                <path
+                  d="M280-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 120q-100 0-170-70T40-480q0-100 70-170t170-70q81 0 141.5 46T506-560h335l79 79-140 160-100-79-80 80-80-80h-14q-25 72-87 116t-139 44Z"></path>
+              </svg>
+            </div>
+
+
+            <div class="flex pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                   width="24px">
+                <path
+                  d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm.04-77.02q-42.89 0-72.95-30.02-30.07-30.03-30.07-72.92t30.02-72.95q30.03-30.07 72.92-30.07t72.95 30.02q30.07 30.03 30.07 72.92t-30.02 72.95q-30.03 30.07-72.92 30.07ZM480-192.59q-148.87 0-270.66-83.89Q87.54-360.37 32.59-500q54.95-139.63 176.75-223.52Q331.13-807.41 480-807.41t270.66 83.89Q872.46-639.63 927.41-500q-54.95 139.63-176.75 223.52Q628.87-192.59 480-192.59ZM480-500Zm.02 220q112.74 0 207-59.62T831.28-500q-50-100.76-144.28-160.38Q592.72-720 479.98-720q-112.74 0-207 59.62T128.72-500q50 100.76 144.28 160.38Q367.28-280 480.02-280Z" />
+              </svg>
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="flex width-full margin-top-20">
+          <div class="flex margin-right-10">
+            <input class="display-close check" id="item" type="checkbox" name="checkbox" value="Выбор товаров">
+            <label class="checkbox z-index-1 bg-page" for="item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                   width="20px">
+                <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
+              </svg>
+            </label>
+          </div>
+          <div class="flex font-size-18">Запомнить меня</div>
+        </div>
+
+        <div class="flex width-full">
+          <div class="flex height-80 margin-bottom-20 bg-page margin-top-20">
+            <div class="flex width-60 items-center justify-center">
+              <input class="display-close check" id="robot" type="checkbox" name="checkbox" value="Выбор товаров">
+              <label class="checkbox z-index-1 bg-page" for="robot">
+                <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                     width="20px">
+                  <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
+                </svg>
+              </label>
+            </div>
+            <div class="flex flex-1 flex-col between">
+              <div class="flex width-full flex-1">
+                <div class="flex items-center flex-1 padding-top-20">Я не робот</div>
+                <div class="flex flex-col justify-center items-center padding-right-15">
+                  <div class="flex">
+                    <div class="password-mask"></div>
+                    <svg class="z-index-1" xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                         fill-rule="evenodd"
+                         clip-rule="evenodd" image-rendering="optimizeQuality"
+                         shape-rendering="geometricPrecision"
+                         text-rendering="geometricPrecision">
+                      <path fill="#ffdc26" fill-rule="nonzero"
+                            d="M4.83 32c-.69 0-1.29-.25-1.79-.75-.5-.51-.76-1.1-.76-1.79V9.9c0-.68.26-1.28.76-1.78s1.1-.76 1.79-.76h3.8c0-2.04.7-3.77 2.09-5.21C12.12.72 13.83 0 15.87 0s3.8.72 5.28 2.15c1.48 1.44 2.22 3.17 2.22 5.21h3.8c.69 0 1.29.26 1.79.76s.76 1.1.76 1.78v19.56c0 .69-.26 1.28-.76 1.79-.5.5-1.1.75-1.79.75zM16 19.05q3.06 0 5.28-2.22c1.47-1.48 2.21-3.23 2.21-5.27h-2.54c0 1.35-.48 2.51-1.46 3.49-.97.97-2.14 1.46-3.49 1.46s-2.52-.49-3.49-1.46c-.98-.98-1.46-2.14-1.46-3.49H8.51c0 2.04.74 3.79 2.21 5.27q2.22 2.22 5.28 2.22M11.17 7.36h9.66c0-1.35-.47-2.49-1.4-3.42-.93-.94-2.08-1.4-3.43-1.4s-2.5.46-3.43 1.4c-.93.93-1.4 2.07-1.4 3.42" />
+                    </svg>
+                  </div>
+                  <div class="flex width-full font-weight-700 margin-top-5">sakhshop</div>
+                </div>
+              </div>
+              <div class="flex width-full font-size-12 padding-right-15-bottom-5">
+                Система защиты от роботов. ИИ
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="flex margin-bottom-20 flex-row items-center">
+          <div class="flex">
+            <input class="absolute hidden check" id="item1" type="checkbox" name="checkbox" value="Выбор товаров">
+            <label class="checkbox z-index-1 bg-light" for="item1">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960"
+                   width="25px">
+                <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
+              </svg>
+            </label>
+          </div>
+
+          <div class="margin-left-10">Я принимаю <span routerLink="/user-agreement"
+                                                       class="text-blue font-weight-700 pointer">пользовательское соглашение</span>
+            и подтверждаю, что ознакомлен с <span routerLink="/privacy-policy"
+                                                  class="text-blue font-weight-700 pointer">политикой конфиденциальности</span>
+          </div>
+
+        </div>
+
+        <div class="flex width-full margin-bottom-20 between font-size-18">
+          <div class="flex items-center pointer padding-7 radius-10 bg-hover-white justify-center" routerLink="/">
+            <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px">
+              <path
+                d="M760-200v-160q0-50-35-85t-85-35H273l144 144-57 56-240-240 240-240 57 56-144 144h367q83 0 141.5 58.5T840-360v160h-80Z"></path>
+            </svg>
+          </div>
+
+          <!--Не активная кнопка-->
+          <div class="button-disabled width-full padding-x-17 margin-left-10">
+            Зарегистрироваться
+          </div>
+
+          <!--Активная кнопка-->
+          <!--<div
+            class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center margin-left-10"
+            routerLink="/registration">Зарегистрироваться
+          </div>-->
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+  </div>
+</main>
+
+<!--Для для сообщений на странице-->
+<!--<<div class="overlay">
+  <div class="centered-box">
+    <h2>Заголовок</h2>
+    <p class="font-size-18">Блок для сообщений</p>
+    <div class="button-primary margin-top-20 font-size-18 pointer">Ясно</div>
+  </div>
+</div>-->
+
+<!--Прижатие подвала-->
+<div class="flex flex-grow"></div>
+<app-c-footer></app-c-footer>
