@@ -1,0 +1,189 @@
+<app-c-header></app-c-header>
+
+
+<main class="flex justify-center margin-bottom-20 padding-x-24 font-size-16">
+  <div class="flex max-width-1400 width-full items-center flex-col">
+
+    <div
+      class="flex margin-y-40 login-form padding-40 radius-10 justify-center overflow-hidden block flex-col items-center">
+      <div class="flex flex-col items-center max-width-32 width-full font-size-18">
+        <div class="flex padding-10 bg-yellow radius-10">
+          <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000">
+            <path
+              d="M200-80q-33 0-56.5-23.5T120-160v-480q0-33 23.5-56.5T200-720h80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720h80q33 0 56.5 23.5T840-640v480q0 33-23.5 56.5T760-80H200Zm0-80h560v-480H200v480Zm421.5-298.5Q680-517 680-600h-80q0 50-35 85t-85 35q-50 0-85-35t-35-85h-80q0 83 58.5 141.5T480-400q83 0 141.5-58.5ZM360-720h240q0-50-35-85t-85-35q-50 0-85 35t-35 85ZM200-160v-480 480Z" />
+          </svg>
+        </div>
+
+        <div class="flex font-size-24 font-weight-700 margin-top-10 text-center">Регистрация продавца</div>
+
+        <div class="flex width-full pt35 margin-top-35">ИНН</div>
+        <div class="flex width-full">
+          <input name="ИНН" type="text" class="input-form width-full"
+                 placeholder="Укажите ИНН"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">КПП</div>
+        <div class="flex width-full">
+          <input name="КПП" type="text" class="input-form width-full"
+                 placeholder="Укажите КПП"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">ОГРН</div>
+        <div class="flex width-full">
+          <input name="ogrn" type="text" class="input-form width-full"
+                 placeholder="Укажите ОГРН"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Юридическй адрес</div>
+        <div class="flex width-full">
+          <input name="address1" type="text" class="input-form width-full"
+                 placeholder="Юридический адрес"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Фактический адрес</div>
+        <div class="flex width-full">
+          <input name="address2" type="text" class="input-form width-full"
+                 placeholder="Фактический адрес"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Фамилия</div>
+        <div class="flex width-full">
+          <input name="surname" type="text" class="input-form width-full"
+                 placeholder="Фамилия представителя"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Имя</div>
+        <div class="flex width-full">
+          <input name="name" type="text" class="input-form width-full"
+                 placeholder="Имя"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Отчество</div>
+        <div class="flex width-full">
+          <input name="patronymic" type="text" class="input-form width-full"
+                 placeholder="Отчество"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Должность</div>
+        <div class="flex width-full">
+          <input name="patronymic" type="text" class="input-form width-full"
+                 placeholder="Отчество"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Телефон</div>
+        <div class="flex width-full">
+          <div class="flex font-size-18 font-weight-700 items-center justify-center">+7</div>
+          <input name="phone" type="text" class="input-form width-full margin-left-10"
+                 placeholder="Контактный телефон"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">р/с</div>
+        <div class="flex width-full">
+          <input name="Current-account" type="text" class="input-form width-full"
+                 placeholder="Расчётный счёт"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">БИК</div>
+        <div class="flex width-full">
+          <input name="bik" type="text" class="input-form width-full"
+                 placeholder="БИК"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">к/с</div>
+        <div class="flex width-full">
+          <input name="cor-account" type="text" class="input-form width-full"
+                 placeholder="Корреспондентский счет"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Название банка</div>
+        <div class="flex width-full">
+          <input name="bank-name" type="text" class="input-form width-full"
+                 placeholder="Корреспондентский счет"
+                 required>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Название магазина</div>
+        <div class="flex width-full">
+          <input name="store-name" type="text" class="input-form width-full"
+                 placeholder="Название магазина"
+                 required>
+        </div>
+
+
+        <div class="flex margin-top-20 width-full">
+
+          <div class="flex-col">
+            <div class="flex overflow-hidden img-size">
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+                   height="290"
+                   width="290">
+            </div>
+            <div class="flex width-full justify-center margin-top-10">
+              Логотип
+            </div>
+          </div>
+          <div class="flex width-full justify-center items-center">
+            <div class="flex button-primary">Выбрать</div>
+          </div>
+
+        </div>
+
+
+        <div class="flex width-full pt35 margin-top-35">Описание магазина</div>
+        <div class="flex width-full">
+          <textarea name="store-description" type="text" class="width-full min-width-15 min-height-100 max-height-200"
+                    required></textarea>
+        </div>
+
+        <div class="flex width-full pt35 margin-top-35">Адрес точки выдачи</div>
+        <div class="flex width-full">
+          <input name="pick-up" type="text" class="input-form width-full"
+                 placeholder="Адрес точки выдачи"
+                 required>
+        </div>
+
+        <div class="width-full pt35 margin-top-35">
+          <span class="font-weight-700">Внимание!</span> Все адреса которые вы указываете, должны соответствовать<span
+          class="text-blue margin-left-5 pointer" (click)="openExternalSite()">Федеральной информационной адресной системе</span>
+        </div>
+
+
+        <div class="flex width-full margin-bottom-20 between font-size-18 margin-top-40">
+          <!--Не активная кнопка-->
+          <div class="button-disabled width-full padding-x-17">
+            Сохранить
+          </div>
+          <!--Активная кнопка-->
+          <!--<div
+            class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center margin-left-10"
+            routerLink="/registration">Зарегистрироваться
+          </div>-->
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+  </div>
+</main>
+
+
+<!--Прижатие подвала-->
+<div class="flex flex-grow"></div>
+<app-c-footer></app-c-footer>

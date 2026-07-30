@@ -42,4 +42,9 @@ export const routes: Routes = [
     loadComponent: () => import('./pub/w-registration/w-registration').then((m) => m.WRegistration),
     pathMatch: 'full',
   },
+  {
+    path: 'confirm',
+    loadComponent: () => import('./pub/w-confirm/w-confirm').then((m) => m.WConfirm),
+    pathMatch: 'full',
+  },
 ];

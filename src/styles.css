@@ -75,6 +75,7 @@ html {
 
   height: 100%;
   width: 100%;
+  min-width: 32rem;
 }
 
 body {
@@ -241,24 +242,24 @@ textarea {
   max-width: 44rem;
 }
 
-.min-width-320 {
-  min-width: 32rem;
-}
-
-.min-width-200 {
-  min-width: 20rem;
-}
-
 .max-width-32 {
   max-width: 32rem;
 }
 
-.min-height-10 {
+.min-width-15 {
+  min-width: 15rem;
+}
+
+.min-height-100 {
   min-height: 10rem;
 }
 
 .min-height-154 {
   min-height: 15.4rem;
+}
+
+.max-height-200 {
+  max-height: 20rem;
 }
 
 
@@ -533,11 +534,6 @@ textarea {
   font-size: 1.2rem;
 }
 
-
-.font-size-24 {
-  font-size: 2.4rem;
-}
-
 .font-size-16 {
   font-size: 1.6rem;
 }
@@ -548,6 +544,14 @@ textarea {
 
 .font-size-14 {
   font-size: 1.4rem;
+}
+
+.font-size-24 {
+  font-size: 2.4rem;
+}
+
+.font-size-20 {
+  font-size: 2rem;
 }
 
 .font-size-40 {

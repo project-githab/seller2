@@ -24,23 +24,23 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .img-size {
-  width: 100px;
-  height: 100px;
+  width: 10rem;
+  height: 10rem;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
 }
 
 .variant-img-size {
-  width: 60px;
-  height: 60px;
+  width: 6rem;
+  height: 6rem;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
 }
 
 .color-size {
   aspect-ratio: 1 / 1;
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   background-color: black;
   border-radius: 0.5rem;
 }
@@ -77,15 +77,15 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 
   .variant-img-size {
-    width: 40px;
-    height: 40px;
+    width: 4rem;
+    height: 4rem;
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
   }
 
   .variant-img-size2 {
-    width: 70px;
-    height: 70px;
+    width: 7rem;
+    height: 7rem;
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
   }

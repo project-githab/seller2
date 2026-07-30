@@ -12,12 +12,4 @@ import { RouterLink } from '@angular/router';
     class: 'flex flex-col height-screen',
   },
 })
-export class WRegistration {
-  sellerBuyerSwitch = false;
-
-  setUserType(isSeller: boolean) {
-    if (this.sellerBuyerSwitch !== isSeller) {
-      this.sellerBuyerSwitch = isSeller;
-    }
-  }
-}
+export class WRegistration {}
