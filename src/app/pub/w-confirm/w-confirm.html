@@ -1,12 +1,13 @@
 <app-c-header></app-c-header>
 
 
-<main class="flex justify-center margin-bottom-20 padding-x-24 font-size-16">
+<main class="flex justify-center margin-bottom-20 padding-x-24-tablet font-size-16">
   <div class="flex max-width-1400 width-full items-center flex-col">
 
-    <div
-      class="flex margin-y-40 login-form padding-40 radius-10 justify-center overflow-hidden block flex-col items-center">
-      <div class="flex flex-col items-center max-width-32 width-full font-size-18">
+    <div class="flex shadow flex-col margin-top-40 max-width-80 radius-10 justify-center items-center">
+
+
+      <div class="flex padding-20 flex-col items-center font-size-18">
         <div class="flex padding-10 bg-yellow radius-10">
           <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000">
             <path
@@ -14,167 +15,318 @@
           </svg>
         </div>
 
-        <div class="flex font-size-24 font-weight-700 margin-top-10 text-center">Регистрация продавца</div>
-
-        <div class="flex width-full pt35 margin-top-35">ИНН</div>
-        <div class="flex width-full">
-          <input name="ИНН" type="text" class="input-form width-full"
-                 placeholder="Укажите ИНН"
-                 required>
+        <div class="font-size-24 font-weight-700 margin-top-10 text-center">Регистрация продавца</div>
+        <div class="margin-top-10 text-center">Заполните сведения о компании и магазине. Эти данные необходимы для
+          начало работы на площадки
+        </div>
+        <div class="margin-top-10 text-center">Поля отмеченные <span class="text-red">*</span>, обязательные для
+          заполнения
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">КПП</div>
-        <div class="flex width-full">
-          <input name="КПП" type="text" class="input-form width-full"
-                 placeholder="Укажите КПП"
-                 required>
+
+      </div>
+
+
+      <div class="styled-hr margin-top-20 margin-bottom-20"></div>
+
+      <div class="flex width-full items-center padding-20">
+        <div class="flex size-50 items-center justify-center bg-yellow radius-50p">
+          <div class="flex font-size-24 font-weight-700">1</div>
+        </div>
+        <div class="flex margin-left-20 flex-col">
+          <div class="flex font-size-24 font-weight-700">Реквизиты организации</div>
+          <div class="flex">Основные регистрационные данный</div>
+        </div>
+      </div>
+
+      <div class="lex width-full items-center padding-20">
+        <div class="flex gap-20 width-full">
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">ИНН <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="ИНН" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="Укажите ИНН"
+                     required>
+            </div>
+          </div>
+
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">КПП <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="kpp" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="Укажите КПП"
+                     required>
+            </div>
+          </div>
+
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">ОГРН</div>
-        <div class="flex width-full">
-          <input name="ogrn" type="text" class="input-form width-full"
+        <div class="flex width-full margin-top-35 font-weight-700">ОГРН <span class="text-red">*</span></div>
+        <div class="flex width-full margin-top-10">
+          <input name="ogrn" type="text" class="input-form padding-x-10 width-full"
                  placeholder="Укажите ОГРН"
                  required>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">Юридическй адрес</div>
-        <div class="flex width-full">
-          <input name="address1" type="text" class="input-form width-full"
+        <div class="flex width-full margin-top-35 font-weight-700">Юридическй адрес <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input name="address1" type="text" class="input-form padding-x-10 width-full"
                  placeholder="Юридический адрес"
                  required>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">Фактический адрес</div>
-        <div class="flex width-full">
-          <input name="address2" type="text" class="input-form width-full"
+        <div class="flex width-full margin-top-35 font-weight-700">Фактический адрес <span
+          class="text-red">*</span></div>
+        <div class="flex width-full margin-top-10">
+          <input name="address2" type="text" class="input-form padding-x-10 width-full"
                  placeholder="Фактический адрес"
                  required>
         </div>
+      </div>
 
-        <div class="flex width-full pt35 margin-top-35">Фамилия</div>
-        <div class="flex width-full">
-          <input name="surname" type="text" class="input-form width-full"
-                 placeholder="Фамилия представителя"
+      <div class="styled-hr margin-top-20 margin-bottom-20"></div>
+
+      <div class="flex width-full items-center padding-20">
+        <div class="flex size-50 items-center justify-center bg-yellow radius-50p">
+          <div class="flex font-size-24 font-weight-700">2</div>
+        </div>
+        <div class="flex margin-left-20 flex-col">
+          <div class="flex font-size-24 font-weight-700">Представитель организации</div>
+          <div class="flex">Контактное лицо, ответственного за работу магазина</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col width-full items-center padding-20">
+        <div class="flex gap-20 width-full">
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">Фамилия <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="surname" type="text" class="input-form padding-x-10 width-full padding-x-10"
+                     placeholder="Фамилия"
+                     required>
+            </div>
+          </div>
+
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">Имя <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="name" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="Имя"
+                     required>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex margin-top-35 gap-20 width-full">
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">Отчество <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="patronymic" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="Отчество"
+                     required>
+            </div>
+          </div>
+
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">Должность <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="job-title" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="Должность"
+                     required>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex width-full margin-top-35 font-weight-700">Телефон <span class="text-red">*</span></div>
+        <div class="flex width-full margin-top-10 relative">
+          <div class="absolute font-size-18 font-weight-700 plus-seven margin-left-5">+7</div>
+          <input name="phone" type="text" class="input-form padding-left-40 padding-right-10 width-full"
+                 placeholder="900 000-00-00"
                  required>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">Имя</div>
-        <div class="flex width-full">
-          <input name="name" type="text" class="input-form width-full"
-                 placeholder="Имя"
+      </div>
+
+      <div class="styled-hr margin-top-20 margin-bottom-20"></div>
+
+      <div class="flex width-full items-center padding-20">
+        <div class="flex size-50 items-center justify-center bg-yellow radius-50p">
+          <div class="flex font-size-24 font-weight-700">3</div>
+        </div>
+        <div class="flex margin-left-20 flex-col">
+          <div class="flex font-size-24 font-weight-700">Банковские реквизиты</div>
+          <div class="flex">Счёт, на который будут перечисляться выплаты</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col width-full items-center padding-20">
+
+        <div class="flex width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
+                 placeholder="20 цифр"
                  required>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">Отчество</div>
-        <div class="flex width-full">
-          <input name="patronymic" type="text" class="input-form width-full"
-                 placeholder="Отчество"
+        <div class="flex gap-20 width-full margin-top-35">
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">БИК <span class="text-red">*</span></div>
+            <div class="flex width-full margin-top-10">
+              <input name="bik" type="text" class="input-form padding-x-10 width-full padding-x-10"
+                     placeholder="9 цифр"
+                     required>
+            </div>
+          </div>
+
+          <div class="flex-col width-full">
+            <div class="flex width-full font-weight-700">Корреспондентский счёт <span class="text-red">*</span>
+            </div>
+            <div class="flex width-full margin-top-10">
+              <input name="cor-account" type="text" class="input-form padding-x-10 width-full"
+                     placeholder="20 цифр"
+                     required>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex margin-top-35 width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
+                 placeholder="20 цифр"
                  required>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35">Должность</div>
-        <div class="flex width-full">
-          <input name="patronymic" type="text" class="input-form width-full"
-                 placeholder="Отчество"
-                 required>
-        </div>
+      </div>
 
-        <div class="flex width-full pt35 margin-top-35">Телефон</div>
-        <div class="flex width-full">
-          <div class="flex font-size-18 font-weight-700 items-center justify-center">+7</div>
-          <input name="phone" type="text" class="input-form width-full margin-left-10"
-                 placeholder="Контактный телефон"
-                 required>
-        </div>
+      <div class="styled-hr margin-top-20 margin-bottom-20"></div>
 
-        <div class="flex width-full pt35 margin-top-35">р/с</div>
-        <div class="flex width-full">
-          <input name="Current-account" type="text" class="input-form width-full"
-                 placeholder="Расчётный счёт"
-                 required>
+      <div class="flex width-full items-center padding-20">
+        <div class="flex size-50 items-center justify-center bg-yellow radius-50p">
+          <div class="flex font-size-24 font-weight-700">4</div>
         </div>
-
-        <div class="flex width-full pt35 margin-top-35">БИК</div>
-        <div class="flex width-full">
-          <input name="bik" type="text" class="input-form width-full"
-                 placeholder="БИК"
-                 required>
+        <div class="flex margin-left-20 flex-col">
+          <div class="flex font-size-24 font-weight-700">Информация о магазине</div>
+          <div class="flex">Эти сведения будут видеть покупатели</div>
         </div>
+      </div>
 
-        <div class="flex width-full pt35 margin-top-35">к/с</div>
-        <div class="flex width-full">
-          <input name="cor-account" type="text" class="input-form width-full"
-                 placeholder="Корреспондентский счет"
-                 required>
+      <div class="flex flex-col width-full items-center padding-20">
+
+        <div class="flex width-full font-weight-700">Название магазина <span class="text-red">*</span>
         </div>
-
-        <div class="flex width-full pt35 margin-top-35">Название банка</div>
-        <div class="flex width-full">
-          <input name="bank-name" type="text" class="input-form width-full"
-                 placeholder="Корреспондентский счет"
-                 required>
-        </div>
-
-        <div class="flex width-full pt35 margin-top-35">Название магазина</div>
-        <div class="flex width-full">
-          <input name="store-name" type="text" class="input-form width-full"
+        <div class="flex width-full margin-top-10">
+          <input name="store-name" type="text" class="input-form padding-x-10 width-full"
                  placeholder="Название магазина"
                  required>
         </div>
 
+        <div class="flex width-full margin-top-35 font-weight-700">Логотип магазина</div>
+        <div class="flex width-full items-center margin-top-10 bg-page border-dashed radius-10 padding-20 gap-20">
 
-        <div class="flex margin-top-20 width-full">
-
-          <div class="flex-col">
+          <div class="flex">
             <div class="flex overflow-hidden img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
+              <img ngSrc="/img/img3.jpg" alt="Изображение товара"
+                   class=" overflow-hiddenobject-fit-contain width-full height-full radius-10"
                    height="290"
                    width="290">
             </div>
-            <div class="flex width-full justify-center margin-top-10">
-              Логотип
+          </div>
+
+          <div class="flex-col">
+            <div class="flex">
+              <div class="flex font-size-18 padding-x-24 bg-hover-yellow height-50 items-center radius-10 pointer">
+                Выбрать
+              </div>
             </div>
-          </div>
-          <div class="flex width-full justify-center items-center">
-            <div class="flex button-primary">Выбрать</div>
+            <div class="flex margin-top-10">PNG, JPG, WebP. Рекомендуемый размер не менее 500 х 500 пикселей</div>
           </div>
 
         </div>
 
-
-        <div class="flex width-full pt35 margin-top-35">Описание магазина</div>
-        <div class="flex width-full">
-          <textarea name="store-description" type="text" class="width-full min-width-15 min-height-100 max-height-200"
-                    required></textarea>
+        <div class="flex width-full font-weight-700 margin-top-35">Описание магазина <span class="text-red">*</span>
         </div>
+        <div class="flex width-full margin-top-10">
+          <textarea name="business-account" type="text"
+                    class="input-form padding-10 width-full min-width-150 min-height-100"
+                    placeholder="Коротко расскажите о магазине, ассортименте и преимуществах" required></textarea>
+        </div>
+        <div class="flex width-full margin-top-5">До 1 000 символов</div>
 
-        <div class="flex width-full pt35 margin-top-35">Адрес точки выдачи</div>
-        <div class="flex width-full">
-          <input name="pick-up" type="text" class="input-form width-full"
-                 placeholder="Адрес точки выдачи"
+
+      </div>
+
+      <div class="styled-hr margin-top-20 margin-bottom-20"></div>
+
+      <div class="flex width-full items-center padding-20">
+        <div class="flex size-50 items-center justify-center bg-yellow radius-50p">
+          <div class="flex font-size-24 font-weight-700">5</div>
+        </div>
+        <div class="flex margin-left-20 flex-col">
+          <div class="flex font-size-24 font-weight-700">Адрес точки выдачи</div>
+          <div class="flex">Место передачи и получения заказов</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col width-full items-center padding-20">
+
+        <div class="flex width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
+                 placeholder="Введите полный адрес"
                  required>
         </div>
 
-        <div class="width-full pt35 margin-top-35">
-          <span class="font-weight-700">Внимание!</span> Все адреса которые вы указываете, должны соответствовать<span
-          class="text-blue margin-left-5 pointer" (click)="openExternalSite()">Федеральной информационной адресной системе</span>
-        </div>
+      </div>
 
+      <div class="flex width-full items-center padding-20">
 
-        <div class="flex width-full margin-bottom-20 between font-size-18 margin-top-40">
-          <!--Не активная кнопка-->
-          <div class="button-disabled width-full padding-x-17">
-            Сохранить
+        <div class="flex width-full bg-yellow-soft text-brown radius-10">
+          <div class="flex height-50 items-center margin-left-10">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="35"
+                 height="35"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
           </div>
-          <!--Активная кнопка-->
-          <!--<div
-            class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center margin-left-10"
-            routerLink="/registration">Зарегистрироваться
-          </div>-->
-
+          <div class="font-size-18 margin-left-10">Все указанные адреса должны соответствовать
+            <span class="text-blue pointer"
+                  (click)="openExternalSite()">Федеральной информационной адресной системе</span>
+          </div>
         </div>
+      </div>
 
 
+      <div class="flex width-full items-center padding-20">
+        <div class="flex width-full">
+          <div class="flex width-full margin-bottom-20 between font-size-18 margin-top-40">
+            <!--Не активная кнопка-->
+            <div class="button-disabled width-full padding-x-17">
+              Сохранить
+            </div>
+            <!--Активная кнопка-->
+            <!--<div
+              class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center margin-left-10"
+              routerLink="/registration">Зарегистрироваться
+            </div>-->
+
+          </div>
+        </div>
       </div>
 
     </div>
@@ -182,6 +334,15 @@
 
   </div>
 </main>
+
+<!--Для для сообщений на странице-->
+<!--<<div class="overlay">
+  <div class="centered-box">
+    <h2>Заголовок</h2>
+    <p class="font-size-18">Блок для сообщений</p>
+    <div class="button-primary margin-top-20 font-size-18 pointer">Ясно</div>
+  </div>
+</div>-->
 
 
 <!--Прижатие подвала-->

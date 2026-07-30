@@ -20,7 +20,7 @@ export class PwAddProduct {
     /*Для плавного опускания страницы (скролла) для блока который появляется с варинтами*/
     if (type === 'variant') {
       setTimeout(() => {
-        document.getElementById('variant-block')?.scrollIntoView({
+        document.getElementById('variant-shadow')?.scrollIntoView({
           behavior: 'smooth',
           block: 'start',
         });

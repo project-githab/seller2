@@ -47,6 +47,8 @@
   --color-11: #0033ff;
   --color-12: #ff0000;
   --color-13: #3f3f3f75;
+  --color-14: #fefce8;
+  --color-15: #854d0e;
 
   --r-color-1: rgba(0, 93, 255, 0.05);
   --r-color-2: rgb(22 163 74);
@@ -246,8 +248,12 @@ textarea {
   max-width: 32rem;
 }
 
-.min-width-15 {
+.min-width-150 {
   min-width: 15rem;
+}
+
+.max-width-80 {
+  max-width: 80rem;
 }
 
 .min-height-100 {
@@ -269,8 +275,8 @@ textarea {
 
 /*Блок*/
 
-.block {
-  box-shadow: 0 1px 1rem 0 rgb(191 191 191 / 50%);
+.shadow {
+  box-shadow: 0 0 0.8rem 0 rgb(191 191 191 / 50%);
 }
 
 .bg-white-transition {
@@ -282,7 +288,7 @@ textarea {
   background-color: var(--r-color-1);
 }
 
-/*.block-in-active {*/
+/*.shadow-in-active {*/
 /*  height: 4.1rem;*/
 /*  background-color: var(--color-5);*/
 /*}*/
@@ -292,9 +298,13 @@ textarea {
   background-color: var(--r-color-1);
 }
 
-.block-border {
+.block-border-solid {
   height: 4.1rem;
   border: 2px solid rgb(191 191 191 / 50%)
+}
+
+.border-dashed {
+  border: 2px dashed rgb(191 191 191 / 50%)
 }
 
 .block-shrink {
@@ -497,6 +507,10 @@ textarea {
   color: var(--r-color-2);
 }
 
+.text-brown {
+  color: var(--color-15);
+}
+
 .bg-blue-soft {
   background-color: var(--r-color-1);
 }
@@ -521,9 +535,14 @@ textarea {
   background-color: var(--r-color-7);
 }
 
-.bf-magenta-bright-alpha {
+.bg-magenta-bright-alpha {
   background-color: var(--r-color-8);
 }
+
+.bg-yellow-soft {
+  background-color: var(--color-14);
+}
+
 
 /*Шрифты*/
 .font-weight-700 {
@@ -576,7 +595,7 @@ textarea {
   gap: 4rem;
 }
 
-.margin-30 {
+.margin-20 {
   margin: 2rem;
 }
 
@@ -590,6 +609,10 @@ textarea {
 
 .margin-left-10 {
   margin-left: 1rem;
+}
+
+.margin-left-20 {
+  margin-left: 2rem;
 }
 
 .margin-left-35 {
@@ -647,6 +670,10 @@ textarea {
   padding: 0 1.5rem 0.5rem 0;
 }
 
+.padding-x-10 {
+  padding: 0 1rem 0 1rem;
+}
+
 .padding-x-13 {
   padding: 0 1.3rem 0 1.3rem;
 }
@@ -656,6 +683,11 @@ textarea {
 }
 
 .padding-x-24 {
+  padding: 0 2.4rem 0 2.4rem;
+}
+
+
+.padding-x-24-tablet {
   padding: 0 2.4rem 0 2.4rem;
 }
 
@@ -676,12 +708,20 @@ textarea {
   padding: 0 1.7rem 0 1.7rem;
 }
 
+.padding-x-40 {
+  padding: 0 4rem 0 4rem;
+}
+
 .padding-20 {
   padding: 2rem;
 }
 
 .padding-40 {
   padding: 4rem;
+}
+
+.padding-top-40 {
+  padding-top: 4rem;
 }
 
 .padding-left-10 {
@@ -694,6 +734,10 @@ textarea {
 
 .padding-left-20 {
   padding-left: 2rem;
+}
+
+.padding-left-40 {
+  padding-left: 4rem;
 }
 
 .padding-right-15 {
@@ -773,6 +817,11 @@ textarea {
 .size-25 {
   width: 2.5rem;
   height: 2.5rem;
+}
+
+.size-50 {
+  width: 5rem;
+  height: 5rem;
 }
 
 .display-close {
@@ -871,6 +920,11 @@ textarea {
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
+
+  .padding-x-24-tablet {
+    padding: 0 1.7rem 0 1.7rem;
+  }
+
 }
 
 /* Телефон 767px */

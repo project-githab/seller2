@@ -18,7 +18,7 @@
   right: 0.8rem;
 }
 
-.block {
+.shadow {
   border-left: 0.1rem solid var(--color-5);
   box-shadow: 0 0 0.8rem 0 rgb(191 191 191 / 50%);
 }

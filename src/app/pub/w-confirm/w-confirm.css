@@ -1,6 +1,11 @@
+.plus-seven {
+  top: 1.3rem;
+  left: 0.7rem;
+}
+
 .img-size {
-  width: 7rem;
-  height: 7rem;
+  width: 10rem;
+  height: 10rem;
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
 }
@@ -15,7 +20,6 @@
 }
 
 .login-form {
-  max-width: 48rem;
   width: 100%;
 }
 
@@ -24,17 +28,12 @@
   right: 0.8rem;
 }
 
-.block {
-  border-left: 0.1rem solid var(--color-5);
-  box-shadow: 0 0 0.8rem 0 rgb(191 191 191 / 50%);
-}
 
 .input-form {
-  height: 4rem;
+  height: 5rem;
   border-radius: 0.8rem;
   background-color: var(--color-7);
   outline: none;
-  padding: 0 3.8rem 0 1rem;
   border: 0.2rem solid transparent;
   transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
   font-size: 1.8rem;
@@ -48,6 +47,7 @@
   background-color: var(--color-1);
   border: 0.2rem solid var(--color-9);
 }
+
 
 /*/////////////*/
 
@@ -92,10 +92,6 @@
 
 /* Планшет 991px */
 @media (max-width: 61.938em) {
-
-  .padding-x-24 {
-    padding: 0 1.7rem 0 1.7rem;
-  }
 
 }
 
