@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./public/w-home/w-home').then((m) => m.WHome),
+    loadComponent: () => import('./pub/w-home/w-home').then((m) => m.WHome),
     pathMatch: 'full',
   },
   {
@@ -39,8 +39,7 @@ export const routes: Routes = [
   },
   {
     path: 'registration',
-    loadComponent: () =>
-      import('./public/w-registration/w-registration').then((m) => m.WRegistration),
+    loadComponent: () => import('./pub/w-registration/w-registration').then((m) => m.WRegistration),
     pathMatch: 'full',
   },
 ];
