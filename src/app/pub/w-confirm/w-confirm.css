@@ -98,4 +98,12 @@
 /* Телефон 767px */
 @media (max-width: 47.938em) {
 
+  .flex-col-phone {
+    flex-direction: column;
+  }
+
+  .margin-left-phone {
+    margin-left: 0;
+  }
+
 }
