@@ -1,0 +1,55 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 500 500"
+  role="img"
+  aria-labelledby="title">
+  <title id="title">Логотип магазина по умолчанию</title>
+
+  <circle
+    cx="250"
+    cy="250"
+    r="240"
+    fill="#fff8d5" />
+
+  <path
+    d="M115 205h270l-28-82H143l-28 82Z"
+    fill="#ffdc26"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linejoin="round" />
+
+  <path
+    d="M135 205v178h230V205"
+    fill="#ffffff"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linejoin="round" />
+
+  <path
+    d="M95 205h310"
+    fill="none"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linecap="round" />
+
+  <path
+    d="M195 383V280h110v103"
+    fill="#ffdc26"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linejoin="round" />
+
+  <path
+    d="M115 205c0 31 25 56 56 56s56-25 56-56"
+    fill="#ffffff"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linejoin="round" />
+
+  <path
+    d="M227 205c0 31 25 56 56 56s56-25 56-56"
+    fill="#ffffff"
+    stroke="#2b2b2b"
+    stroke-width="18"
+    stroke-linejoin="round" />
+</svg>
