@@ -84,7 +84,8 @@
                 <div class="flex font-size-18 font-weight-700">Название магазина</div>
                 <input id="1"
                        class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                       value="Магазин Колобок">
+                       [value]="storeName()"
+                       readonly>
               </div>
 
             </div>
@@ -106,7 +107,9 @@
             <div class="flex width-full flex-col">
               <div class="flex font-size-18 font-weight-700 margin-top-20">Описание магазина</div>
               <textarea
-                class="height-41 font-size-18 radius-10 width-full padding-10 margin-top-10 input-txt min-height-100">Очень хороший магазин</textarea>
+                class="height-41 font-size-18 radius-10 width-full padding-10 margin-top-10 input-txt min-height-100"
+                [value]="storeSettings()?.storeDescription ?? ''"
+                readonly></textarea>
             </div>
 
             <div class="flex width-full margin-top-20 gap-10 flex-wrap">
@@ -116,25 +119,32 @@
                 <div
                   class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
                   title="ИНН организации, ИП или физ. лица">
-                  <div class="flex">6404853456</div>
+                  <div class="flex">{{ storeSettings()?.inn ?? '' }}</div>
                 </div>
               </div>
 
-              <div class="flex flex-1 flex-col">
-                <div class="font-size-18 font-weight-700" title="ОГРН организации, ИП">ОГРН</div>
-                <div
-                  class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
-                  title="ОГРН организации, ИП">
-                  <div class="flex">640485345656753</div>
+              @if (registrationNumber() !== '') {
+                <div class="flex flex-1 flex-col">
+                  <div
+                    class="font-size-18 font-weight-700"
+                    [title]="registrationNumberLabel()">
+                    {{ registrationNumberLabel() }}
+                  </div>
+
+                  <div
+                    class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
+                    [title]="registrationNumberLabel()">
+                    <div class="flex">{{ registrationNumber() }}</div>
+                  </div>
                 </div>
-              </div>
+              }
 
               <div class="flex flex-1 flex-col">
                 <div class="font-size-18 font-weight-700" title="Дата регистрации">Регистрации</div>
                 <div
                   class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
                   title="Дата регистрации">
-                  <div class="flex">27.06.2026</div>
+                  <div class="flex">{{ registrationDate() }}</div>
                   <div class="flex margin-left-10">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                          fill="#000000">
@@ -176,23 +186,34 @@
                     <div class="flex font-size-18 font-weight-700">E-mail</div>
                     <input id="2"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           value="vasa@mail.ru">
+                           [value]="storeSettings()?.email ?? ''"
+                           readonly>
                   </div>
 
                   <div class="flex width-full flex-col">
                     <div class="flex font-size-18 font-weight-700">Телефон</div>
                     <input id="3"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           value="+7 000 000 00 00">
+                           [value]="storeSettings()?.phone ?? ''"
+                           readonly>
                   </div>
 
                 </div>
 
                 <div class="flex width-full margin-top-20 flex-col">
-                  <div class="flex font-size-18 font-weight-700">Адрес</div>
-                  <input id="4"
+                  <div class="flex font-size-18 font-weight-700">Юридический адрес</div>
+                  <input id="seller-registration-address"
                          class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                         value="Улица Пушкина, дом калатушкина">
+                         [value]="storeSettings()?.registrationAddress ?? ''"
+                         readonly>
+                </div>
+
+                <div class="flex width-full margin-top-20 flex-col">
+                  <div class="flex font-size-18 font-weight-700">Фактический адрес</div>
+                  <input id="seller-actual-address"
+                         class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                         [value]="storeSettings()?.actualAddress ?? ''"
+                         readonly>
                 </div>
 
                 <div class="flex width-full margin-top-20">
@@ -253,7 +274,7 @@
             <div
               class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
               title="Название банка">
-              <div class="flex">АО "Союз Банк"</div>
+              <div class="flex">{{ storeSettings()?.bankName ?? '' }}</div>
             </div>
           </div>
 
@@ -262,7 +283,7 @@
             <div
               class="flex block-in-active margin-top-10 radius-10 font-size-18 items-center justify-center padding-left-10 padding-right-10"
               title="Расчётный счёт">
-              <div class="flex">5643 4567 8923 4567 8923</div>
+              <div class="flex">{{ storeSettings()?.bankAccountNumber ?? '' }}</div>
             </div>
           </div>
 

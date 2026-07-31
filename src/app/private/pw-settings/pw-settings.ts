@@ -1,9 +1,11 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CpHeader } from '../../shared/private/cp-header/cp-header';
 import { CpMenuList } from '../../shared/private/cp-menu-list/cp-menu-list';
 import { NgOptimizedImage } from '@angular/common';
 import { SellerLogoService } from '../../_core/service/seller-logo.service';
 import { finalize } from 'rxjs';
+import { SellerSettingsService } from '../../_core/service/seller-settings.service';
+import { SellerSettingsResponse } from '../../_core/model/seller-settings.response';
 
 @Component({
   selector: 'app-pw-settings',
@@ -16,6 +18,12 @@ export class PwSettings implements OnInit {
    * Сервис чтения и загрузки логотипа магазина.
    */
   private readonly sellerLogoService = inject(SellerLogoService);
+
+  /**
+   * Сервис безопасно получает настройки
+   * текущего магазина из Go API.
+   */
+  private readonly sellerSettingsService = inject(SellerSettingsService);
 
   /**
    * Максимальный размер исходного логотипа:
@@ -41,10 +49,102 @@ export class PwSettings implements OnInit {
   readonly logoUrl = signal('/img/default-store-logo.svg');
 
   /**
+   * Настоящее название магазина,
+   * полученное из PostgreSQL через Go API.
+   *
+   * До завершения запроса фиктивное
+   * название не показывается.
+   */
+  readonly storeName = signal('');
+
+  /**
+   * Полные настройки текущего магазина.
+   *
+   * null означает, что ответ сервера
+   * ещё не получен.
+   */
+  readonly storeSettings = signal<SellerSettingsResponse | null>(null);
+
+  /**
+   * Возвращает правильную подпись
+   * регистрационного номера продавца.
+   *
+   * У самозанятого регистрационного
+   * номера этого типа нет.
+   */
+  readonly registrationNumberLabel = computed(() => {
+    const sellerType = this.storeSettings()?.sellerType;
+
+    if (sellerType === 'legal_entity') {
+      return 'ОГРН';
+    }
+
+    if (sellerType === 'individual_entrepreneur') {
+      return 'ОГРНИП';
+    }
+
+    return '';
+  });
+
+  /**
+   * Возвращает ОГРН юридического лица
+   * либо ОГРНИП индивидуального предпринимателя.
+   */
+  readonly registrationNumber = computed(() => {
+    const settings = this.storeSettings();
+
+    if (settings?.sellerType === 'legal_entity') {
+      return settings.ogrn;
+    }
+
+    if (settings?.sellerType === 'individual_entrepreneur') {
+      return settings.ogrnip;
+    }
+
+    return '';
+  });
+
+  /**
+   * Преобразует дату регистрации
+   * из ISO 8601 в формат ДД.ММ.ГГГГ.
+   *
+   * Берём календарную часть строки напрямую,
+   * чтобы браузер не сдвинул день
+   * при преобразовании часового пояса.
+   */
+  readonly registrationDate = computed(() => {
+    const registeredAt = this.storeSettings()?.registeredAt;
+
+    if (registeredAt === undefined) {
+      return '';
+    }
+
+    const dateParts = /^(\d{4})-(\d{2})-(\d{2})/.exec(registeredAt);
+
+    if (dateParts === null) {
+      return '';
+    }
+
+    return `${dateParts[3]}.${dateParts[2]}.${dateParts[1]}`;
+  });
+
+  /**
    * После открытия страницы запрашиваем
    * текущий логотип авторизованного продавца.
    */
   ngOnInit(): void {
+    this.sellerSettingsService.current().subscribe({
+      next: (response) => {
+        // Записываем настоящее название магазина,
+        // которое Go прочитал по sellerID сессии.
+        // Полный ответ понадобится всем блокам
+        // страницы настроек.
+        this.storeSettings.set(response);
+
+        this.storeName.set(response.storeName);
+      },
+    });
+
     this.sellerLogoService.current().subscribe({
       next: (response) => {
         /**
