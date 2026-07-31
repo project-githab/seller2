@@ -9,6 +9,10 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'settings', renderMode: RenderMode.Client },
   { path: 'add-product', renderMode: RenderMode.Client },
   { path: 'registration', renderMode: RenderMode.Server },
-  { path: 'confirm', renderMode: RenderMode.Server },
+  /**
+   * Страница оформления продавца защищена сессией
+   * и загружается только в браузере.
+   */
+  { path: 'confirm', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Prerender },
 ];

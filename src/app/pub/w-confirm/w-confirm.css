@@ -1,3 +1,20 @@
+/**
+ * Убираем стандартное браузерное оформление,
+ * сохраняя существующий дизайн кнопки регистрации.
+ */
+.registration-submit-button {
+  border: none;
+  font: inherit;
+}
+
+/**
+ * Отключённая кнопка не должна показывать
+ * курсор доступного действия.
+ */
+.registration-submit-button:disabled {
+  cursor: default;
+}
+
 .plus-seven {
   top: 1.3rem;
   left: 0.7rem;

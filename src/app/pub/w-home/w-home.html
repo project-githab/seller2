@@ -1,7 +1,12 @@
 <app-c-header></app-c-header>
 
-<div class="flex width-full justify-center">
-  <div class="flex max-width-1400 width-full margin-x-20-phone justify-center">
+<main class="flex width-full justify-center">
+  <!-- Реактивная форма входа продавца. -->
+  <form
+    class="flex max-width-1400 width-full margin-x-20-phone justify-center"
+    [formGroup]="loginForm"
+    (ngSubmit)="submitLogin()"
+  >
 
     <div
       class="flex margin-y-40 login-form padding-40 radius-10 justify-center overflow-hidden shadow flex-col items-center">
@@ -15,11 +20,20 @@
 
         <div class="flex font-size-24 font-weight-700 margin-top-10 text-center">С возвращением, Партнер!</div>
 
-        <div class="flex width-full pt35 margin-top-35">Email</div>
+        <label class="flex width-full pt35 margin-top-35" for="login-email">
+          Email
+        </label>
         <div class="flex width-full relative">
-          <input name="email" type="email" class="input-form width-full" autocomplete="username"
-                 placeholder="Укажите email"
-                 required>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            class="input-form width-full"
+            autocomplete="email"
+            formControlName="email"
+            placeholder="Укажите email"
+            required
+          >
           <div class="flex absolute email-position">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
               <path
@@ -28,11 +42,21 @@
           </div>
         </div>
 
-        <div class="flex width-full pt35 margin-top-35 margin-top-20">Пароль</div>
+        <label
+          class="flex width-full pt35 margin-top-35 margin-top-20"
+          for="login-password">
+          Пароль
+        </label>
         <div class="flex width-full relative">
-          <input name="password" type="password" class="input-form width-full" autocomplete="username"
-                 placeholder="Укажите email"
-                 required>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            class="input-form width-full"
+            autocomplete="current-password"
+            formControlName="password"
+            placeholder="Укажите пароль"
+            required>
           <div class="flex absolute email-position">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
               <path
@@ -43,8 +67,14 @@
 
         <div class="flex width-full margin-top-20">
           <div class="flex margin-right-10">
-            <input class="display-close check" id="item" type="checkbox" name="checkbox" value="Выбор товаров">
-            <label class="checkbox z-index-1 bg-page" for="item">
+            <input
+              class="display-close check"
+              id="login-remember-me"
+              type="checkbox"
+              name="rememberMe"
+              formControlName="rememberMe"
+            >
+            <label class="checkbox z-index-1 bg-page" for="login-remember-me">
               <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                    width="20px">
                 <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
@@ -57,8 +87,15 @@
         <div class="flex width-full">
           <div class="flex height-80 margin-bottom-20 bg-page margin-top-20">
             <div class="flex width-60 items-center justify-center">
-              <input class="display-close check" id="robot" type="checkbox" name="checkbox" value="Выбор товаров">
-              <label class="checkbox z-index-1 bg-page" for="robot">
+              <input
+                class="display-close check"
+                id="login-robot"
+                type="checkbox"
+                name="robotConfirmed"
+                formControlName="robotConfirmed"
+                required
+              >
+              <label class="checkbox z-index-1 bg-page" for="login-robot">
                 <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
                      width="20px">
                   <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
@@ -91,10 +128,30 @@
         </div>
 
 
-        <div class="flex width-full justify-end">
-          <div class="flex font-size-18 padding-x-24 bg-hover-gray height-50 items-center radius-10"
-               routerLink="/inventory">Войти
+        <!-- Ошибка входа, полученная от Go API. -->
+        @if (errorMessage()) {
+          <div class="flex width-full margin-bottom-20 text-red" role="alert">
+            {{ errorMessage() }}
           </div>
+        }
+
+        <div class="flex width-full justify-end">
+          <!-- Настоящая кнопка отправки формы входа. -->
+          <button
+            class="login-submit-button flex font-size-18 padding-x-24 height-50 items-center radius-10 justify-center"
+            type="submit"
+            [class.bg-hover-gray]="loginForm.valid && !isSubmitting()"
+            [class.pointer]="loginForm.valid && !isSubmitting()"
+            [class.button-disabled]="loginForm.invalid || isSubmitting()"
+            [disabled]="loginForm.invalid || isSubmitting()"
+            [attr.aria-busy]="isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              Вход…
+            } @else {
+              Войти
+            }
+          </button>
         </div>
 
         <div class="flex width-full justify-end margin-top-20">
@@ -108,9 +165,9 @@
 
     </div>
 
-  </div>
+  </form>
 
-</div>
+</main>
 
 <!--Для для сообщений на странице-->
 <!--<<div class="overlay">-->

@@ -361,7 +361,7 @@ textarea {
 
 .button-primary {
   padding: 0 1rem;
-  height: 4rem;
+  height: 5rem;
   justify-content: center;
   align-items: center;
   border: none;
@@ -502,6 +502,10 @@ textarea {
 
 .text-blue {
   color: var(--color-11);
+}
+
+.text-black {
+  color: var(--color-2);
 }
 
 .text-red {
@@ -739,6 +743,10 @@ textarea {
 
 .padding-left-20 {
   padding-left: 2rem;
+}
+
+.padding-left-30 {
+  padding-left: 3rem;
 }
 
 .padding-left-40 {

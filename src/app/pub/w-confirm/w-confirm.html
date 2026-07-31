@@ -4,7 +4,10 @@
 <main class="flex justify-center margin-bottom-20 padding-x-24-tablet font-size-16">
   <div class="flex max-width-1400 width-full items-center flex-col">
 
-    <div class="flex shadow flex-col margin-top-40 max-width-80 radius-10 justify-center items-center">
+    <form
+      class="flex shadow flex-col margin-top-40 max-width-80 radius-10 justify-center items-center"
+      [formGroup]="onboardingForm"
+      (ngSubmit)="submitOnboarding()">
 
 
       <div class="flex padding-20 flex-col items-center font-size-18">
@@ -39,49 +42,175 @@
         </div>
       </div>
 
-      <div class="lex width-full items-center padding-20">
-        <div class="flex gap-20 width-full flex-col-phone">
-          <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">ИНН <span class="text-red">*</span></div>
-            <div class="flex width-full margin-top-10">
-              <input name="ИНН" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="Укажите ИНН"
-                     required>
+
+      <div
+        class="flex flex-col width-full items-center padding-20"
+        formGroupName="registration">
+
+        <div class="flex width-full font-weight-700">
+          Тип продавца <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <select
+            class="input-form padding-x-10 width-full"
+            formControlName="sellerType"
+            (change)="updateSellerType()">
+            @for (option of sellerTypeOptions; track option.value) {
+              <option [value]="option.value">
+                {{ option.label }}
+              </option>
+            }
+          </select>
+        </div>
+
+        @if (isIndividualEntrepreneur) {
+
+          <div class="flex width-full margin-top-20">
+            <div class="flex margin-right-10">
+
+              <input
+                class="display-close check"
+                id="registration-remember-me"
+                type="checkbox"
+                name="rememberMe"
+                formControlName="isNpd">
+
+              <label class="checkbox z-index-1 bg-page" for="registration-remember-me">
+                <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                     width="20px">
+                  <path d="M389-227 154-461l91-92 144 145 327-326 91 90-418 417Z" />
+                </svg>
+              </label>
             </div>
+            <div class="flex font-size-18">Применяю налоговый режим НПД</div>
           </div>
 
-          <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">КПП <span class="text-red">*</span></div>
-            <div class="flex width-full margin-top-10">
-              <input name="kpp" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="Укажите КПП"
-                     required>
+        }
+
+        @if (selectedSellerType === 'individual') {
+          <div class="flex width-full margin-top-20">
+            Самозанятый регистрируется как физическое лицо на НПД.
+          </div>
+        }
+
+        <div class="flex width-full margin-top-35 font-weight-700">
+          @if (isLegalEntity) {
+            Официальное название организации
+          } @else {
+            Полное ФИО
+          }
+          <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="registeredName"
+            [placeholder]="
+        isLegalEntity
+          ? 'Укажите официальное название организации'
+          : 'Укажите полное ФИО'
+      "
+            required>
+        </div>
+
+        <div class="flex width-full margin-top-35 font-weight-700">
+          ИНН <span class="text-red">*</span>
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input
+            type="text"
+            inputmode="numeric"
+            class="input-form padding-x-10 width-full"
+            formControlName="inn"
+            [attr.maxlength]="isLegalEntity ? 10 : 12"
+            [placeholder]="isLegalEntity ? '10 цифр' : '12 цифр'"
+            required>
+        </div>
+
+        @if (isLegalEntity) {
+          <div class="flex gap-20 width-full margin-top-35 flex-col-phone">
+            <div class="flex-col width-full">
+              <div class="flex width-full font-weight-700">
+                КПП <span class="text-red">*</span>
+              </div>
+              <div class="flex width-full margin-top-10">
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="9"
+                  class="input-form padding-x-10 width-full"
+                  formControlName="kpp"
+                  placeholder="9 цифр"
+                  required>
+              </div>
+            </div>
+
+            <div class="flex-col width-full">
+              <div class="flex width-full font-weight-700">
+                ОГРН <span class="text-red">*</span>
+              </div>
+              <div class="flex width-full margin-top-10">
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="13"
+                  class="input-form padding-x-10 width-full"
+                  formControlName="ogrn"
+                  placeholder="13 цифр"
+                  required>
+              </div>
             </div>
           </div>
+        }
 
+        @if (isIndividualEntrepreneur) {
+          <div class="flex width-full margin-top-35 font-weight-700">
+            ОГРНИП <span class="text-red">*</span>
+          </div>
+          <div class="flex width-full margin-top-10">
+            <input
+              type="text"
+              inputmode="numeric"
+              maxlength="15"
+              class="input-form padding-x-10 width-full"
+              formControlName="ogrnip"
+              placeholder="15 цифр"
+              required>
+          </div>
+        }
+
+        <div class="flex width-full margin-top-35 font-weight-700">
+          @if (isLegalEntity) {
+            Юридический адрес
+          } @else {
+            Адрес регистрации
+          }
+          <span class="text-red">*</span>
         </div>
-
-        <div class="flex width-full margin-top-35 font-weight-700">ОГРН <span class="text-red">*</span></div>
         <div class="flex width-full margin-top-10">
-          <input name="ogrn" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="Укажите ОГРН"
-                 required>
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="registrationAddress"
+            [placeholder]="
+        isLegalEntity
+          ? 'Укажите юридический адрес'
+          : 'Укажите адрес регистрации'
+      "
+            required>
         </div>
 
-        <div class="flex width-full margin-top-35 font-weight-700">Юридическй адрес <span class="text-red">*</span>
+        <div class="flex width-full margin-top-35 font-weight-700">
+          Фактический адрес <span class="text-red">*</span>
         </div>
         <div class="flex width-full margin-top-10">
-          <input name="address1" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="Юридический адрес"
-                 required>
-        </div>
-
-        <div class="flex width-full margin-top-35 font-weight-700">Фактический адрес <span
-          class="text-red">*</span></div>
-        <div class="flex width-full margin-top-10">
-          <input name="address2" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="Фактический адрес"
-                 required>
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="actualAddress"
+            placeholder="Укажите фактический адрес"
+            required>
         </div>
       </div>
 
@@ -92,62 +221,97 @@
           <div class="flex font-size-24 font-weight-700">2</div>
         </div>
         <div class="flex margin-left-20 flex-col">
-          <div class="flex font-size-24 font-weight-700">Представитель организации</div>
-          <div class="flex">Контактное лицо, ответственного за работу магазина</div>
+          <div class="flex font-size-24 font-weight-700">
+            @if (isLegalEntity) {
+              Представитель организации
+            } @else {
+              Контактные данные
+            }
+          </div>
+          <div class="flex">
+            @if (isLegalEntity) {
+              Ответственный за работу магазина
+            } @else {
+              Данные продавца для связи
+            }
+          </div>
         </div>
       </div>
 
-      <div class="flex flex-col width-full items-center padding-20">
+      <div
+        class="flex flex-col width-full items-center padding-20"
+        formGroupName="contact">
+
         <div class="flex gap-20 width-full flex-col-phone">
           <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">Фамилия <span class="text-red">*</span></div>
+            <div class="flex width-full font-weight-700">
+              Фамилия <span class="text-red">*</span>
+            </div>
             <div class="flex width-full margin-top-10">
-              <input name="surname" type="text" class="input-form padding-x-10 width-full padding-x-10"
-                     placeholder="Фамилия"
-                     required>
+              <input
+                type="text"
+                class="input-form padding-x-10 width-full"
+                formControlName="lastName"
+                placeholder="Фамилия"
+                required>
             </div>
           </div>
 
           <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">Имя <span class="text-red">*</span></div>
+            <div class="flex width-full font-weight-700">
+              Имя <span class="text-red">*</span>
+            </div>
             <div class="flex width-full margin-top-10">
-              <input name="name" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="Имя"
-                     required>
+              <input
+                type="text"
+                class="input-form padding-x-10 width-full"
+                formControlName="firstName"
+                placeholder="Имя"
+                required>
             </div>
           </div>
-
         </div>
 
-        <div class="flex margin-top-35 gap-20 width-full flex-col-phone">
-          <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">Отчество <span class="text-red">*</span></div>
-            <div class="flex width-full margin-top-10">
-              <input name="patronymic" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="Отчество"
-                     required>
-            </div>
-          </div>
-
-          <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">Должность <span class="text-red">*</span></div>
-            <div class="flex width-full margin-top-10">
-              <input name="job-title" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="Должность"
-                     required>
-            </div>
-          </div>
-
+        <div class="flex width-full margin-top-35 font-weight-700">
+          Отчество
+        </div>
+        <div class="flex width-full margin-top-10">
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="patronymic"
+            placeholder="Отчество, если есть">
         </div>
 
-        <div class="flex width-full margin-top-35 font-weight-700">Телефон <span class="text-red">*</span></div>
+        @if (isLegalEntity) {
+          <div class="flex width-full margin-top-35 font-weight-700">
+            Должность <span class="text-red">*</span>
+          </div>
+          <div class="flex width-full margin-top-10">
+            <input
+              type="text"
+              class="input-form padding-x-10 width-full"
+              formControlName="jobTitle"
+              placeholder="Должность"
+              required>
+          </div>
+        }
+
+        <div class="flex width-full margin-top-35 font-weight-700">
+          Телефон <span class="text-red">*</span>
+        </div>
         <div class="flex width-full margin-top-10 relative">
-          <div class="absolute font-size-18 font-weight-700 plus-seven margin-left-5">+7</div>
-          <input name="phone" type="text" class="input-form padding-left-40 padding-right-10 width-full"
-                 placeholder="900 000-00-00"
-                 required>
+          <div class="flex font-size-18 font-weight-700 items-center justify-center absolute plus-seven">+7</div>
+          <input
+            type="tel"
+            inputmode="numeric"
+            maxlength="10"
+            class="input-form padding-left-30 padding-right-10 width-full"
+            formControlName="phone"
+            placeholder="900 000-00-00"
+            autocomplete="tel"
+            required>
         </div>
-
       </div>
 
       <div class="styled-hr margin-top-20 margin-bottom-20"></div>
@@ -162,46 +326,58 @@
         </div>
       </div>
 
-      <div class="flex flex-col width-full items-center padding-20">
+      <div
+        class="flex flex-col width-full items-center padding-20"
+        formGroupName="bankAccount">
 
-        <div class="flex width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
+        <div class="flex width-full font-weight-700">
+          Расчётный счёт <span class="text-red">*</span>
         </div>
         <div class="flex width-full margin-top-10">
-          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="20 цифр"
-                 required>
+          <input
+            type="text"
+            inputmode="numeric"
+            maxlength="20"
+            class="input-form padding-x-10 width-full"
+            formControlName="accountNumber"
+            placeholder="20 цифр"
+            required>
         </div>
 
         <div class="flex gap-20 width-full margin-top-35 flex-col-phone">
           <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">БИК <span class="text-red">*</span></div>
+            <div class="flex width-full font-weight-700">
+              БИК <span class="text-red">*</span>
+            </div>
             <div class="flex width-full margin-top-10">
-              <input name="bik" type="text" class="input-form padding-x-10 width-full padding-x-10"
-                     placeholder="9 цифр"
-                     required>
+              <input
+                type="text"
+                inputmode="numeric"
+                maxlength="9"
+                class="input-form padding-x-10 width-full"
+                formControlName="bik"
+                placeholder="9 цифр"
+                required>
             </div>
           </div>
 
           <div class="flex-col width-full">
-            <div class="flex width-full font-weight-700">Корреспондентский счёт <span class="text-red">*</span>
+            <div class="flex width-full font-weight-700">
+              Корреспондентский счёт
+              <span class="text-red">*</span>
             </div>
             <div class="flex width-full margin-top-10">
-              <input name="cor-account" type="text" class="input-form padding-x-10 width-full"
-                     placeholder="20 цифр"
-                     required>
+              <input
+                type="text"
+                inputmode="numeric"
+                maxlength="20"
+                class="input-form padding-x-10 width-full"
+                formControlName="correspondentAccount"
+                placeholder="20 цифр"
+                required>
             </div>
           </div>
-
         </div>
-
-        <div class="flex margin-top-35 width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
-        </div>
-        <div class="flex width-full margin-top-10">
-          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="20 цифр"
-                 required>
-        </div>
-
       </div>
 
       <div class="styled-hr margin-top-20 margin-bottom-20"></div>
@@ -216,52 +392,45 @@
         </div>
       </div>
 
-      <div class="flex flex-col width-full items-center padding-20">
+      <div
+        class="flex flex-col width-full items-center padding-20"
+        formGroupName="store">
 
-        <div class="flex width-full font-weight-700">Название магазина <span class="text-red">*</span>
+        <div class="flex width-full font-weight-700">
+          Название магазина <span class="text-red">*</span>
         </div>
         <div class="flex width-full margin-top-10">
-          <input name="store-name" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="Название магазина"
-                 required>
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="name"
+            placeholder="Название магазина"
+            required>
         </div>
 
-        <div class="flex width-full margin-top-35 font-weight-700">Логотип магазина</div>
-        <div class="flex width-full items-center margin-top-10 bg-page border-dashed radius-10 padding-20 gap-20">
-
-          <div class="flex">
-            <div class="flex overflow-hidden img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара"
-                   class=" overflow-hiddenobject-fit-contain width-full height-full radius-10"
-                   height="290"
-                   width="290">
-            </div>
-          </div>
-
-          <div class="flex-col">
-            <div class="flex">
-              <div class="flex font-size-18 padding-x-24 bg-hover-yellow height-50 items-center radius-10 pointer">
-                Выбрать
-              </div>
-            </div>
-            <div class="flex margin-top-10">PNG, JPG, WebP. Рекомендуемый размер не менее 500 х 500 пикселей</div>
-          </div>
-
-        </div>
-
-        <div class="flex width-full font-weight-700 margin-top-35">Описание магазина <span class="text-red">*</span>
+        <div class="flex width-full font-weight-700 margin-top-35">
+          Описание магазина <span class="text-red">*</span>
         </div>
         <div class="flex width-full margin-top-10">
-          <textarea name="business-account" type="text"
-                    class="input-form padding-10 width-full min-width-150 min-height-100"
-                    placeholder="Коротко расскажите о магазине, ассортименте и преимуществах" required></textarea>
+    <textarea
+      class="input-form padding-10 width-full min-width-150 min-height-100"
+      formControlName="description"
+      maxlength="1000"
+      placeholder="Коротко расскажите о магазине, ассортименте и преимуществах"
+      required></textarea>
         </div>
+
         <div class="flex between width-full">
-          <div class="flex margin-top-5">До 1 000 символов</div>
-          <div class="flex margin-top-5">1000/0</div>
+          <div class="flex margin-top-5">
+            До 1 000 символов
+          </div>
+          <div class="flex margin-top-5">
+            {{
+              onboardingForm.controls.store.controls.description
+                .value.length
+            }}/1000
+          </div>
         </div>
-
-
       </div>
 
       <div class="styled-hr margin-top-20 margin-bottom-20"></div>
@@ -277,15 +446,19 @@
       </div>
 
       <div class="flex flex-col width-full items-center padding-20">
-
-        <div class="flex width-full font-weight-700">Расчётный счёт <span class="text-red">*</span>
+        <div class="flex width-full font-weight-700">
+          Полный адрес точки передачи заказов
+          <span class="text-red">*</span>
         </div>
+
         <div class="flex width-full margin-top-10">
-          <input name="business-account" type="text" class="input-form padding-x-10 width-full"
-                 placeholder="Введите полный адрес"
-                 required>
+          <input
+            type="text"
+            class="input-form padding-x-10 width-full"
+            formControlName="pickupPointAddress"
+            placeholder="Введите полный адрес"
+            required>
         </div>
-
       </div>
 
       <div class="flex width-full items-center padding-20">
@@ -316,23 +489,38 @@
 
 
       <div class="flex width-full items-center padding-20">
-        <div class="flex width-full">
-          <div class="flex width-full margin-bottom-20 between font-size-18 margin-top-40">
-            <!--Не активная кнопка-->
-            <div class="button-disabled width-full padding-x-17">
-              Сохранить
+        <div class="flex width-full flex-col">
+
+          @if (submitError() !== null) {
+            <div
+              class="flex width-full text-red margin-bottom-20"
+              role="alert"
+              aria-live="polite">
+              {{ submitError() }}
             </div>
-            <!--Активная кнопка-->
-            <!--<div
-              class="flex font-size-18 width-full bg-hover-yellow height-50 items-center radius-10 pointer justify-center margin-left-10"
-              routerLink="/registration">Зарегистрироваться
-            </div>-->
+          }
+
+          <div class="flex width-full margin-bottom-20 between font-size-18 margin-top-40">
+
+            <button type="submit" class="registration-submit-button width-full padding-x-17 text-black"
+                    [class.button-disabled]="onboardingForm.invalid || isSubmitting()"
+                    [class.button-primary]="onboardingForm.valid && !isSubmitting()"
+                    [class.pointer]="onboardingForm.valid && !isSubmitting()"
+                    [disabled]="onboardingForm.invalid || isSubmitting()">
+              @if (isSubmitting()) {
+                Сохраняем...
+              } @else {
+                Сохранить
+              }
+            </button>
 
           </div>
+
+
         </div>
       </div>
 
-    </div>
+    </form>
 
 
   </div>
