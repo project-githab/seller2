@@ -19,12 +19,21 @@
             <div class="flex font-size-40 font-weight-700">Добавить</div>
           </div>
 
-          <div class="flex justify-end cm-t20">
+          <div class="flex justify-end cm-t20 product-save-actions">
 
+            @if (productSaveError()) {
+              <p class="product-save-feedback error" role="alert">{{ productSaveError() }}</p>
+            }
 
-            <div class="flex font-size-18 button-in-active margin-left-10 radius-10">
-              <div class="flex font-size-18">Сохранить</div>
-            </div>
+            @if (productSaveMessage()) {
+              <p class="product-save-feedback success" role="status">{{ productSaveMessage() }}</p>
+            }
+
+            <button class="flex font-size-18 button-blue2 radius-10 product-draft-save-button" type="button"
+                    [disabled]="isSavingProduct() || isLoadingProductEditor() || isLoadingCategoryDefinition()"
+                    (click)="saveProductDraft()">
+              <span class="flex font-size-18">{{ isSavingProduct() ? 'Сохраняем…' : 'Сохранить черновик' }}</span>
+            </button>
 
 
           </div>
@@ -52,39 +61,67 @@
 
             <div class="flex margin-top-20 flex-col">
               <div class="flex">Название товара</div>
-              <input id="1"
+              <input id="product-name" type="text"
                      class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                     placeholder="Укажите название товара">
+                     placeholder="Укажите название товара" minlength="3" maxlength="200" [value]="productName()"
+                     (input)="updateProductName($any($event.target).value)">
             </div>
 
             <div class="flex margin-top-20">
               <div class="flex width-full gap-20">
+
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Категория</div>
-                    <div class="flex height-41 radius-10 block-border-solid margin-top-10">
-                      <div class="flex items-center margin-left-10 width-full">Одежда</div>
-                      <div class="flex items-center justify-end">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                             fill="#000000">
-                          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                        </svg>
+
+                    @if (isLoadingCategories()) {
+                      <div
+                        class="flex height-41 radius-10 block-border-solid margin-top-10 items-center padding-left-10">
+                        Загружаем категории…
                       </div>
-                    </div>
+                    } @else if (categoryLoadError()) {
+                      <div class="category-field-message error">
+                        <span>{{ categoryLoadError() }}</span>
+                        <button type="button" (click)="retryCategories()">Повторить</button>
+                      </div>
+                    } @else {
+                      <select
+                        class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                        [value]="selectedCategoryId()"
+                        [disabled]="productCardId() !== null || isSavingProduct() || isLoadingProductEditor()"
+                        (change)="selectCategory($any($event.target).value)">
+                        <option value="">Выберите конечную категорию</option>
+
+                        @for (category of selectableCategories(); track category.categoryId) {
+                          <option [value]="category.categoryId"
+                                  [selected]="category.categoryId === selectedCategoryId()">{{ category.label }}
+                          </option>
+                        } @empty {
+                          <option value="" disabled>Нет доступных конечных категорий</option>
+                        }
+                      </select>
+                    }
+
+                    @if (isLoadingCategoryDefinition()) {
+                      <small class="category-field-hint">Загружаем характеристики категории…</small>
+                    } @else if (categoryDefinitionError()) {
+                      <div class="category-field-message error">
+                        <span>{{ categoryDefinitionError() }}</span>
+                        <button type="button" (click)="retryCategoryDefinition()">Повторить</button>
+                      </div>
+                    } @else if (selectedCategoryPath()) {
+                      <small class="category-field-hint">{{ selectedCategoryPath() }}</small>
+                    }
                   </div>
                 </div>
+
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Бренд</div>
-                    <div class="flex height-41 radius-10 block-border-solid margin-top-10">
-                      <div class="flex items-center margin-left-10">Андромеда</div>
-                      <div class="flex items-center width-full justify-end">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                             fill="#000000">
-                          <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                        </svg>
-                      </div>
-                    </div>
+                    <input id="product-brand" type="text"
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           placeholder="Укажите бренд" maxlength="120" [value]="brandName()"
+                           (input)="updateBrandName($any($event.target).value)">
                   </div>
                 </div>
               </div>
@@ -138,9 +175,10 @@
                   <div class="flex flex-1">
                     <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex">Цена</div>
-                      <input id="2" type="number"
+                      <input id="simple-product-price" type="text" inputmode="decimal"
                              class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                             placeholder="₽ 0.00">
+                             placeholder="₽ 0.00" maxlength="13" autocomplete="off" [value]="priceAmount()"
+                             (input)="updatePriceAmount($any($event.target).value)">
                     </div>
                   </div>
 
@@ -148,9 +186,11 @@
                     <div class="flex margin-top-20 flex-col width-full">
                       <div class="flex wi2">Количество</div>
                       <div class="flex wi1">Кол.</div>
-                      <input id="3" type="number"
+                      <input id="simple-product-stock" type="number" inputmode="numeric" min="0" max="2147483647"
+                             step="1"
                              class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                             placeholder="100">
+                             placeholder="100" [value]="stockQuantity()"
+                             (input)="updateStockQuantity($any($event.target).value)">
                     </div>
                   </div>
 
@@ -172,12 +212,12 @@
                     d="M600-320h120q17 0 28.5-11.5T760-360v-240q0-17-11.5-28.5T720-640H600q-17 0-28.5 11.5T560-600v240q0 17 11.5 28.5T600-320Zm40-80v-160h40v160h-40Zm-280 80h120q17 0 28.5-11.5T520-360v-240q0-17-11.5-28.5T480-640H360q-17 0-28.5 11.5T320-600v240q0 17 11.5 28.5T360-320Zm40-80v-160h40v160h-40Zm-200 80h80v-320h-80v320ZM80-160v-640h800v640H80Zm80-560v480-480Zm0 480h640v-480H160v480Z" />
                 </svg>
               </div>
-              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Опиаание товара</div>
+              <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Описание товара</div>
             </div>
 
 
             <div class="flex margin-top-20 flex-col">
-              <div class="flex">Опиаание</div>
+              <div class="flex">Описание</div>
 
               <textarea
                 class="height-41 font-size-18 radius-10 width-full padding-10 margin-top-10 input-txt min-height-154">Очень хороший товар</textarea>
@@ -233,8 +273,7 @@
                             <div class="flex items-center margin-left-10">EAN</div>
                             <div class="flex items-center justify-end">
                               <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                   width="24px"
-                                   fill="#000000">
+                                   width="24px" fill="#000000">
                                 <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
                               </svg>
                             </div>
@@ -265,6 +304,117 @@
 </div>
 
 
+<div class="flex justify-center">
+  <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
+    <div class="flex width-full padding-10 items-start flex-col">
+      <section class="product-characteristics-section">
+        <header class="product-characteristics-heading">
+          <h2>Характеристики товара</h2>
+          <p>Набор характеристик определяется выбранной категорией.</p>
+        </header>
+
+        @if (!selectedCategoryId()) {
+          <div class="product-characteristics-empty">Сначала выберите конечную категорию товара.</div>
+        } @else if (isLoadingCategoryDefinition()) {
+          <div class="product-characteristics-empty">Загружаем характеристики категории…</div>
+        } @else if (categoryDefinitionError()) {
+          <div class="product-characteristics-empty error">
+            <span>{{ categoryDefinitionError() }}</span>
+            <button type="button" (click)="retryCategoryDefinition()">Повторить загрузку</button>
+          </div>
+        } @else if (categoryAttributes().length === 0) {
+          <div class="product-characteristics-empty">Для выбранной категории характеристики пока не настроены.</div>
+        } @else {
+          <div class="product-characteristics-list">
+            @for (attribute of categoryAttributes(); track attribute.attributeId) {
+              <div class="product-characteristic-field">
+                <div class="product-characteristic-title">
+                  <label [for]="'attribute-' + attribute.attributeId">{{ attribute.attributeName }}</label>
+
+                  <div class="product-characteristic-badges">
+                    @if (attribute.isRequired) {
+                      <span class="product-characteristic-required">Обязательно</span>
+                    }
+
+                    @if (attribute.isVariant) {
+                      <span class="product-characteristic-variant">Для вариантов товара</span>
+                    }
+                  </div>
+                </div>
+
+                <small class="product-characteristic-meta">
+                  <span>{{ productAttributeDataTypeLabel(attribute.dataType) }}</span>
+
+                  @if (attribute.unitName) {
+                    <span>Единица: {{ attribute.unitName }}</span>
+                  }
+                </small>
+
+                @switch (attribute.dataType) {
+                  @case ('text') {
+                    <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId" type="text"
+                           autocomplete="off" [value]="attributeDraft(attribute.attributeId).valueText"
+                           (input)="updateAttributeText(attribute.attributeId, 'valueText', $any($event.target).value)">
+                  }
+                  @case ('integer') {
+                    <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
+                           type="number" inputmode="numeric" step="1"
+                           [value]="attributeDraft(attribute.attributeId).valueInteger"
+                           (input)="updateAttributeText(attribute.attributeId, 'valueInteger', $any($event.target).value)">
+                  }
+                  @case ('decimal') {
+                    <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
+                           type="number" inputmode="decimal" step="any"
+                           [value]="attributeDraft(attribute.attributeId).valueDecimal"
+                           (input)="updateAttributeText(attribute.attributeId, 'valueDecimal', $any($event.target).value)">
+                  }
+                  @case ('boolean') {
+                    <select class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
+                            [value]="attributeDraft(attribute.attributeId).valueBoolean === null ? '' : attributeDraft(attribute.attributeId).valueBoolean ? 'true' : 'false'"
+                            (change)="updateAttributeBoolean(attribute.attributeId, $any($event.target).value)">
+                      <option value="">Не выбрано</option>
+                      <option value="true">Да</option>
+                      <option value="false">Нет</option>
+                    </select>
+                  }
+                  @case ('select') {
+                    <select class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
+                            [value]="attributeDraft(attribute.attributeId).attributeOptionIds.at(0) ?? ''"
+                            (change)="updateSingleAttributeOption(attribute.attributeId, $any($event.target).value)">
+                      <option value="">Не выбрано</option>
+
+                      @for (option of attribute.options; track option.attributeOptionId) {
+                        <option [value]="option.attributeOptionId"
+                                [selected]="isAttributeOptionSelected(attribute.attributeId, option.attributeOptionId)">{{ option.optionValue }}
+                        </option>
+                      }
+                    </select>
+                  }
+                  @case ('multiselect') {
+                    <div class="product-characteristic-options" [id]="'attribute-' + attribute.attributeId">
+                      @for (option of attribute.options; track option.attributeOptionId) {
+                        <label class="product-characteristic-option">
+                          <input type="checkbox"
+                                 [checked]="isAttributeOptionSelected(attribute.attributeId, option.attributeOptionId)"
+                                 (change)="toggleMultipleAttributeOption(attribute.attributeId, option.attributeOptionId, $any($event.target).checked)">
+                          <span>{{ option.optionValue }}</span>
+                        </label>
+                      } @empty {
+                        <span>Доступные варианты отсутствуют.</span>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+</div>
+
+
 <!-- - - - - - - - - -->
 @if (productType === 'simple') {
 
@@ -278,8 +428,7 @@
           <div class="flex flex-col">
             <div class="flex overflow-hidden width-full img-size">
               <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290"
-                   width="290">
+                   height="290" width="290">
             </div>
             <div class="flex width-full justify-center margin-top-10">
               Главное
@@ -292,8 +441,7 @@
           <div class="flex flex-col">
             <div class="flex overflow-hidden width-full img-size">
               <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290"
-                   width="290">
+                   height="290" width="290">
             </div>
             <div class="flex width-full justify-center margin-top-10">2</div>
             <div class="flex width-full justify-center margin-top-10">
@@ -304,8 +452,7 @@
           <div class="flex flex-col">
             <div class="flex overflow-hidden width-full img-size">
               <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290"
-                   width="290">
+                   height="290" width="290">
             </div>
             <div class="flex width-full justify-center margin-top-10">3</div>
             <div class="flex width-full justify-center margin-top-10">
@@ -316,8 +463,7 @@
           <div class="flex flex-col">
             <div class="flex overflow-hidden width-full img-size">
               <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290"
-                   width="290">
+                   height="290" width="290">
             </div>
             <div class="flex width-full justify-center margin-top-10">4</div>
             <div class="flex width-full justify-center margin-top-10">
@@ -328,8 +474,7 @@
           <div class="flex flex-col">
             <div class="flex overflow-hidden width-full img-size">
               <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290"
-                   width="290">
+                   height="290" width="290">
             </div>
             <div class="flex width-full justify-center margin-top-10">5</div>
             <div class="flex width-full justify-center margin-top-10">
@@ -376,7 +521,9 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 1</div>
                     <input id="6" type="text"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           minlength="3" maxlength="300" [value]="productBullet(0)"
+                           (input)="updateProductBullet(0, $any($event.target).value)">
                   </div>
                 </div>
 
@@ -384,7 +531,9 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 2</div>
                     <input id="7" type="text"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           minlength="3" maxlength="300" [value]="productBullet(1)"
+                           (input)="updateProductBullet(1, $any($event.target).value)">
                   </div>
                 </div>
 
@@ -392,7 +541,9 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 3</div>
                     <input id="8" type="text"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           minlength="3" maxlength="300" [value]="productBullet(2)"
+                           (input)="updateProductBullet(2, $any($event.target).value)">
                   </div>
                 </div>
 
@@ -400,7 +551,9 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 4</div>
                     <input id="9" type="text"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           minlength="3" maxlength="300" [value]="productBullet(3)"
+                           (input)="updateProductBullet(3, $any($event.target).value)">
                   </div>
                 </div>
 
@@ -408,7 +561,9 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Тезис 5</div>
                     <input id="10" type="text"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
+                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
+                           minlength="3" maxlength="300" [value]="productBullet(4)"
+                           (input)="updateProductBullet(4, $any($event.target).value)">
                   </div>
                 </div>
 
@@ -438,7 +593,7 @@
 
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Ключевале слово 1</div>
+                    <div class="flex">Ключевое слово 1</div>
                     <input id="11" type="text"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
@@ -446,7 +601,7 @@
 
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Ключевале слово 2</div>
+                    <div class="flex">Ключевое слово 2</div>
                     <input id="12" type="text"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
@@ -454,7 +609,7 @@
 
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Ключевале слово 3</div>
+                    <div class="flex">Ключевое слово 3</div>
                     <input id="13" type="text"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
@@ -462,7 +617,7 @@
 
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Ключевале слово 4</div>
+                    <div class="flex">Ключевое слово 4</div>
                     <input id="14" type="text"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
@@ -470,7 +625,7 @@
 
                 <div class="flex flex-1">
                   <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Ключевале слово 5</div>
+                    <div class="flex">Ключевое слово 5</div>
                     <input id="15" type="text"
                            class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt">
                   </div>
@@ -501,19 +656,13 @@
         <div class="flex gap-20 width-full cf-col">
 
           <div class="flex flex-1 padding-20 gap-20 shadow font-size-18 bg-blue-soft pointer block-shrink cf-col"
-               [class.bg-blue-soft]="productType === 'simple'"
-               [class.bg-white-transition]="productType !== 'simple'"
+               [class.bg-blue-soft]="productType === 'simple'" [class.bg-white-transition]="productType !== 'simple'"
                (click)="setProductType('simple')">
 
             <div class="flex margin-top-20 flex-col">
               <div class="flex">
                 <div class="flex items-center">
-                  <input
-                    type="radio"
-                    class="size-25"
-                    name="productType"
-                    [checked]="productType === 'simple'"
-                  >
+                  <input type="radio" class="size-25" name="productType" [checked]="productType === 'simple'">
                 </div>
                 <div class="flex items-center margin-left-10 font-size-24 font-weight-700">Простой товар</div>
               </div>
@@ -535,8 +684,7 @@
           </div>
 
           <div class="flex flex-1 padding-20 gap-20 shadow font-size-18 bg-white-transition pointer block-shrink cf-col"
-               [class.bg-blue-soft]="productType === 'variant'"
-               [class.bg-white-transition]="productType !== 'variant'"
+               [class.bg-blue-soft]="productType === 'variant'" [class.bg-white-transition]="productType !== 'variant'"
                (click)="setProductType('variant')">
 
             <div class="flex margin-top-20 flex-col">
@@ -575,475 +723,179 @@
 
 
 @if (productType === 'variant') {
-
-  <div id="variant-block" class="flex width-full justify-center">
-    <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
-      <div class="flex flex-1 padding-10 items-start flex-col">
-        <div class="flex width-full padding-20 flex-col shadow font-size-18">
-
-          <div class="flex">Настройка вариантов</div>
-          <div class="flex font-weight-700 margin-top-20">1. Добавить опции</div>
-
-          <div class="flex margin-top-10 gap-20 cf-col f-reverse">
-
-            <div class="flex button-blue2 radius-10 cf-jc-sb">
-              <div class="flex">Цвет</div>
-              <div class="flex pointer margin-left-10">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
-                     fill="#000000">
-                  <path
-                    d="m336-280-56-56 144-144-144-143 56-56 144 144 143-144 56 56-144 143 144 144-56 56-143-144-144 144Z" />
-                </svg>
-              </div>
-            </div>
-
-            <div class="flex button-blue2 radius-10 cf-jc-sb">
-              <div class="flex">Размер</div>
-              <div class="flex pointer margin-left-10">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
-                     fill="#000000">
-                  <path
-                    d="m336-280-56-56 144-144-144-143 56-56 144 144 143-144 56 56-144 143 144 144-56 56-143-144-144 144Z" />
-                </svg>
-              </div>
-            </div>
-
-
-            <div class="flex button-primary">
-              <div class="flex">
-                <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px"
-                     fill="#000000">
-                  <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-                </svg>
-              </div>
-              <div class="flex margin-left-10">Добавить опции</div>
-            </div>
-
-
-          </div>
-
-          <div class="flex margin-top-20 font-weight-700">2. Варианты товаров</div>
-
-          <div class="flex margin-top-20 display-exp1">
-
-            <div class="variant-grid-container width-full gap-10 cfs16">
-
-              <div class="flex justify-center items-center">Цвет</div>
-              <div class="flex justify-center items-center">Размер</div>
-              <div class="flex justify-center text-center items-center">Артикул</div>
-              <div class="flex justify-center items-center">EAN/GTIN</div>
-              <div class="flex justify-center items-center">Цена</div>
-              <div class="flex justify-center items-center">Количество</div>
-              <div class="flex justify-center items-center">IMG</div>
-              <div class="flex justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px"
-                     fill="#000000">
-                  <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                </svg>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full items-center">
-                  <div class="flex color-size margin-left-10"></div>
-                  <div class="flex items-center margin-left-10 open-display">Чёрный</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                         fill="#000000">
-                      <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">S</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                         fill="#000000">
-                      <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <input id="11" type="text"
-                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                       value="TOOL-SET-120-PRO">
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <input id="11" type="text"
-                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                       value="12345678910114">
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">294.00</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    ₽.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">10</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    ШТ.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex overflow-hidden width-full variant-img-size">
-                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                       height="290"
-                       width="290">
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                     fill="#ff0000">
-                  <path
-                    d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-                </svg>
-              </div>
-
-              <!-- - - - - - - -->
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full items-center">
-                  <div class="flex color-size margin-left-10"></div>
-                  <div class="flex items-center margin-left-10 open-display">Чёрный</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                         fill="#000000">
-                      <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">S</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                         fill="#000000">
-                      <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <input id="11" type="text"
-                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                       value="TOOL-SET-120-PRO">
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <input id="11" type="text"
-                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                       value="12345678910114">
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">294.00</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    ₽.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex height-41 radius-10 block-border-solid width-full">
-                  <div class="flex items-center margin-left-10">10</div>
-                  <div class="flex items-center width-full justify-end margin-right-10">
-                    ШТ.
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <div class="flex overflow-hidden width-full variant-img-size">
-                  <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                       height="290"
-                       width="290">
-                </div>
-              </div>
-
-              <div class="flex justify-center margin-top-10 items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                     fill="#ff0000">
-                  <path
-                    d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
-                </svg>
-              </div>
-
-              <!-- - - - - - - - -->
-
-            </div>
-
-          </div>
-
-          <!-- - - - - - - - -->
-
-          <!--Вариант товара мобила-->
-          <div class="flex margin-top-20 display-exp2 flex-col radius-10"
-               style="border: 2px #e6e6e6 solid; padding: 10px">
-
-            <!--Изображение-->
-            <div class="flex justify-center">
-              <div class="flex overflow-hidden width-full variant-img-size2">
-                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                     height="290"
-                     width="290">
-              </div>
-            </div>
-
-            <!--Цена и количество товара-->
-            <div class="flex">
-              <div class="flex width-full gap-20">
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Цена</div>
-                    <input id="2" type="number"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="₽ 0.00">
-                  </div>
-                </div>
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex wi2">Количество</div>
-                    <div class="flex wi1">Кол.</div>
-                    <input id="3" type="number"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="100">
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <!--Артикл и ID товара-->
-            <div class="flex">
-              <div class="flex width-full gap-20 flex-col">
-                <div class="flex flex-1 gap-20">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Артикул</div>
-                    <input id="4"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="TOOL-SET-120-PRO">
-                  </div>
-
-                </div>
-
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">ID товара (EAN/GTIN)</div>
-
-                    <div class="flex gap-10">
-
-                      <div class="flex flex-1">
-                        <input id="5"
-                               class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                               placeholder="1234567891011">
-                      </div>
-
-                      <div class="flex flex-0-30">
-                        <div class="flex height-41 radius-10 block-border-solid margin-top-10 width-full between">
-                          <div class="flex items-center margin-left-10">EAN</div>
-                          <div class="flex items-center justify-end">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                 width="24px"
-                                 fill="#000000">
-                              <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
-
-                  </div>
-                </div>
-
-
-              </div>
-            </div>
-
-            <!--Цвет-->
-            <div class="flex margin-top-20 flex-col">
-              <div class="flex">Цвет</div>
-              <div class="flex height-41 radius-10 block-border-solid width-full items-center margin-top-10">
-                <div class="flex color-size margin-left-10"></div>
-                <div class="flex items-center margin-left-10">Чёрный</div>
-                <div class="flex items-center width-full justify-end margin-right-10">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                       fill="#000000">
-                    <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-
-            <!--Размер-->
-            <div class="flex height-41 radius-10 block-border-solid width-full margin-top-20">
-              <div class="flex items-center margin-left-10">S</div>
-              <div class="flex items-center width-full justify-end margin-right-10">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                     fill="#000000">
-                  <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                </svg>
-              </div>
-            </div>
-
-
-          </div>
-
-          <div class="flex margin-top-20 display-exp2 flex-col radius-10"
-               style="border: 2px #e6e6e6 solid; padding: 10px">
-
-            <!--Изображение-->
-            <div class="flex justify-center">
-              <div class="flex overflow-hidden width-full variant-img-size2">
-                <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                     height="290"
-                     width="290">
-              </div>
-            </div>
-
-            <!--Цена и количество товара-->
-            <div class="flex">
-              <div class="flex width-full gap-20">
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Цена</div>
-                    <input id="2" type="number"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="₽ 0.00">
-                  </div>
-                </div>
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex wi2">Количество</div>
-                    <div class="flex wi1">Кол.</div>
-                    <input id="3" type="number"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="100">
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <!--Артикл и ID товара-->
-            <div class="flex">
-              <div class="flex width-full gap-20 flex-col">
-                <div class="flex flex-1 gap-20">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">Артикул</div>
-                    <input id="4"
-                           class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                           placeholder="TOOL-SET-120-PRO">
-                  </div>
-
-                </div>
-
-
-                <div class="flex flex-1">
-                  <div class="flex margin-top-20 flex-col width-full">
-                    <div class="flex">ID товара (EAN/GTIN)</div>
-
-                    <div class="flex gap-10">
-
-                      <div class="flex flex-1">
-                        <input id="5"
-                               class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                               placeholder="1234567891011">
-                      </div>
-
-                      <div class="flex flex-0-30">
-                        <div class="flex height-41 radius-10 block-border-solid margin-top-10 width-full between">
-                          <div class="flex items-center margin-left-10">EAN</div>
-                          <div class="flex items-center justify-end">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                 width="24px"
-                                 fill="#000000">
-                              <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-
-
-                  </div>
-                </div>
-
-
-              </div>
-            </div>
-
-            <!--Цвет-->
-            <div class="flex margin-top-20 flex-col">
-              <div class="flex">Цвет</div>
-              <div class="flex height-41 radius-10 block-border-solid width-full items-center margin-top-10">
-                <div class="flex color-size margin-left-10"></div>
-                <div class="flex items-center margin-left-10">Чёрный</div>
-                <div class="flex items-center width-full justify-end margin-right-10">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                       fill="#000000">
-                    <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-
-            <!--Размер-->
-            <div class="flex height-41 radius-10 block-border-solid width-full margin-top-20">
-              <div class="flex items-center margin-left-10">S</div>
-              <div class="flex items-center width-full justify-end margin-right-10">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                     fill="#000000">
-                  <path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z" />
-                </svg>
-              </div>
-            </div>
-
-
-          </div>
-
-
-          <!-- - - - - - - - -->
-
-          <div class="flex margin-top-20">
-            <div class="flex button-primary">Добавить вариант</div>
-          </div>
-
-
+  <section id="variant-block" class="product-variant-section">
+    <div class="product-variant-panel">
+      <header class="product-variant-heading">
+        <div>
+          <h2>Настройка вариантов</h2>
+          <p>Добавьте один или два уровня выбора и заполните цену с остатком каждого конечного варианта.</p>
         </div>
-      </div>
+        <span>Конечных вариантов: {{ concreteVariantCount() }}</span>
+      </header>
+
+      <section class="product-variant-selectors" aria-labelledby="variant-selectors-heading">
+        <div class="product-variant-subheading">
+          <div>
+            <h3 id="variant-selectors-heading">1. Уровни выбора</h3>
+            <p>Например: «Цвет» либо два уровня «Цвет → Размер».</p>
+          </div>
+
+          @if (variantSelectors().length < 2) {
+            <button class="product-variant-add-button" type="button" (click)="addVariantSelector()">Добавить второй
+              уровень
+            </button>
+          }
+        </div>
+
+        <div class="product-variant-selector-list">
+          @for (selector of variantSelectors(); track $index) {
+            <article class="product-variant-selector-card">
+              <div class="product-variant-selector-number">Уровень {{ $index + 1 }}</div>
+
+              <div class="product-variant-selector-fields">
+                <label class="product-variant-field" [for]="'variant-selector-name-' + $index">
+                  <span>Название уровня</span>
+                  <input [id]="'variant-selector-name-' + $index" type="text" maxlength="100" autocomplete="off"
+                         placeholder="Например, Цвет" [value]="selector.selectorName"
+                         (input)="updateVariantSelectorName($index, $any($event.target).value)">
+                </label>
+
+                <label class="product-variant-field" [for]="'variant-selector-display-' + $index">
+                  <span>Отображение покупателю</span>
+                  <select [id]="'variant-selector-display-' + $index" [value]="selector.displayType"
+                          (change)="updateVariantSelectorDisplayType($index, $any($event.target).value)">
+                    <option value="text" [selected]="selector.displayType === 'text'">Текстом</option>
+                    <option value="image" [selected]="selector.displayType === 'image'">Изображениями</option>
+                  </select>
+                </label>
+              </div>
+
+              @if ($index === 1) {
+                <button class="product-variant-remove-button" type="button" (click)="removeSecondVariantSelector()">
+                  Удалить второй уровень
+                </button>
+              }
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="product-variant-values" aria-labelledby="variant-values-heading">
+        <div class="product-variant-subheading">
+          <div>
+            <h3 id="variant-values-heading">2. Варианты товара</h3>
+            <p>Значения не должны повторяться внутри одного уровня.</p>
+          </div>
+          <button class="product-variant-add-button" type="button" (click)="addRootVariant()">Добавить значение первого
+            уровня
+          </button>
+        </div>
+
+        <div class="product-variant-root-list">
+          @for (root of variantDrafts(); track root.draftKey; let rootIndex = $index) {
+            <article class="product-variant-root-card">
+              <header class="product-variant-root-header">
+                <strong>{{ variantSelectors()[0].selectorName || 'Первый уровень' }} ·
+                  значение {{ rootIndex + 1 }}</strong>
+                <button class="product-variant-remove-button compact" type="button"
+                        [attr.aria-label]="'Удалить значение первого уровня ' + (rootIndex + 1)"
+                        (click)="removeRootVariant(root.draftKey)">Удалить
+                </button>
+              </header>
+
+              <label class="product-variant-field" [for]="'variant-root-value-' + root.draftKey">
+                <span>{{ variantSelectors()[0].selectorName || 'Значение первого уровня' }}</span>
+                <input [id]="'variant-root-value-' + root.draftKey" type="text" maxlength="120" autocomplete="off"
+                       placeholder="Введите значение" [value]="root.variantValue"
+                       (input)="updateVariantValue(root.draftKey, null, $any($event.target).value)">
+              </label>
+
+              @if (root.images.length > 0) {
+                <div class="product-variant-images" aria-label="Сохранённые изображения варианта">
+                  @for (image of root.images; track image.imageId) {
+                    <img class="product-variant-image" [src]="image.thumbnailUrl"
+                         [alt]="'Изображение варианта ' + root.variantValue" width="96" height="96">
+                  }
+                </div>
+              }
+
+              @if (hasSecondVariantSelector()) {
+                <section class="product-variant-child-section">
+                  <div class="product-variant-child-heading">
+                    <strong>{{ variantSelectors()[1].selectorName || 'Второй уровень' }}</strong>
+                    <button class="product-variant-add-button compact" type="button"
+                            (click)="addChildVariant(root.draftKey)">Добавить конечный вариант
+                    </button>
+                  </div>
+
+                  <div class="product-variant-child-list">
+                    @for (child of root.children; track child.draftKey; let childIndex = $index) {
+                      <article class="product-variant-child-card">
+                        <div class="product-variant-child-number">Конечный вариант {{ childIndex + 1 }}</div>
+
+                        <div class="product-variant-child-fields">
+                          <label class="product-variant-field" [for]="'variant-child-value-' + child.draftKey">
+                            <span>{{ variantSelectors()[1].selectorName || 'Значение второго уровня' }}</span>
+                            <input [id]="'variant-child-value-' + child.draftKey" type="text" maxlength="120"
+                                   autocomplete="off" placeholder="Введите значение" [value]="child.variantValue"
+                                   (input)="updateVariantValue(root.draftKey, child.draftKey, $any($event.target).value)">
+                          </label>
+
+                          <label class="product-variant-field" [for]="'variant-child-price-' + child.draftKey">
+                            <span>Цена, ₽</span>
+                            <input [id]="'variant-child-price-' + child.draftKey" type="text" inputmode="decimal"
+                                   maxlength="13" autocomplete="off" placeholder="0,00" [value]="child.priceAmount"
+                                   (input)="updateVariantOffer(root.draftKey, child.draftKey, 'priceAmount', $any($event.target).value)">
+                          </label>
+
+                          <label class="product-variant-field" [for]="'variant-child-stock-' + child.draftKey">
+                            <span>Количество, шт.</span>
+                            <input [id]="'variant-child-stock-' + child.draftKey" type="number" inputmode="numeric"
+                                   min="0" max="2147483647" step="1" placeholder="0" [value]="child.stockQuantity"
+                                   (input)="updateVariantOffer(root.draftKey, child.draftKey, 'stockQuantity', $any($event.target).value)">
+                          </label>
+                        </div>
+
+                        @if (child.images.length > 0) {
+                          <div class="product-variant-images" aria-label="Сохранённые изображения конечного варианта">
+                            @for (image of child.images; track image.imageId) {
+                              <img class="product-variant-image" [src]="image.thumbnailUrl"
+                                   [alt]="'Изображение варианта ' + child.variantValue" width="96" height="96">
+                            }
+                          </div>
+                        }
+
+                        <button class="product-variant-remove-button compact" type="button"
+                                [attr.aria-label]="'Удалить конечный вариант ' + (childIndex + 1)"
+                                (click)="removeChildVariant(root.draftKey, child.draftKey)">Удалить конечный вариант
+                        </button>
+                      </article>
+                    }
+                  </div>
+                </section>
+              } @else {
+                <div class="product-variant-offer-fields">
+                  <label class="product-variant-field" [for]="'variant-root-price-' + root.draftKey">
+                    <span>Цена, ₽</span>
+                    <input [id]="'variant-root-price-' + root.draftKey" type="text" inputmode="decimal" maxlength="13"
+                           autocomplete="off" placeholder="0,00" [value]="root.priceAmount"
+                           (input)="updateVariantOffer(root.draftKey, null, 'priceAmount', $any($event.target).value)">
+                  </label>
+
+                  <label class="product-variant-field" [for]="'variant-root-stock-' + root.draftKey">
+                    <span>Количество, шт.</span>
+                    <input [id]="'variant-root-stock-' + root.draftKey" type="number" inputmode="numeric" min="0"
+                           max="2147483647" step="1" placeholder="0" [value]="root.stockQuantity"
+                           (input)="updateVariantOffer(root.draftKey, null, 'stockQuantity', $any($event.target).value)">
+                  </label>
+                </div>
+              }
+            </article>
+          } @empty {
+            <div class="product-variant-empty-state">Добавьте первое значение варианта.</div>
+          }
+        </div>
+      </section>
     </div>
-  </div>
-
+  </section>
 }
-
-
-
