@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 
 import { API_BASE_URL } from '../config/api-base-url';
 import {
+  SellerAddProductResponse,
   SellerCreateProductDraftRequest,
   SellerCreateProductDraftResponse,
   SellerProductEditorResponse,
@@ -154,6 +155,25 @@ export class SellerProductApi {
       this.httpClient.put<void>(
         `${this.apiBaseUrl}/seller/products/${productCardId}/details`,
         input,
+        {
+          headers,
+        },
+      ),
+    );
+  }
+
+  /**
+   * Завершает добавление товара.
+   *
+   * Сервер самостоятельно применяет правила продавца:
+   * сразу публикует товар либо отправляет его
+   * на модерацию.
+   */
+  addProduct(productCardId: string): Observable<SellerAddProductResponse> {
+    return this.withCSRF((headers) =>
+      this.httpClient.post<SellerAddProductResponse>(
+        `${this.apiBaseUrl}/seller/products/${productCardId}/submit`,
+        null,
         {
           headers,
         },

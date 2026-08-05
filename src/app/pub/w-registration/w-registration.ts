@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 

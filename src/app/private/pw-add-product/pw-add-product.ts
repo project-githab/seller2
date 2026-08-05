@@ -7,6 +7,7 @@ import {
   SellerProductCategoryAttribute,
   SellerProductCategoryFormDefinition,
   SellerProductCategoryNode,
+  SellerProductCategorySearchItem,
 } from '../../_core/model/seller-product-category.response';
 import { SellerProductCategoryApi } from '../../_core/service/seller-product-category-api';
 import { CpHeader } from '../../shared/private/cp-header/cp-header';
@@ -17,6 +18,7 @@ import {
   SellerProductEditorAttributeValue,
   SellerProductEditorImage,
   SellerProductEditorVariant,
+  SellerProductModerationStatus,
   SellerProductVariantDisplayType,
   SellerProductVariantNodeRequest,
   SellerProductVariantResponse,
@@ -52,7 +54,7 @@ type SellerProductVariantOfferField = 'priceAmount' | 'stockQuantity';
  * Редактируемое описание одного уровня вариантов.
  */
 type SellerProductVariantSelectorDraft = {
-  selectorName: string;
+  attributeId: string;
   displayType: SellerProductVariantDisplayType;
 };
 
@@ -65,6 +67,7 @@ type SellerProductVariantSelectorDraft = {
 type SellerProductVariantDraft = {
   draftKey: number;
   productVariantId: string | null;
+  attributeOptionId: string;
   variantValue: string;
   priceAmount: string;
   stockQuantity: string;
@@ -86,6 +89,50 @@ type SellerProductRestorableVariant = SellerProductEditorVariant | SellerProduct
 })
 export class PwAddProduct {
   protected readonly categories = signal<SellerProductCategoryNode[]>([]);
+
+  // Управляет отдельным окном выбора категории.
+  protected readonly categoryPickerOpen = signal(false);
+
+  // Хранит пройденный путь от корня
+  // до текущего уровня выбора.
+  protected readonly categoryNavigationPath = signal<SellerProductCategoryNode[]>([]);
+
+  // Показывает текущий путь внутри окна выбора.
+  protected readonly categoryNavigationPathLabel = computed(() => {
+    const categoryNames = this.categoryNavigationPath().map((category) => category.categoryName);
+
+    return categoryNames.length > 0 ? categoryNames.join(' → ') : 'Все категории';
+  });
+
+  // Хранит текст глобального поиска конечной категории.
+  protected readonly categorySearch = signal('');
+
+  // Содержит найденные сервером конечные категории.
+  protected readonly categorySearchResults = signal<SellerProductCategorySearchItem[]>([]);
+
+  // Показывает выполнение поискового запроса.
+  protected readonly isSearchingCategories = signal(false);
+
+  // Содержит понятное сообщение при ошибке поиска.
+  protected readonly categorySearchError = signal('');
+
+  // Переключает окно с навигации по дереву
+  // на результаты глобального поиска.
+  protected readonly categorySearchActive = computed(
+    () => Array.from(this.normalizeCategorySearch(this.categorySearch())).length >= 2,
+  );
+
+  // Хранит отложенный запуск поиска,
+  // чтобы запрос не выполнялся после каждой введённой буквы.
+  private categorySearchTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Не позволяет запоздавшему поисковому ответу
+  // заменить результаты более нового запроса.
+  private categorySearchRequestNumber = 0;
+
+  // Не позволяет запоздавшему ответу старого уровня
+  // заменить более новый список категорий.
+  private categoryLevelRequestNumber = 0;
 
   protected readonly selectableCategories = computed<SellerProductCategoryChoice[]>(() =>
     this.flattenSelectableCategories(this.categories()),
@@ -121,6 +168,20 @@ export class PwAddProduct {
 
   protected readonly categoryAttributes = computed<SellerProductCategoryAttribute[]>(
     () => this.categoryFormDefinition()?.items ?? [],
+  );
+
+  /**
+   * Характеристики категории, разрешённые
+   * для построения вариантов товара.
+   *
+   * Вариант должен выбирать ровно одно значение,
+   * поэтому здесь используются только характеристики select.
+   */
+  protected readonly variantCategoryAttributes = computed<SellerProductCategoryAttribute[]>(() =>
+    this.categoryAttributes().filter(
+      (attribute) =>
+        attribute.isVariant && attribute.dataType === 'select' && attribute.options.length > 0,
+    ),
   );
 
   protected readonly selectedCategoryPath = computed(
@@ -250,18 +311,146 @@ export class PwAddProduct {
   }
 
   /**
-   * Обновляет название указанного уровня вариантов.
+   * Возвращает название характеристики,
+   * выбранной для указанного уровня вариантов.
    */
-  protected updateVariantSelectorName(index: number, value: string): void {
-    this.variantSelectors.update((currentSelectors) =>
-      currentSelectors.map((selector, selectorIndex) =>
+  protected variantSelectorName(index: number): string {
+    const attributeId = this.variantSelectors()[index]?.attributeId;
+
+    return (
+      this.variantCategoryAttributes().find((attribute) => attribute.attributeId === attributeId)
+        ?.attributeName ?? ''
+    );
+  }
+
+  /**
+   * Возвращает допустимые значения характеристики,
+   * выбранной для указанного уровня.
+   */
+  protected variantSelectorOptions(index: number) {
+    const attributeId = this.variantSelectors()[index]?.attributeId;
+
+    return (
+      this.variantCategoryAttributes().find((attribute) => attribute.attributeId === attributeId)
+        ?.options ?? []
+    );
+  }
+
+  /**
+   * Проверяет, выбрано ли значение характеристики
+   * в другом варианте того же уровня.
+   *
+   * Значения первого уровня не должны повторяться
+   * среди всех корневых вариантов.
+   *
+   * Значения второго уровня могут повторяться
+   * у разных корней, но не внутри одного корня.
+   */
+  protected isVariantOptionUsedByOtherDraft(
+    selectorIndex: number,
+    attributeOptionId: string,
+    rootDraftKey: number,
+    childDraftKey: number | null,
+  ): boolean {
+    if (!attributeOptionId) {
+      return false;
+    }
+
+    if (selectorIndex === 0) {
+      return this.variantDrafts().some(
+        (root) => root.draftKey !== rootDraftKey && root.attributeOptionId === attributeOptionId,
+      );
+    }
+
+    const root = this.variantDrafts().find((item) => item.draftKey === rootDraftKey);
+
+    if (!root) {
+      return false;
+    }
+
+    return root.children.some(
+      (child) => child.draftKey !== childDraftKey && child.attributeOptionId === attributeOptionId,
+    );
+  }
+
+  /**
+   * Показывает, что характеристика уже используется
+   * другим уровнем вариантов этого товара.
+   */
+  protected isVariantAttributeUsedByOtherSelector(
+    attributeId: string,
+    selectorIndex: number,
+  ): boolean {
+    return this.variantSelectors().some(
+      (selector, index) => index !== selectorIndex && selector.attributeId === attributeId,
+    );
+  }
+
+  /**
+   * Выбирает глобальную характеристику
+   * для указанного уровня вариантов.
+   */
+  protected updateVariantSelectorAttribute(index: number, attributeId: string): void {
+    const attribute = this.variantCategoryAttributes().find(
+      (item) => item.attributeId === attributeId,
+    );
+
+    if (!attribute) {
+      this.productSaveError.set('Выберите доступную характеристику вариантов.');
+
+      return;
+    }
+
+    if (this.isVariantAttributeUsedByOtherSelector(attributeId, index)) {
+      this.productSaveError.set(
+        'Одна характеристика не может использоваться на двух уровнях вариантов.',
+      );
+
+      return;
+    }
+
+    const currentSelectors = this.variantSelectors();
+
+    if (currentSelectors[index]?.attributeId === attributeId) {
+      return;
+    }
+
+    this.productSaveError.set('');
+
+    this.variantSelectors.update((selectors) =>
+      selectors.map((selector, selectorIndex) =>
         selectorIndex === index
           ? {
               ...selector,
-              selectorName: value,
+              attributeId,
             }
           : selector,
       ),
+    );
+
+    // После смены характеристики прежние значения
+    // больше не принадлежат выбранному справочнику.
+    if (index === 0) {
+      this.variantDrafts.update((roots) =>
+        roots.map((root) => ({
+          ...root,
+          attributeOptionId: '',
+          variantValue: '',
+        })),
+      );
+
+      return;
+    }
+
+    this.variantDrafts.update((roots) =>
+      roots.map((root) => ({
+        ...root,
+        children: root.children.map((child) => ({
+          ...child,
+          attributeOptionId: '',
+          variantValue: '',
+        })),
+      })),
     );
   }
 
@@ -287,7 +476,8 @@ export class PwAddProduct {
   }
 
   /**
-   * Добавляет первый либо второй уровень вариантов.
+   * Добавляет первый либо второй уровень вариантов
+   * из характеристик выбранной категории.
    *
    * При появлении второго уровня цена и остаток
    * каждого корня переносятся в его первого потомка,
@@ -302,13 +492,28 @@ export class PwAddProduct {
       return;
     }
 
+    const availableAttribute = this.variantCategoryAttributes().find(
+      (attribute) =>
+        !currentSelectors.some((selector) => selector.attributeId === attribute.attributeId),
+    );
+
+    if (!availableAttribute) {
+      this.productSaveError.set(
+        currentSelectors.length === 0
+          ? 'Для выбранной категории не настроены характеристики вариантов.'
+          : 'Для выбранной категории отсутствует вторая характеристика вариантов.',
+      );
+
+      return;
+    }
+
     this.productSaveError.set('');
 
     this.variantSelectors.set([
       ...currentSelectors,
       {
-        selectorName: '',
-        displayType: 'text',
+        attributeId: availableAttribute.attributeId,
+        displayType: availableAttribute.slug === 'primary-color' ? 'image' : 'text',
       },
     ]);
 
@@ -508,17 +713,42 @@ export class PwAddProduct {
   }
 
   /**
-   * Обновляет текстовое значение корневого
-   * либо дочернего варианта.
+   * Выбирает справочное значение характеристики
+   * для корневого либо дочернего варианта.
    */
-  protected updateVariantValue(
+  protected updateVariantOption(
     rootDraftKey: number,
     childDraftKey: number | null,
-    value: string,
+    attributeOptionId: string,
   ): void {
+    if (!attributeOptionId) {
+      this.updateVariantDraft(rootDraftKey, childDraftKey, (currentDraft) => ({
+        ...currentDraft,
+        attributeOptionId: '',
+        variantValue: '',
+      }));
+
+      return;
+    }
+
+    const selectorIndex = childDraftKey === null ? 0 : 1;
+
+    const option = this.variantSelectorOptions(selectorIndex).find(
+      (item) => item.attributeOptionId === attributeOptionId,
+    );
+
+    if (!option) {
+      this.productSaveError.set('Выбранное значение отсутствует в характеристике варианта.');
+
+      return;
+    }
+
+    this.productSaveError.set('');
+
     this.updateVariantDraft(rootDraftKey, childDraftKey, (currentDraft) => ({
       ...currentDraft,
-      variantValue: value,
+      attributeOptionId: option.attributeOptionId,
+      variantValue: option.optionValue,
     }));
   }
 
@@ -560,13 +790,29 @@ export class PwAddProduct {
   }
 
   /**
-   * Создаёт серверный черновик товара
-   * и сохраняет заполненные характеристики.
-   *
-   * Если черновик уже был создан во время
-   * предыдущей попытки, повторно он не создаётся.
+   * Сохраняет товар как черновик
+   * без его добавления в каталог.
    */
   protected saveProductDraft(): void {
+    this.saveProduct(false);
+  }
+
+  /**
+   * Сохраняет все данные и завершает
+   * добавление товара.
+   *
+   * Сервер сам решает, опубликовать товар
+   * сразу или отправить его на модерацию.
+   */
+  protected addProduct(): void {
+    this.saveProduct(true);
+  }
+
+  /**
+   * Создаёт либо обновляет товар и при необходимости
+   * завершает его добавление.
+   */
+  private saveProduct(shouldAddProduct: boolean): void {
     /**
      * Не отправляем форму повторно и не разрешаем
      * сохранение до завершения восстановления черновика.
@@ -624,6 +870,12 @@ export class PwAddProduct {
     const attributeValues = this.buildProductAttributeValues();
 
     const existingProductCardId = this.productCardId();
+
+    /**
+     * Хранит результат добавления товара:
+     * публикацию либо передачу на модерацию.
+     */
+    let completedModerationStatus: SellerProductModerationStatus | null = null;
 
     this.isSavingProduct.set(true);
 
@@ -689,21 +941,12 @@ export class PwAddProduct {
         ),
 
         /**
-         * Характеристики сохраняются только после
-         * успешного обновления текстовых данных.
-         */
-        switchMap((productCardId) =>
-          this.productApi
-            .saveProductAttributes(productCardId, {
-              items: attributeValues,
-            })
-            .pipe(map(() => productCardId)),
-        ),
-
-        /**
-         * В зависимости от выбранного продавцом типа
-         * сохраняем одно общее предложение либо полную
-         * конфигурацию вариантов товара.
+         * Сначала сохраняем одно общее предложение
+         * либо полную конфигурацию вариантов.
+         *
+         * Варианты сохраняются раньше характеристик,
+         * чтобы обязательная характеристика могла быть
+         * подтверждена сохранённым селектором.
          */
         switchMap((productCardId) => {
           if (simpleOffer !== null) {
@@ -728,6 +971,39 @@ export class PwAddProduct {
         }),
 
         /**
+         * Общие характеристики сохраняются после
+         * предложения или конфигурации вариантов.
+         */
+        switchMap((productCardId) =>
+          this.productApi
+            .saveProductAttributes(productCardId, {
+              items: attributeValues,
+            })
+            .pipe(map(() => productCardId)),
+        ),
+
+        /**
+         * Кнопка «Сохранить черновик» завершает цепочку
+         * после сохранения данных.
+         *
+         * Кнопка «Добавить товар» дополнительно просит
+         * сервер применить правила публикации продавца.
+         */
+        switchMap((productCardId) => {
+          if (!shouldAddProduct) {
+            return of(productCardId);
+          }
+
+          return this.productApi.addProduct(productCardId).pipe(
+            map((response) => {
+              completedModerationStatus = response.moderationStatus;
+
+              return response.productCardId;
+            }),
+          );
+        }),
+
+        /**
          * Состояние загрузки сбрасывается как после
          * успешного ответа, так и после ошибки.
          */
@@ -737,19 +1013,112 @@ export class PwAddProduct {
       )
       .subscribe({
         next: (productCardId) => {
-          this.productSaveMessage.set(`Черновик товара №${productCardId} и его данные сохранены.`);
+          if (!shouldAddProduct) {
+            this.productSaveMessage.set(
+              existingProductCardId === null
+                ? `Черновик товара №${productCardId} сохранён.`
+                : `Изменения товара №${productCardId} сохранены.`,
+            );
+
+            return;
+          }
+
+          if (completedModerationStatus === 'pending') {
+            this.productSaveMessage.set(`Товар №${productCardId} отправлен на модерацию.`);
+
+            return;
+          }
+
+          if (completedModerationStatus === 'approved') {
+            this.productSaveMessage.set(`Товар №${productCardId} добавлен и опубликован.`);
+
+            return;
+          }
+
+          this.productSaveError.set('Сервер вернул неизвестный статус добавленного товара.');
         },
 
         error: (error: unknown) => {
           this.productSaveError.set(
-            this.readRequestError(error, 'Не удалось сохранить черновик товара.'),
+            this.readRequestError(
+              error,
+              shouldAddProduct
+                ? 'Не удалось добавить товар.'
+                : 'Не удалось сохранить черновик товара.',
+            ),
           );
         },
       });
   }
 
-  protected retryCategories(): void {
+  // Открывает выбор категории с корневого уровня.
+  protected openCategoryPicker(): void {
+    if (this.productCardId() !== null || this.isSavingProduct() || this.isLoadingProductEditor()) {
+      return;
+    }
+
+    this.resetCategorySearch();
+    this.categoryPickerOpen.set(true);
     this.loadCategories();
+  }
+
+  // Закрывает окно без изменения выбранной категории.
+  protected closeCategoryPicker(): void {
+    this.categoryPickerOpen.set(false);
+    this.resetCategorySearch();
+  }
+
+  // Обновляет поисковую строку и запускает
+  // отложенный серверный поиск.
+  protected updateCategorySearch(value: string): void {
+    this.categorySearch.set(value);
+    this.scheduleCategorySearch(value);
+  }
+
+  // Повторяет завершившийся ошибкой поисковый запрос.
+  protected retryCategorySearch(): void {
+    this.scheduleCategorySearch(this.categorySearch(), true);
+  }
+
+  // Выбирает конечную категорию из результатов поиска.
+  protected selectCategorySearchResult(category: SellerProductCategorySearchItem): void {
+    this.selectCategory(category.categoryId);
+    this.closeCategoryPicker();
+  }
+
+  // Переходит к дочернему уровню либо выбирает
+  // конечную категорию для создаваемого товара.
+  protected openCategoryPickerItem(category: SellerProductCategoryNode): void {
+    if (category.isLeaf) {
+      this.selectCategory(category.categoryId);
+      this.closeCategoryPicker();
+      return;
+    }
+
+    this.categoryNavigationPath.update((currentPath) => [...currentPath, category]);
+
+    this.loadCategoryLevel(category.categoryId);
+  }
+
+  // Возвращает выбор на один уровень назад.
+  protected returnToPreviousCategoryLevel(): void {
+    const nextPath = this.categoryNavigationPath().slice(0, -1);
+
+    this.categoryNavigationPath.set(nextPath);
+
+    const parentCategoryId = nextPath.length > 0 ? nextPath[nextPath.length - 1].categoryId : null;
+
+    this.loadCategoryLevel(parentCategoryId);
+  }
+
+  // Повторяет загрузку текущего уровня.
+  protected retryCategories(): void {
+    const currentPath = this.categoryNavigationPath();
+
+    const parentCategoryId =
+      currentPath.length > 0 ? currentPath[currentPath.length - 1].categoryId : null;
+
+    this.loadCategoryLevel(parentCategoryId);
   }
 
   protected selectCategory(categoryId: string): void {
@@ -970,24 +1339,116 @@ export class PwAddProduct {
     });
   }
 
-  private loadCategories(): void {
-    this.isLoadingCategories.set(true);
-    this.categoryLoadError.set('');
+  // Нормализует поисковую строку перед отправкой серверу.
+  private normalizeCategorySearch(value: string): string {
+    return value.trim().replace(/\s+/g, ' ');
+  }
 
-    this.productCategoryApi.getCategories().subscribe({
+  // Очищает поиск и отменяет ожидающий запуск запроса.
+  private resetCategorySearch(): void {
+    if (this.categorySearchTimer !== null) {
+      clearTimeout(this.categorySearchTimer);
+      this.categorySearchTimer = null;
+    }
+
+    this.categorySearchRequestNumber += 1;
+    this.categorySearch.set('');
+    this.categorySearchResults.set([]);
+    this.isSearchingCategories.set(false);
+    this.categorySearchError.set('');
+  }
+
+  // Планирует поиск с небольшой задержкой,
+  // чтобы не отправлять запрос после каждой буквы.
+  private scheduleCategorySearch(value: string, immediately = false): void {
+    if (this.categorySearchTimer !== null) {
+      clearTimeout(this.categorySearchTimer);
+      this.categorySearchTimer = null;
+    }
+
+    const search = this.normalizeCategorySearch(value);
+    const requestNumber = ++this.categorySearchRequestNumber;
+
+    this.categorySearchResults.set([]);
+    this.categorySearchError.set('');
+
+    if (Array.from(search).length < 2) {
+      this.isSearchingCategories.set(false);
+      return;
+    }
+
+    this.isSearchingCategories.set(true);
+
+    const executeSearch = (): void => {
+      this.categorySearchTimer = null;
+      this.loadCategorySearch(search, requestNumber);
+    };
+
+    if (immediately) {
+      executeSearch();
+      return;
+    }
+
+    this.categorySearchTimer = setTimeout(executeSearch, 350);
+  }
+
+  // Выполняет серверный поиск конечных категорий.
+  private loadCategorySearch(search: string, requestNumber: number): void {
+    this.productCategoryApi.searchCategories(search).subscribe({
       next: (response) => {
-        this.categories.set(response.items);
+        if (requestNumber !== this.categorySearchRequestNumber) {
+          return;
+        }
 
-        this.isLoadingCategories.set(false);
+        this.categorySearchResults.set(response.items);
+        this.isSearchingCategories.set(false);
       },
 
       error: (error: unknown) => {
+        if (requestNumber !== this.categorySearchRequestNumber) {
+          return;
+        }
+
+        this.categorySearchResults.set([]);
+        this.isSearchingCategories.set(false);
+        this.categorySearchError.set(
+          this.readRequestError(error, 'Не удалось выполнить поиск категорий.'),
+        );
+      },
+    });
+  }
+
+  // Начинает выбор с корневого уровня.
+  private loadCategories(): void {
+    this.categoryNavigationPath.set([]);
+    this.loadCategoryLevel(null);
+  }
+
+  // Загружает только один уровень дерева категорий.
+  private loadCategoryLevel(parentCategoryId: string | null): void {
+    const requestNumber = ++this.categoryLevelRequestNumber;
+
+    this.isLoadingCategories.set(true);
+    this.categoryLoadError.set('');
+
+    this.productCategoryApi.getCategoryLevel(parentCategoryId).subscribe({
+      next: (response) => {
+        if (requestNumber !== this.categoryLevelRequestNumber) {
+          return;
+        }
+
+        this.categories.set(response.items);
+        this.isLoadingCategories.set(false);
+      },
+
+      error: () => {
+        if (requestNumber !== this.categoryLevelRequestNumber) {
+          return;
+        }
+
         this.categories.set([]);
         this.isLoadingCategories.set(false);
-
-        this.categoryLoadError.set(
-          this.readRequestError(error, 'Не удалось загрузить категории товаров.'),
-        );
+        this.categoryLoadError.set('Не удалось загрузить категории товаров.');
       },
     });
   }
@@ -1136,6 +1597,10 @@ export class PwAddProduct {
     }
 
     for (const attribute of this.categoryAttributes()) {
+      if (this.isAttributeUsedAsVariantSelector(attribute.attributeId)) {
+        continue;
+      }
+
       const validationError = this.validateProductAttribute(attribute);
 
       if (validationError) {
@@ -1144,6 +1609,17 @@ export class PwAddProduct {
     }
 
     return '';
+  }
+
+  /**
+   * Проверяет, используется ли характеристика
+   * как один из уровней вариантов товара.
+   */
+  protected isAttributeUsedAsVariantSelector(attributeId: string): boolean {
+    return (
+      this.productType === 'variant' &&
+      this.variantSelectors().some((selector) => selector.attributeId === attributeId)
+    );
   }
 
   /**
@@ -1219,8 +1695,8 @@ export class PwAddProduct {
   }
 
   /**
-   * Проверяет селекторы и полное дерево вариантов
-   * по тем же ограничениям, которые применяет Go API.
+   * Проверяет селекторы и дерево вариантов
+   * по идентификаторам справочных характеристик.
    */
   private validateVariantConfiguration(): string {
     const selectors = this.variantSelectors();
@@ -1229,28 +1705,28 @@ export class PwAddProduct {
       return 'Добавьте один или два уровня вариантов товара.';
     }
 
-    const usedSelectorNames = new Set<string>();
+    const usedAttributeIds = new Set<string>();
 
     for (let index = 0; index < selectors.length; index += 1) {
       const selector = selectors[index];
-      const selectorName = selector.selectorName.trim();
-      const selectorNameLength = [...selectorName].length;
 
-      if (selectorNameLength < 1 || selectorNameLength > 100) {
-        return `Введите название уровня вариантов №${index + 1} длиной до 100 символов.`;
+      const attribute = this.variantCategoryAttributes().find(
+        (item) => item.attributeId === selector.attributeId,
+      );
+
+      if (!attribute) {
+        return `Выберите характеристику для уровня вариантов №${index + 1}.`;
       }
+
+      if (usedAttributeIds.has(selector.attributeId)) {
+        return 'Одна характеристика не может использоваться на двух уровнях вариантов.';
+      }
+
+      usedAttributeIds.add(selector.attributeId);
 
       if (selector.displayType !== 'image' && selector.displayType !== 'text') {
-        return `Выберите способ отображения уровня «${selectorName}».`;
+        return `Выберите способ отображения характеристики «${attribute.attributeName}».`;
       }
-
-      const selectorKey = selectorName.toLowerCase();
-
-      if (usedSelectorNames.has(selectorKey)) {
-        return 'Названия уровней вариантов не должны повторяться.';
-      }
-
-      usedSelectorNames.add(selectorKey);
     }
 
     const roots = this.variantDrafts();
@@ -1259,31 +1735,34 @@ export class PwAddProduct {
       return 'Добавьте от 1 до 50 значений первого уровня вариантов.';
     }
 
-    const usedRootValues = new Set<string>();
+    const rootOptions = this.variantSelectorOptions(0);
+
+    const usedRootOptionIds = new Set<string>();
+
     let concreteVariantCount = 0;
 
     for (let rootIndex = 0; rootIndex < roots.length; rootIndex += 1) {
       const root = roots[rootIndex];
-      const rootValue = root.variantValue.trim();
-      const rootValueLength = [...rootValue].length;
 
-      if (rootValueLength < 1 || rootValueLength > 120) {
-        return `Заполните значение первого уровня №${rootIndex + 1} длиной до 120 символов.`;
+      const rootOption = rootOptions.find(
+        (option) => option.attributeOptionId === root.attributeOptionId,
+      );
+
+      if (!rootOption) {
+        return `Выберите значение характеристики «${this.variantSelectorName(0)}» для варианта №${rootIndex + 1}.`;
       }
 
-      const rootKey = rootValue.toLowerCase();
-
-      if (usedRootValues.has(rootKey)) {
-        return `Значение первого уровня «${rootValue}» повторяется.`;
+      if (usedRootOptionIds.has(root.attributeOptionId)) {
+        return `Значение «${rootOption.optionValue}» первого уровня повторяется.`;
       }
 
-      usedRootValues.add(rootKey);
+      usedRootOptionIds.add(root.attributeOptionId);
 
       if (selectors.length === 1) {
         const offerError = this.validateOfferValues(
           root.priceAmount,
           root.stockQuantity,
-          `варианта «${rootValue}»`,
+          `варианта «${rootOption.optionValue}»`,
         );
 
         if (offerError) {
@@ -1296,32 +1775,34 @@ export class PwAddProduct {
       }
 
       if (root.children.length < 1 || root.children.length > 100) {
-        return `Добавьте от 1 до 100 значений второго уровня для «${rootValue}».`;
+        return `Добавьте от 1 до 100 значений второго уровня для «${rootOption.optionValue}».`;
       }
 
-      const usedChildValues = new Set<string>();
+      const childOptions = this.variantSelectorOptions(1);
+
+      const usedChildOptionIds = new Set<string>();
 
       for (let childIndex = 0; childIndex < root.children.length; childIndex += 1) {
         const child = root.children[childIndex];
-        const childValue = child.variantValue.trim();
-        const childValueLength = [...childValue].length;
 
-        if (childValueLength < 1 || childValueLength > 120) {
-          return `Заполните значение второго уровня №${childIndex + 1} для «${rootValue}» длиной до 120 символов.`;
+        const childOption = childOptions.find(
+          (option) => option.attributeOptionId === child.attributeOptionId,
+        );
+
+        if (!childOption) {
+          return `Выберите значение характеристики «${this.variantSelectorName(1)}» для варианта «${rootOption.optionValue}» №${childIndex + 1}.`;
         }
 
-        const childKey = childValue.toLowerCase();
-
-        if (usedChildValues.has(childKey)) {
-          return `Вариант «${rootValue} → ${childValue}» повторяется.`;
+        if (usedChildOptionIds.has(child.attributeOptionId)) {
+          return `Вариант «${rootOption.optionValue} → ${childOption.optionValue}» повторяется.`;
         }
 
-        usedChildValues.add(childKey);
+        usedChildOptionIds.add(child.attributeOptionId);
 
         const offerError = this.validateOfferValues(
           child.priceAmount,
           child.stockQuantity,
-          `варианта «${rootValue} → ${childValue}»`,
+          `варианта «${rootOption.optionValue} → ${childOption.optionValue}»`,
         );
 
         if (offerError) {
@@ -1384,7 +1865,7 @@ export class PwAddProduct {
 
     return {
       selectors: this.variantSelectors().map((selector) => ({
-        selectorName: selector.selectorName.trim(),
+        attributeId: selector.attributeId,
         displayType: selector.displayType,
       })),
       variants: this.variantDrafts().map((root) =>
@@ -1402,7 +1883,7 @@ export class PwAddProduct {
     hasSecondSelector: boolean,
   ): SellerProductVariantNodeRequest {
     const request: SellerProductVariantNodeRequest = {
-      variantValue: draft.variantValue.trim(),
+      attributeOptionId: draft.attributeOptionId,
       children: [],
       offer: null,
     };
@@ -1455,7 +1936,7 @@ export class PwAddProduct {
 
     this.variantSelectors.set(
       orderedSelectors.map((selector) => ({
-        selectorName: selector.selectorName,
+        attributeId: selector.attributeId,
         displayType: selector.displayType,
       })),
     );
@@ -1562,6 +2043,7 @@ export class PwAddProduct {
     const draft: SellerProductVariantDraft = {
       draftKey: this.nextVariantDraftKey,
       productVariantId: input.productVariantId ?? null,
+      attributeOptionId: input.attributeOptionId ?? '',
       variantValue: input.variantValue ?? '',
       priceAmount: input.priceAmount ?? '',
       stockQuantity: input.stockQuantity ?? '',
@@ -1631,6 +2113,10 @@ export class PwAddProduct {
     const items: SellerProductAttributeValueRequest[] = [];
 
     for (const attribute of this.categoryAttributes()) {
+      if (this.isAttributeUsedAsVariantSelector(attribute.attributeId)) {
+        continue;
+      }
+
       const draft = this.attributeDraft(attribute.attributeId);
 
       switch (attribute.dataType) {

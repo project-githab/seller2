@@ -13,6 +13,17 @@ export interface SellerProductCategoryTreeResponse {
   items: SellerProductCategoryNode[];
 }
 
+export interface SellerProductCategorySearchItem {
+  categoryId: string;
+  categoryName: string;
+  slug: string;
+  categoryPath: string;
+}
+
+export interface SellerProductCategorySearchResponse {
+  items: SellerProductCategorySearchItem[];
+}
+
 export type SellerProductAttributeDataType =
   | 'text'
   | 'integer'

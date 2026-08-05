@@ -28,6 +28,17 @@ export interface SellerCreateProductDraftResponse {
 }
 
 /**
+ * Результат завершения добавления товара.
+ *
+ * Статус approved означает немедленную публикацию,
+ * а pending — передачу товара на модерацию.
+ */
+export interface SellerAddProductResponse {
+  productCardId: string;
+  moderationStatus: SellerProductModerationStatus;
+}
+
+/**
  * Значение одной характеристики товара.
  *
  * Конкретное поле значения выбирается по типу
@@ -87,7 +98,7 @@ export type SellerProductVariantDisplayType = 'image' | 'text';
  * отправляемое на Go-сервер.
  */
 export interface SellerProductVariantSelectorRequest {
-  selectorName: string;
+  attributeId: string;
   displayType: SellerProductVariantDisplayType;
 }
 
@@ -102,7 +113,7 @@ export interface SellerProductVariantSelectorRequest {
  */
 export interface SellerProductVariantNodeRequest {
   productVariantId?: string;
-  variantValue: string;
+  attributeOptionId: string;
   children: SellerProductVariantNodeRequest[];
   offer: SellerSaveProductOfferRequest | null;
 }
@@ -121,6 +132,7 @@ export interface SellerSaveProductVariantConfigurationRequest {
  */
 export interface SellerProductVariantSelectorResponse {
   productVariationSelectorId: string;
+  attributeId: string;
   selectorLevel: number;
   selectorName: string;
   displayType: SellerProductVariantDisplayType;
@@ -135,6 +147,8 @@ export interface SellerProductVariantSelectorResponse {
 export interface SellerProductVariantResponse {
   productVariantId: string;
   parentVariantId: string | null;
+  attributeId: string;
+  attributeOptionId: string;
   variantValue: string;
   sortOrder: number;
   offer: SellerProductOfferResponse | null;
@@ -194,6 +208,8 @@ export interface SellerProductEditorImage {
 export interface SellerProductEditorVariant {
   productVariantId: string;
   parentVariantId: string | null;
+  attributeId: string | null;
+  attributeOptionId: string | null;
   variantValue: string;
   sortOrder: number;
   offer: SellerProductOfferResponse | null;

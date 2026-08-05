@@ -32,7 +32,14 @@
             <button class="flex font-size-18 button-blue2 radius-10 product-draft-save-button" type="button"
                     [disabled]="isSavingProduct() || isLoadingProductEditor() || isLoadingCategoryDefinition()"
                     (click)="saveProductDraft()">
-              <span class="flex font-size-18">{{ isSavingProduct() ? 'Сохраняем…' : 'Сохранить черновик' }}</span>
+              <span
+                class="flex font-size-18">{{ productCardId() === null ? 'Сохранить черновик' : 'Сохранить изменения' }}</span>
+            </button>
+
+            <button class="flex font-size-18 button-blue2 radius-10 product-draft-save-button" type="button"
+                    [disabled]="isSavingProduct() || isLoadingProductEditor() || isLoadingCategoryDefinition()"
+                    (click)="addProduct()">
+              <span class="flex font-size-18">Добавить товар</span>
             </button>
 
 
@@ -74,33 +81,14 @@
                   <div class="flex margin-top-20 flex-col width-full">
                     <div class="flex">Категория</div>
 
-                    @if (isLoadingCategories()) {
-                      <div
-                        class="flex height-41 radius-10 block-border-solid margin-top-10 items-center padding-left-10">
-                        Загружаем категории…
-                      </div>
-                    } @else if (categoryLoadError()) {
-                      <div class="category-field-message error">
-                        <span>{{ categoryLoadError() }}</span>
-                        <button type="button" (click)="retryCategories()">Повторить</button>
-                      </div>
-                    } @else {
-                      <select
-                        class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt"
-                        [value]="selectedCategoryId()"
-                        [disabled]="productCardId() !== null || isSavingProduct() || isLoadingProductEditor()"
-                        (change)="selectCategory($any($event.target).value)">
-                        <option value="">Выберите конечную категорию</option>
-
-                        @for (category of selectableCategories(); track category.categoryId) {
-                          <option [value]="category.categoryId"
-                                  [selected]="category.categoryId === selectedCategoryId()">{{ category.label }}
-                          </option>
-                        } @empty {
-                          <option value="" disabled>Нет доступных конечных категорий</option>
-                        }
-                      </select>
-                    }
+                    <button
+                      class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt category-picker-trigger"
+                      type="button"
+                      [disabled]="productCardId() !== null || isSavingProduct() || isLoadingProductEditor()"
+                      (click)="openCategoryPicker()">
+                      <span>{{ selectedCategoryId() ? 'Изменить категорию' : 'Выберите категорию' }}</span>
+                      <span class="category-picker-trigger-arrow" aria-hidden="true">›</span>
+                    </button>
 
                     @if (isLoadingCategoryDefinition()) {
                       <small class="category-field-hint">Загружаем характеристики категории…</small>
@@ -380,6 +368,7 @@
                   @case ('select') {
                     <select class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
                             [value]="attributeDraft(attribute.attributeId).attributeOptionIds.at(0) ?? ''"
+                            [disabled]="isAttributeUsedAsVariantSelector(attribute.attributeId)"
                             (change)="updateSingleAttributeOption(attribute.attributeId, $any($event.target).value)">
                       <option value="">Не выбрано</option>
 
@@ -389,6 +378,11 @@
                         </option>
                       }
                     </select>
+
+                    @if (isAttributeUsedAsVariantSelector(attribute.attributeId)) {
+                      <small class="product-characteristic-meta">Значение задаётся отдельно для каждого варианта
+                        товара.</small>
+                    }
                   }
                   @case ('multiselect') {
                     <div class="product-characteristic-options" [id]="'attribute-' + attribute.attributeId">
@@ -740,7 +734,7 @@
             <p>Например: «Цвет» либо два уровня «Цвет → Размер».</p>
           </div>
 
-          @if (variantSelectors().length < 2) {
+          @if (variantSelectors().length < 2 && variantSelectors().length < variantCategoryAttributes().length) {
             <button class="product-variant-add-button" type="button" (click)="addVariantSelector()">Добавить второй
               уровень
             </button>
@@ -753,11 +747,16 @@
               <div class="product-variant-selector-number">Уровень {{ $index + 1 }}</div>
 
               <div class="product-variant-selector-fields">
-                <label class="product-variant-field" [for]="'variant-selector-name-' + $index">
-                  <span>Название уровня</span>
-                  <input [id]="'variant-selector-name-' + $index" type="text" maxlength="100" autocomplete="off"
-                         placeholder="Например, Цвет" [value]="selector.selectorName"
-                         (input)="updateVariantSelectorName($index, $any($event.target).value)">
+                <label class="product-variant-field" [for]="'variant-selector-attribute-' + $index">
+                  <span>Характеристика уровня</span>
+                  <select [id]="'variant-selector-attribute-' + $index" [value]="selector.attributeId"
+                          (change)="updateVariantSelectorAttribute($index, $any($event.target).value)">
+                    @for (attribute of variantCategoryAttributes(); track attribute.attributeId) {
+                      <option [value]="attribute.attributeId"
+                              [disabled]="isVariantAttributeUsedByOtherSelector(attribute.attributeId, $index)">{{ attribute.attributeName }}
+                      </option>
+                    }
+                  </select>
                 </label>
 
                 <label class="product-variant-field" [for]="'variant-selector-display-' + $index">
@@ -786,8 +785,8 @@
             <h3 id="variant-values-heading">2. Варианты товара</h3>
             <p>Значения не должны повторяться внутри одного уровня.</p>
           </div>
-          <button class="product-variant-add-button" type="button" (click)="addRootVariant()">Добавить значение первого
-            уровня
+          <button class="product-variant-add-button" type="button" (click)="addRootVariant()">Добавить вариант
+            «{{ variantSelectorName(0) }}»
           </button>
         </div>
 
@@ -795,8 +794,7 @@
           @for (root of variantDrafts(); track root.draftKey; let rootIndex = $index) {
             <article class="product-variant-root-card">
               <header class="product-variant-root-header">
-                <strong>{{ variantSelectors()[0].selectorName || 'Первый уровень' }} ·
-                  значение {{ rootIndex + 1 }}</strong>
+                <strong>{{ variantSelectorName(0) || 'Первый уровень' }} · значение {{ rootIndex + 1 }}</strong>
                 <button class="product-variant-remove-button compact" type="button"
                         [attr.aria-label]="'Удалить значение первого уровня ' + (rootIndex + 1)"
                         (click)="removeRootVariant(root.draftKey)">Удалить
@@ -804,10 +802,16 @@
               </header>
 
               <label class="product-variant-field" [for]="'variant-root-value-' + root.draftKey">
-                <span>{{ variantSelectors()[0].selectorName || 'Значение первого уровня' }}</span>
-                <input [id]="'variant-root-value-' + root.draftKey" type="text" maxlength="120" autocomplete="off"
-                       placeholder="Введите значение" [value]="root.variantValue"
-                       (input)="updateVariantValue(root.draftKey, null, $any($event.target).value)">
+                <span>{{ variantSelectorName(0) || 'Значение первого уровня' }}</span>
+                <select [id]="'variant-root-value-' + root.draftKey" [value]="root.attributeOptionId"
+                        (change)="updateVariantOption(root.draftKey, null, $any($event.target).value)">
+                  <option value="">Не выбрано</option>
+                  @for (option of variantSelectorOptions(0); track option.attributeOptionId) {
+                    <option [value]="option.attributeOptionId"
+                            [disabled]="isVariantOptionUsedByOtherDraft(0, option.attributeOptionId, root.draftKey, null)">{{ option.optionValue }}
+                    </option>
+                  }
+                </select>
               </label>
 
               @if (root.images.length > 0) {
@@ -822,7 +826,7 @@
               @if (hasSecondVariantSelector()) {
                 <section class="product-variant-child-section">
                   <div class="product-variant-child-heading">
-                    <strong>{{ variantSelectors()[1].selectorName || 'Второй уровень' }}</strong>
+                    <strong>{{ variantSelectorName(1) || 'Второй уровень' }}</strong>
                     <button class="product-variant-add-button compact" type="button"
                             (click)="addChildVariant(root.draftKey)">Добавить конечный вариант
                     </button>
@@ -835,10 +839,16 @@
 
                         <div class="product-variant-child-fields">
                           <label class="product-variant-field" [for]="'variant-child-value-' + child.draftKey">
-                            <span>{{ variantSelectors()[1].selectorName || 'Значение второго уровня' }}</span>
-                            <input [id]="'variant-child-value-' + child.draftKey" type="text" maxlength="120"
-                                   autocomplete="off" placeholder="Введите значение" [value]="child.variantValue"
-                                   (input)="updateVariantValue(root.draftKey, child.draftKey, $any($event.target).value)">
+                            <span>{{ variantSelectorName(1) || 'Значение второго уровня' }}</span>
+                            <select [id]="'variant-child-value-' + child.draftKey" [value]="child.attributeOptionId"
+                                    (change)="updateVariantOption(root.draftKey, child.draftKey, $any($event.target).value)">
+                              <option value="">Не выбрано</option>
+                              @for (option of variantSelectorOptions(1); track option.attributeOptionId) {
+                                <option [value]="option.attributeOptionId"
+                                        [disabled]="isVariantOptionUsedByOtherDraft(1, option.attributeOptionId, root.draftKey, child.draftKey)">{{ option.optionValue }}
+                                </option>
+                              }
+                            </select>
                           </label>
 
                           <label class="product-variant-field" [for]="'variant-child-price-' + child.draftKey">
@@ -898,4 +908,94 @@
       </section>
     </div>
   </section>
+}
+
+@if (categoryPickerOpen()) {
+  <div class="category-picker-backdrop" (click)="closeCategoryPicker()">
+    <section class="category-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="category-picker-title"
+             (click)="$event.stopPropagation()">
+      <header class="category-picker-header">
+        <div>
+          <p>КАТЕГОРИЯ ТОВАРА</p>
+          <h2 id="category-picker-title">Выберите категорию</h2>
+        </div>
+        <button class="category-picker-close" type="button" aria-label="Закрыть окно выбора категории"
+                (click)="closeCategoryPicker()">×
+        </button>
+      </header>
+
+      <div class="category-picker-search">
+        <label for="category-picker-search">Поиск по всем категориям</label>
+        <div class="category-picker-search-field">
+          <input id="category-picker-search" type="search" autocomplete="off" maxlength="100"
+                 placeholder="Например: беспроводные наушники" [value]="categorySearch()"
+                 (input)="updateCategorySearch($any($event.target).value)">
+          @if (categorySearch()) {
+            <button type="button" aria-label="Очистить поиск категорий" (click)="updateCategorySearch('')">×</button>
+          }
+        </div>
+        <small>Введите минимум два символа. Поиск выполняется среди конечных категорий.</small>
+      </div>
+
+      @if (categorySearchActive()) {
+        <div class="category-picker-path">
+          <span>Результаты поиска</span>
+        </div>
+
+        <div class="category-picker-list">
+          @if (isSearchingCategories()) {
+            <div class="category-picker-state" role="status">Ищем подходящие категории…</div>
+          } @else if (categorySearchError()) {
+            <div class="category-picker-state error" role="alert">
+              <span>{{ categorySearchError() }}</span>
+              <button type="button" (click)="retryCategorySearch()">Повторить</button>
+            </div>
+          } @else {
+            @for (category of categorySearchResults(); track category.categoryId) {
+              <button class="category-picker-item" type="button" (click)="selectCategorySearchResult(category)">
+                <span>
+                  <strong>{{ category.categoryName }}</strong>
+                  <small>{{ category.categoryPath }}</small>
+                </span>
+                <span class="category-picker-item-action" aria-hidden="true">Выбрать</span>
+              </button>
+            } @empty {
+              <div class="category-picker-state">Подходящие конечные категории не найдены.</div>
+            }
+          }
+        </div>
+      } @else {
+        <div class="category-picker-path">
+          @if (categoryNavigationPath().length > 0) {
+            <button type="button" (click)="returnToPreviousCategoryLevel()">← Назад</button>
+          }
+          <span>{{ categoryNavigationPathLabel() }}</span>
+        </div>
+
+        <div class="category-picker-list">
+          @if (isLoadingCategories()) {
+            <div class="category-picker-state" role="status">Загружаем категории…</div>
+          } @else if (categoryLoadError()) {
+            <div class="category-picker-state error" role="alert">
+              <span>{{ categoryLoadError() }}</span>
+              <button type="button" (click)="retryCategories()">Повторить</button>
+            </div>
+          } @else {
+            @for (category of categories(); track category.categoryId) {
+              <button class="category-picker-item" type="button" (click)="openCategoryPickerItem(category)">
+                <span>
+                  <strong>{{ category.categoryName }}</strong>
+                  <small>{{ category.isLeaf ? 'Конечная категория' : 'Открыть подкатегории' }}</small>
+                </span>
+                <span class="category-picker-item-action"
+                      aria-hidden="true">{{ category.isLeaf ? 'Выбрать' : '›' }}</span>
+              </button>
+            } @empty {
+              <div class="category-picker-state">В этом разделе нет доступных категорий.</div>
+            }
+          }
+        </div>
+      }
+    </section>
+  </div>
 }
