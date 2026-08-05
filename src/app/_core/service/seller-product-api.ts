@@ -14,6 +14,7 @@ import {
   SellerSaveProductOfferRequest,
   SellerSaveProductVariantConfigurationRequest,
   SellerSaveProductVariantConfigurationResponse,
+  SellerUploadProductVariantImageResponse,
 } from '../model/seller-product.response';
 import { AuthService } from './auth.service';
 
@@ -133,6 +134,37 @@ export class SellerProductApi {
       this.httpClient.put<SellerSaveProductVariantConfigurationResponse>(
         `${this.apiBaseUrl}/seller/products/${productCardId}/variants`,
         input,
+        {
+          headers,
+        },
+      ),
+    );
+  }
+
+  /**
+   * Загружает одно изображение
+   * для конкретного конечного варианта товара.
+   *
+   * Тип Content-Type вручную не задаётся:
+   * браузер самостоятельно добавляет boundary
+   * для multipart/form-data.
+   */
+  uploadProductVariantImage(
+    productVariantId: string,
+    image: File,
+    isMain: boolean,
+    isSelectorPreview: boolean,
+  ): Observable<SellerUploadProductVariantImageResponse> {
+    const formData = new FormData();
+
+    formData.append('image', image);
+    formData.append('isMain', String(isMain));
+    formData.append('isSelectorPreview', String(isSelectorPreview));
+
+    return this.withCSRF((headers) =>
+      this.httpClient.post<SellerUploadProductVariantImageResponse>(
+        `${this.apiBaseUrl}/seller/product-variants/${productVariantId}/images`,
+        formData,
         {
           headers,
         },

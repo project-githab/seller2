@@ -265,8 +265,8 @@ export class PwAddProduct {
   productType: 'simple' | 'variant' = 'simple';
 
   /**
-   * Загружает категории и получает средства Angular
-   * для сохранения ID черновика в адресе страницы.
+   * Загружает категории и отслеживает изменение
+   * идентификатора черновика в адресе страницы.
    */
   constructor(
     private readonly route: ActivatedRoute,
@@ -277,14 +277,31 @@ export class PwAddProduct {
     this.loadCategories();
 
     /**
-     * Если ID присутствует в адресе страницы,
-     * продолжаем редактирование этого черновика.
+     * Angular сохраняет компонент при переходе между
+     * одинаковыми маршрутами, поэтому одного snapshot
+     * недостаточно. Подписка реагирует и на удаление draftId.
      */
-    const draftId = this.route.snapshot.queryParamMap.get('draftId');
+    this.route.queryParamMap.subscribe((queryParameters) => {
+      const draftId = queryParameters.get('draftId');
 
-    if (draftId !== null) {
+      if (draftId === null) {
+        this.resetProductFormForNewProduct();
+
+        return;
+      }
+
+      /**
+       * После первого сохранения draftId добавляется
+       * в адрес уже открытой формы. Повторная загрузка
+       * того же черновика в этом случае не требуется.
+       */
+      if (this.productCardId() === draftId) {
+        return;
+      }
+
+      this.resetProductFormForNewProduct();
       this.loadProductEditor(draftId);
-    }
+    });
   }
 
   protected updateProductName(value: string): void {
@@ -427,6 +444,12 @@ export class PwAddProduct {
           : selector,
       ),
     );
+
+    /**
+     * Новая характеристика селектора больше
+     * не должна иметь общего значения карточки.
+     */
+    this.updateAttributeDraft(attributeId, () => this.createEmptyAttributeDraft());
 
     // После смены характеристики прежние значения
     // больше не принадлежат выбранному справочнику.
@@ -1240,6 +1263,19 @@ export class PwAddProduct {
         this.addVariantSelector();
       }
 
+      /**
+       * Характеристика, используемая вариантами,
+       * больше не должна хранить общее значение
+       * для всей карточки товара.
+       */
+      for (const selector of this.variantSelectors()) {
+        if (!selector.attributeId) {
+          continue;
+        }
+
+        this.updateAttributeDraft(selector.attributeId, () => this.createEmptyAttributeDraft());
+      }
+
       setTimeout(() => {
         document.getElementById('variant-block')?.scrollIntoView({
           behavior: 'smooth',
@@ -1247,6 +1283,40 @@ export class PwAddProduct {
         });
       }, 0);
     }
+  }
+
+  /**
+   * Подготавливает чистую форму нового товара
+   * при переходе с редактирования черновика.
+   */
+  private resetProductFormForNewProduct(): void {
+    this.productCardId.set(null);
+    this.selectedCategoryId.set('');
+    this.categoryFormDefinition.set(null);
+    this.attributeDrafts.set({});
+
+    this.productName.set('');
+    this.brandName.set('');
+    this.priceAmount.set('');
+    this.stockQuantity.set('');
+    this.productBullets.set(['', '', '', '', '']);
+
+    this.productType = 'simple';
+    this.variantSelectors.set([]);
+    this.variantDrafts.set([]);
+    this.restoredAttributeValues.set([]);
+
+    this.categoryPickerOpen.set(false);
+    this.categoryNavigationPath.set([]);
+    this.resetCategorySearch();
+
+    this.isLoadingProductEditor.set(false);
+    this.isLoadingCategoryDefinition.set(false);
+    this.categoryDefinitionError.set('');
+    this.productSaveError.set('');
+    this.productSaveMessage.set('');
+
+    this.nextVariantDraftKey = 1;
   }
 
   /**
@@ -1986,6 +2056,7 @@ export class PwAddProduct {
   ): SellerProductVariantDraft {
     return this.createEmptyVariantDraft({
       productVariantId: variant.productVariantId,
+      attributeOptionId: variant.attributeOptionId ?? '',
       variantValue: variant.variantValue,
       priceAmount: variant.offer?.priceAmount ?? '',
       stockQuantity: variant.offer === null ? '' : String(variant.offer.stockQuantity),

@@ -808,6 +808,7 @@
                   <option value="">Не выбрано</option>
                   @for (option of variantSelectorOptions(0); track option.attributeOptionId) {
                     <option [value]="option.attributeOptionId"
+                            [selected]="root.attributeOptionId === option.attributeOptionId"
                             [disabled]="isVariantOptionUsedByOtherDraft(0, option.attributeOptionId, root.draftKey, null)">{{ option.optionValue }}
                     </option>
                   }
@@ -845,6 +846,7 @@
                               <option value="">Не выбрано</option>
                               @for (option of variantSelectorOptions(1); track option.attributeOptionId) {
                                 <option [value]="option.attributeOptionId"
+                                        [selected]="child.attributeOptionId === option.attributeOptionId"
                                         [disabled]="isVariantOptionUsedByOtherDraft(1, option.attributeOptionId, root.draftKey, child.draftKey)">{{ option.optionValue }}
                                 </option>
                               }

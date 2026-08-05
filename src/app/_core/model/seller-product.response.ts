@@ -202,6 +202,18 @@ export interface SellerProductEditorImage {
 }
 
 /**
+ * Результат загрузки одного изображения
+ * для конкретного конечного варианта товара.
+ */
+export interface SellerUploadProductVariantImageResponse {
+  imageId: string;
+  sortOrder: number;
+  productPageUrl: string;
+  catalogUrl: string;
+  thumbnailUrl: string;
+}
+
+/**
  * Вариация товара вместе с предложением
  * продавца и загруженными изображениями.
  */
