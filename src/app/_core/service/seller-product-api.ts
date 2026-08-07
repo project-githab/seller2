@@ -4,17 +4,8 @@ import { Observable, throwError } from 'rxjs';
 
 import { API_BASE_URL } from '../config/api-base-url';
 import {
-  SellerAddProductResponse,
-  SellerCreateProductDraftRequest,
-  SellerCreateProductDraftResponse,
-  SellerProductEditorResponse,
-  SellerProductOfferResponse,
-  SellerSaveProductAttributesRequest,
-  SellerSaveProductDetailsRequest,
-  SellerSaveProductOfferRequest,
-  SellerSaveProductVariantConfigurationRequest,
-  SellerSaveProductVariantConfigurationResponse,
-  SellerUploadProductVariantImageResponse,
+  SellerCreateProductRequest,
+  SellerCreateProductResponse,
 } from '../model/seller-product.response';
 import { AuthService } from './auth.service';
 
@@ -43,169 +34,32 @@ export class SellerProductApi {
   private readonly authService = inject(AuthService);
 
   /**
-   * Загружает существующий черновик товара
-   * для продолжения его редактирования.
+   * Отправляет всю форму нового товара
+   * и выбранные изображения одним запросом.
    *
-   * Это читающий запрос, поэтому CSRF-токен
-   * для него не требуется.
-   */
-  getProductEditor(productCardId: string): Observable<SellerProductEditorResponse> {
-    return this.httpClient.get<SellerProductEditorResponse>(
-      `${this.apiBaseUrl}/seller/products/${productCardId}/editor`,
-    );
-  }
-
-  /**
-   * Создаёт первоначальный черновик товара.
+   * JSON добавляется первой частью payload.
+   * Порядок файлов images совпадает с порядком
+   * метаданных в input.images.
    *
-   * Сервер связывает черновик с продавцом
-   * на основании защищённой cookie сессии.
+   * Content-Type вручную не задаётся:
+   * браузер самостоятельно добавляет boundary.
    */
-  createProductDraft(
-    input: SellerCreateProductDraftRequest,
-  ): Observable<SellerCreateProductDraftResponse> {
-    return this.withCSRF((headers) =>
-      this.httpClient.post<SellerCreateProductDraftResponse>(
-        `${this.apiBaseUrl}/seller/products/drafts`,
-        input,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Полностью заменяет значения характеристик
-   * ранее созданного черновика товара.
-   *
-   * Успешный серверный ответ не содержит JSON
-   * и возвращается со статусом 204 No Content.
-   */
-  saveProductAttributes(
-    productCardId: string,
-    input: SellerSaveProductAttributesRequest,
-  ): Observable<void> {
-    return this.withCSRF((headers) =>
-      this.httpClient.put<void>(
-        `${this.apiBaseUrl}/seller/products/${productCardId}/attributes`,
-        input,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Сохраняет цену и доступный остаток
-   * одиночного товара.
-   *
-   * Сервер создаёт базовую вариацию при первом
-   * сохранении и обновляет её при следующих.
-   */
-  saveProductOffer(
-    productCardId: string,
-    input: SellerSaveProductOfferRequest,
-  ): Observable<SellerProductOfferResponse> {
-    return this.withCSRF((headers) =>
-      this.httpClient.put<SellerProductOfferResponse>(
-        `${this.apiBaseUrl}/seller/products/${productCardId}/offer`,
-        input,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Полностью сохраняет селекторы, дерево вариантов,
-   * цены и остатки вариантного товара.
-   *
-   * Идентификаторы существующих вариантов позволяют
-   * серверу обновлять записи без их пересоздания.
-   */
-  saveProductVariantConfiguration(
-    productCardId: string,
-    input: SellerSaveProductVariantConfigurationRequest,
-  ): Observable<SellerSaveProductVariantConfigurationResponse> {
-    return this.withCSRF((headers) =>
-      this.httpClient.put<SellerSaveProductVariantConfigurationResponse>(
-        `${this.apiBaseUrl}/seller/products/${productCardId}/variants`,
-        input,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Загружает одно изображение
-   * для конкретного конечного варианта товара.
-   *
-   * Тип Content-Type вручную не задаётся:
-   * браузер самостоятельно добавляет boundary
-   * для multipart/form-data.
-   */
-  uploadProductVariantImage(
-    productVariantId: string,
-    image: File,
-    isMain: boolean,
-    isSelectorPreview: boolean,
-  ): Observable<SellerUploadProductVariantImageResponse> {
+  createProduct(
+    input: SellerCreateProductRequest,
+    images: File[],
+  ): Observable<SellerCreateProductResponse> {
     const formData = new FormData();
 
-    formData.append('image', image);
-    formData.append('isMain', String(isMain));
-    formData.append('isSelectorPreview', String(isSelectorPreview));
+    formData.append('payload', JSON.stringify(input));
+
+    for (const image of images) {
+      formData.append('images', image, image.name);
+    }
 
     return this.withCSRF((headers) =>
-      this.httpClient.post<SellerUploadProductVariantImageResponse>(
-        `${this.apiBaseUrl}/seller/product-variants/${productVariantId}/images`,
+      this.httpClient.post<SellerCreateProductResponse>(
+        `${this.apiBaseUrl}/seller/products`,
         formData,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Обновляет название, бренд и преимущества
-   * существующей карточки товара.
-   *
-   * Успешный серверный ответ имеет статус
-   * 204 No Content и не содержит JSON.
-   */
-  saveProductDetails(
-    productCardId: string,
-    input: SellerSaveProductDetailsRequest,
-  ): Observable<void> {
-    return this.withCSRF((headers) =>
-      this.httpClient.put<void>(
-        `${this.apiBaseUrl}/seller/products/${productCardId}/details`,
-        input,
-        {
-          headers,
-        },
-      ),
-    );
-  }
-
-  /**
-   * Завершает добавление товара.
-   *
-   * Сервер самостоятельно применяет правила продавца:
-   * сразу публикует товар либо отправляет его
-   * на модерацию.
-   */
-  addProduct(productCardId: string): Observable<SellerAddProductResponse> {
-    return this.withCSRF((headers) =>
-      this.httpClient.post<SellerAddProductResponse>(
-        `${this.apiBaseUrl}/seller/products/${productCardId}/submit`,
-        null,
         {
           headers,
         },

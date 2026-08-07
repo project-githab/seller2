@@ -29,17 +29,9 @@
               <p class="product-save-feedback success" role="status">{{ productSaveMessage() }}</p>
             }
 
-            <button class="flex font-size-18 button-blue2 radius-10 product-draft-save-button" type="button"
-                    [disabled]="isSavingProduct() || isLoadingProductEditor() || isLoadingCategoryDefinition()"
-                    (click)="saveProductDraft()">
-              <span
-                class="flex font-size-18">{{ productCardId() === null ? 'Сохранить черновик' : 'Сохранить изменения' }}</span>
-            </button>
-
-            <button class="flex font-size-18 button-blue2 radius-10 product-draft-save-button" type="button"
-                    [disabled]="isSavingProduct() || isLoadingProductEditor() || isLoadingCategoryDefinition()"
-                    (click)="addProduct()">
-              <span class="flex font-size-18">Добавить товар</span>
+            <button class="flex font-size-18 button-blue2 radius-10 product-add-button" type="button"
+                    [disabled]="isSavingProduct() || isLoadingCategoryDefinition()" (click)="addProduct()">
+              <span class="flex font-size-18">{{ isSavingProduct() ? 'Добавляем товар…' : 'Добавить товар' }}</span>
             </button>
 
 
@@ -84,7 +76,7 @@
                     <button
                       class="height-41 font-size-18 radius-10 width-full padding-left-10 padding-right-10 margin-top-10 input-txt category-picker-trigger"
                       type="button"
-                      [disabled]="productCardId() !== null || isSavingProduct() || isLoadingProductEditor()"
+                      [disabled]="isSavingProduct()"
                       (click)="openCategoryPicker()">
                       <span>{{ selectedCategoryId() ? 'Изменить категорию' : 'Выберите категорию' }}</span>
                       <span class="category-picker-trigger-arrow" aria-hidden="true">›</span>
@@ -341,24 +333,24 @@
                 @switch (attribute.dataType) {
                   @case ('text') {
                     <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId" type="text"
-                           autocomplete="off" [value]="attributeDraft(attribute.attributeId).valueText"
+                           autocomplete="off" [value]="attributeState(attribute.attributeId).valueText"
                            (input)="updateAttributeText(attribute.attributeId, 'valueText', $any($event.target).value)">
                   }
                   @case ('integer') {
                     <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
                            type="number" inputmode="numeric" step="1"
-                           [value]="attributeDraft(attribute.attributeId).valueInteger"
+                           [value]="attributeState(attribute.attributeId).valueInteger"
                            (input)="updateAttributeText(attribute.attributeId, 'valueInteger', $any($event.target).value)">
                   }
                   @case ('decimal') {
                     <input class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
                            type="number" inputmode="decimal" step="any"
-                           [value]="attributeDraft(attribute.attributeId).valueDecimal"
+                           [value]="attributeState(attribute.attributeId).valueDecimal"
                            (input)="updateAttributeText(attribute.attributeId, 'valueDecimal', $any($event.target).value)">
                   }
                   @case ('boolean') {
                     <select class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
-                            [value]="attributeDraft(attribute.attributeId).valueBoolean === null ? '' : attributeDraft(attribute.attributeId).valueBoolean ? 'true' : 'false'"
+                            [value]="attributeState(attribute.attributeId).valueBoolean === null ? '' : attributeState(attribute.attributeId).valueBoolean ? 'true' : 'false'"
                             (change)="updateAttributeBoolean(attribute.attributeId, $any($event.target).value)">
                       <option value="">Не выбрано</option>
                       <option value="true">Да</option>
@@ -367,7 +359,7 @@
                   }
                   @case ('select') {
                     <select class="product-characteristic-input" [id]="'attribute-' + attribute.attributeId"
-                            [value]="attributeDraft(attribute.attributeId).attributeOptionIds.at(0) ?? ''"
+                            [value]="attributeState(attribute.attributeId).attributeOptionIds.at(0) ?? ''"
                             [disabled]="isAttributeUsedAsVariantSelector(attribute.attributeId)"
                             (change)="updateSingleAttributeOption(attribute.attributeId, $any($event.target).value)">
                       <option value="">Не выбрано</option>
@@ -411,77 +403,74 @@
 
 <!-- - - - - - - - - -->
 @if (productType === 'simple') {
+  @let simpleVariant = simpleProductVariant();
 
-  <div class="flex justify-center">
-
-    <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
-      <div class="flex width-full padding-10 items-start flex-col">
-        <div class="flex padding-20 shadow font-size-18 width-full gap-20 flex-wrap relative cf-jcc">
-
-
-          <div class="flex flex-col">
-            <div class="flex overflow-hidden width-full img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290" width="290">
+  @if (simpleVariant !== null) {
+    <div class="flex justify-center">
+      <div class="flex max-width-1400 width-full margin-x-20-phone margin-top-20">
+        <div class="flex width-full padding-10 items-start flex-col">
+          <div class="product-variant-image-manager width-full padding-20 shadow">
+            <div class="product-variant-image-manager-heading">
+              <strong>Изображения товара</strong>
+              <span>До 7 изображений. Первое место — главное.</span>
             </div>
-            <div class="flex width-full justify-center margin-top-10">
-              Главное
+
+            <div class="product-variant-image-slots">
+              @for (slotIndex of variantImageSlotIndexes; track slotIndex) {
+                @let image = variantImageForSlot(simpleVariant, slotIndex);
+
+                <article class="product-variant-image-slot" [class.main]="slotIndex === 0"
+                         [class.filled]="image !== null">
+                  <div
+                    class="product-variant-image-slot-title">{{ slotIndex === 0 ? 'Главное' : 'Фото ' + (slotIndex + 1) }}
+                  </div>
+
+                  @if (image !== null) {
+                    <img class="product-variant-image-preview" [src]="image.previewUrl" alt="Изображение товара"
+                         width="160" height="160">
+
+                    <div class="product-variant-image-actions">
+                      <label class="product-variant-image-action"
+                             [class.disabled]="isSavingProduct()">
+                        <span>Заменить</span>
+                        <input class="product-variant-image-file-input" type="file" accept="image/jpeg,image/png"
+                               [disabled]="isSavingProduct()"
+                               (change)="replaceVariantImage(simpleVariant.clientKey, null, image, $event)">
+                      </label>
+
+                      @if (!image.isMain) {
+                        <button class="product-variant-image-action" type="button"
+                                [disabled]="isSavingProduct()"
+                                (click)="makeVariantImageMain(simpleVariant.clientKey, null, image)">Сделать главным
+                        </button>
+                      }
+
+                      <button class="product-variant-image-action danger" type="button"
+                              [disabled]="image.isMain && simpleVariant.images.length > 1"
+                              [attr.title]="image.isMain && simpleVariant.images.length > 1 ? 'Сначала выберите другое главное изображение' : null"
+                              (click)="deleteVariantImage(simpleVariant.clientKey, null, image)">Удалить
+                      </button>
+                    </div>
+                  } @else {
+                    <label class="product-variant-image-empty"
+                           [class.disabled]="isSavingProduct()">
+                      <span class="product-variant-image-plus" aria-hidden="true">+</span>
+                      <span>Выбрать</span>
+                      <input class="product-variant-image-file-input" type="file" accept="image/jpeg,image/png"
+                             [disabled]="isSavingProduct()"
+                             (change)="uploadVariantImage(simpleVariant.clientKey, null, slotIndex, $event)">
+                    </label>
+                  }
+                </article>
+              }
             </div>
-            <div class="flex width-full justify-center margin-top-10">
-              <div class="flex button-primary">Выбрать</div>
-            </div>
+
+            <span class="product-variant-image-upload-hint">JPEG или PNG, не более 15 МБ. Файлы загрузятся после нажатия «Добавить товар».</span>
           </div>
-
-          <div class="flex flex-col">
-            <div class="flex overflow-hidden width-full img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290" width="290">
-            </div>
-            <div class="flex width-full justify-center margin-top-10">2</div>
-            <div class="flex width-full justify-center margin-top-10">
-              <div class="flex button-primary">Выбрать</div>
-            </div>
-          </div>
-
-          <div class="flex flex-col">
-            <div class="flex overflow-hidden width-full img-size">
-              <img ngSrc="/img/img3.jpg" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290" width="290">
-            </div>
-            <div class="flex width-full justify-center margin-top-10">3</div>
-            <div class="flex width-full justify-center margin-top-10">
-              <div class="flex button-primary">Выбрать</div>
-            </div>
-          </div>
-
-          <div class="flex flex-col">
-            <div class="flex overflow-hidden width-full img-size">
-              <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290" width="290">
-            </div>
-            <div class="flex width-full justify-center margin-top-10">4</div>
-            <div class="flex width-full justify-center margin-top-10">
-              <div class="flex button-primary">Выбрать</div>
-            </div>
-          </div>
-
-          <div class="flex flex-col">
-            <div class="flex overflow-hidden width-full img-size">
-              <img ngSrc="/img/default.webp" alt="Изображение товара" class="object-fit-contain width-full height-full"
-                   height="290" width="290">
-            </div>
-            <div class="flex width-full justify-center margin-top-10">5</div>
-            <div class="flex width-full justify-center margin-top-10">
-              <div class="flex button-primary">Выбрать</div>
-            </div>
-          </div>
-
-
         </div>
       </div>
     </div>
-  </div>
-
+  }
 }
 <!-- - - - - - - - - -->
 
@@ -791,95 +780,142 @@
         </div>
 
         <div class="product-variant-root-list">
-          @for (root of variantDrafts(); track root.draftKey; let rootIndex = $index) {
+          @for (root of variantStates(); track root.clientKey; let rootIndex = $index) {
             <article class="product-variant-root-card">
               <header class="product-variant-root-header">
                 <strong>{{ variantSelectorName(0) || 'Первый уровень' }} · значение {{ rootIndex + 1 }}</strong>
-                <button class="product-variant-remove-button compact" type="button"
-                        [attr.aria-label]="'Удалить значение первого уровня ' + (rootIndex + 1)"
-                        (click)="removeRootVariant(root.draftKey)">Удалить
-                </button>
+                @if (variantStates().length > 1) {
+                  <button class="product-variant-remove-button compact" type="button"
+                          [attr.aria-label]="'Удалить значение первого уровня ' + (rootIndex + 1)"
+                          (click)="removeRootVariant(root.clientKey)">Удалить
+                  </button>
+                }
               </header>
 
-              <label class="product-variant-field" [for]="'variant-root-value-' + root.draftKey">
+              <label class="product-variant-field" [for]="'variant-root-value-' + root.clientKey">
                 <span>{{ variantSelectorName(0) || 'Значение первого уровня' }}</span>
-                <select [id]="'variant-root-value-' + root.draftKey" [value]="root.attributeOptionId"
-                        (change)="updateVariantOption(root.draftKey, null, $any($event.target).value)">
+                <select [id]="'variant-root-value-' + root.clientKey" [value]="root.attributeOptionId"
+                        (change)="updateVariantOption(root.clientKey, null, $any($event.target).value)">
                   <option value="">Не выбрано</option>
                   @for (option of variantSelectorOptions(0); track option.attributeOptionId) {
                     <option [value]="option.attributeOptionId"
                             [selected]="root.attributeOptionId === option.attributeOptionId"
-                            [disabled]="isVariantOptionUsedByOtherDraft(0, option.attributeOptionId, root.draftKey, null)">{{ option.optionValue }}
+                            [disabled]="isVariantOptionUsedByOtherState(0, option.attributeOptionId, root.clientKey, null)">{{ option.optionValue }}
                     </option>
                   }
                 </select>
               </label>
-
-              @if (root.images.length > 0) {
-                <div class="product-variant-images" aria-label="Сохранённые изображения варианта">
-                  @for (image of root.images; track image.imageId) {
-                    <img class="product-variant-image" [src]="image.thumbnailUrl"
-                         [alt]="'Изображение варианта ' + root.variantValue" width="96" height="96">
-                  }
-                </div>
-              }
 
               @if (hasSecondVariantSelector()) {
                 <section class="product-variant-child-section">
                   <div class="product-variant-child-heading">
                     <strong>{{ variantSelectorName(1) || 'Второй уровень' }}</strong>
                     <button class="product-variant-add-button compact" type="button"
-                            (click)="addChildVariant(root.draftKey)">Добавить конечный вариант
+                            (click)="addChildVariant(root.clientKey)">Добавить конечный вариант
                     </button>
                   </div>
 
                   <div class="product-variant-child-list">
-                    @for (child of root.children; track child.draftKey; let childIndex = $index) {
+                    @for (child of root.children; track child.clientKey; let childIndex = $index) {
                       <article class="product-variant-child-card">
                         <div class="product-variant-child-number">Конечный вариант {{ childIndex + 1 }}</div>
 
                         <div class="product-variant-child-fields">
-                          <label class="product-variant-field" [for]="'variant-child-value-' + child.draftKey">
+                          <label class="product-variant-field" [for]="'variant-child-value-' + child.clientKey">
                             <span>{{ variantSelectorName(1) || 'Значение второго уровня' }}</span>
-                            <select [id]="'variant-child-value-' + child.draftKey" [value]="child.attributeOptionId"
-                                    (change)="updateVariantOption(root.draftKey, child.draftKey, $any($event.target).value)">
+                            <select [id]="'variant-child-value-' + child.clientKey" [value]="child.attributeOptionId"
+                                    (change)="updateVariantOption(root.clientKey, child.clientKey, $any($event.target).value)">
                               <option value="">Не выбрано</option>
                               @for (option of variantSelectorOptions(1); track option.attributeOptionId) {
                                 <option [value]="option.attributeOptionId"
                                         [selected]="child.attributeOptionId === option.attributeOptionId"
-                                        [disabled]="isVariantOptionUsedByOtherDraft(1, option.attributeOptionId, root.draftKey, child.draftKey)">{{ option.optionValue }}
+                                        [disabled]="isVariantOptionUsedByOtherState(1, option.attributeOptionId, root.clientKey, child.clientKey)">{{ option.optionValue }}
                                 </option>
                               }
                             </select>
                           </label>
 
-                          <label class="product-variant-field" [for]="'variant-child-price-' + child.draftKey">
+                          <label class="product-variant-field" [for]="'variant-child-price-' + child.clientKey">
                             <span>Цена, ₽</span>
-                            <input [id]="'variant-child-price-' + child.draftKey" type="text" inputmode="decimal"
+                            <input [id]="'variant-child-price-' + child.clientKey" type="text" inputmode="decimal"
                                    maxlength="13" autocomplete="off" placeholder="0,00" [value]="child.priceAmount"
-                                   (input)="updateVariantOffer(root.draftKey, child.draftKey, 'priceAmount', $any($event.target).value)">
+                                   (input)="updateVariantOffer(root.clientKey, child.clientKey, 'priceAmount', $any($event.target).value)">
                           </label>
 
-                          <label class="product-variant-field" [for]="'variant-child-stock-' + child.draftKey">
+                          <label class="product-variant-field" [for]="'variant-child-stock-' + child.clientKey">
                             <span>Количество, шт.</span>
-                            <input [id]="'variant-child-stock-' + child.draftKey" type="number" inputmode="numeric"
+                            <input [id]="'variant-child-stock-' + child.clientKey" type="number" inputmode="numeric"
                                    min="0" max="2147483647" step="1" placeholder="0" [value]="child.stockQuantity"
-                                   (input)="updateVariantOffer(root.draftKey, child.draftKey, 'stockQuantity', $any($event.target).value)">
+                                   (input)="updateVariantOffer(root.clientKey, child.clientKey, 'stockQuantity', $any($event.target).value)">
                           </label>
                         </div>
 
-                        @if (child.images.length > 0) {
-                          <div class="product-variant-images" aria-label="Сохранённые изображения конечного варианта">
-                            @for (image of child.images; track image.imageId) {
-                              <img class="product-variant-image" [src]="image.thumbnailUrl"
-                                   [alt]="'Изображение варианта ' + child.variantValue" width="96" height="96">
+                        <div class="product-variant-image-manager">
+                          <div class="product-variant-image-manager-heading">
+                            <strong>Изображения конечного варианта</strong>
+                            <span>До 7 изображений. Первое место — главное.</span>
+                          </div>
+
+                          <div class="product-variant-image-slots">
+                            @for (slotIndex of variantImageSlotIndexes; track slotIndex) {
+                              @let image = variantImageForSlot(child, slotIndex);
+
+                              <article class="product-variant-image-slot" [class.main]="slotIndex === 0"
+                                       [class.filled]="image !== null">
+                                <div class="product-variant-image-slot-title">
+                                  {{ slotIndex === 0 ? 'Главное' : 'Фото ' + (slotIndex + 1) }}
+                                </div>
+
+                                @if (image !== null) {
+                                  <img class="product-variant-image-preview" [src]="image.previewUrl"
+                                       [alt]="'Изображение варианта ' + child.variantValue" width="160" height="160">
+
+                                  <div class="product-variant-image-actions">
+                                    <label class="product-variant-image-action"
+                                           [class.disabled]="isSavingProduct()">
+                                      <span>Заменить</span>
+                                      <input class="product-variant-image-file-input" type="file"
+                                             accept="image/jpeg,image/png"
+                                             [disabled]="isSavingProduct()"
+                                             (change)="replaceVariantImage(root.clientKey, child.clientKey, image, $event)">
+                                    </label>
+
+                                    @if (!image.isMain) {
+                                      <button class="product-variant-image-action" type="button"
+                                              [disabled]="isSavingProduct()"
+                                              (click)="makeVariantImageMain(root.clientKey, child.clientKey, image)">
+                                        Сделать главным
+                                      </button>
+                                    }
+
+                                    <button class="product-variant-image-action danger" type="button"
+                                            [disabled]="image.isMain && child.images.length > 1"
+                                            [attr.title]="image.isMain && child.images.length > 1 ? 'Сначала выберите другое главное изображение' : null"
+                                            (click)="deleteVariantImage(root.clientKey, child.clientKey, image)">
+                                      Удалить
+                                    </button>
+                                  </div>
+                                } @else {
+                                  <label class="product-variant-image-empty"
+                                         [class.disabled]="isSavingProduct()">
+                                    <span class="product-variant-image-plus" aria-hidden="true">+</span>
+                                    <span>Выбрать</span>
+                                    <input class="product-variant-image-file-input" type="file"
+                                           accept="image/jpeg,image/png"
+                                           [disabled]="isSavingProduct()"
+                                           (change)="uploadVariantImage(root.clientKey, child.clientKey, slotIndex, $event)">
+                                  </label>
+                                }
+                              </article>
                             }
                           </div>
-                        }
+
+                          <span class="product-variant-image-upload-hint">JPEG или PNG, не более 15 МБ. Файлы загрузятся после нажатия «Добавить товар».</span>
+                        </div>
 
                         <button class="product-variant-remove-button compact" type="button"
                                 [attr.aria-label]="'Удалить конечный вариант ' + (childIndex + 1)"
-                                (click)="removeChildVariant(root.draftKey, child.draftKey)">Удалить конечный вариант
+                                (click)="removeChildVariant(root.clientKey, child.clientKey)">Удалить конечный вариант
                         </button>
                       </article>
                     }
@@ -887,20 +923,81 @@
                 </section>
               } @else {
                 <div class="product-variant-offer-fields">
-                  <label class="product-variant-field" [for]="'variant-root-price-' + root.draftKey">
+                  <label class="product-variant-field" [for]="'variant-root-price-' + root.clientKey">
                     <span>Цена, ₽</span>
-                    <input [id]="'variant-root-price-' + root.draftKey" type="text" inputmode="decimal" maxlength="13"
+                    <input [id]="'variant-root-price-' + root.clientKey" type="text" inputmode="decimal" maxlength="13"
                            autocomplete="off" placeholder="0,00" [value]="root.priceAmount"
-                           (input)="updateVariantOffer(root.draftKey, null, 'priceAmount', $any($event.target).value)">
+                           (input)="updateVariantOffer(root.clientKey, null, 'priceAmount', $any($event.target).value)">
                   </label>
 
-                  <label class="product-variant-field" [for]="'variant-root-stock-' + root.draftKey">
+                  <label class="product-variant-field" [for]="'variant-root-stock-' + root.clientKey">
                     <span>Количество, шт.</span>
-                    <input [id]="'variant-root-stock-' + root.draftKey" type="number" inputmode="numeric" min="0"
+                    <input [id]="'variant-root-stock-' + root.clientKey" type="number" inputmode="numeric" min="0"
                            max="2147483647" step="1" placeholder="0" [value]="root.stockQuantity"
-                           (input)="updateVariantOffer(root.draftKey, null, 'stockQuantity', $any($event.target).value)">
+                           (input)="updateVariantOffer(root.clientKey, null, 'stockQuantity', $any($event.target).value)">
                   </label>
                 </div>
+
+                <div class="product-variant-image-manager">
+                  <div class="product-variant-image-manager-heading">
+                    <strong>Изображения варианта</strong>
+                    <span>До 7 изображений. Первое место — главное.</span>
+                  </div>
+
+                  <div class="product-variant-image-slots">
+                    @for (slotIndex of variantImageSlotIndexes; track slotIndex) {
+                      @let image = variantImageForSlot(root, slotIndex);
+
+                      <article class="product-variant-image-slot" [class.main]="slotIndex === 0"
+                               [class.filled]="image !== null">
+                        <div class="product-variant-image-slot-title">
+                          {{ slotIndex === 0 ? 'Главное' : 'Фото ' + (slotIndex + 1) }}
+                        </div>
+
+                        @if (image !== null) {
+                          <img class="product-variant-image-preview" [src]="image.previewUrl"
+                               [alt]="'Изображение варианта ' + root.variantValue" width="160" height="160">
+
+                          <div class="product-variant-image-actions">
+                            <label class="product-variant-image-action"
+                                   [class.disabled]="isSavingProduct()">
+                              <span>Заменить</span>
+                              <input class="product-variant-image-file-input" type="file" accept="image/jpeg,image/png"
+                                     [disabled]="isSavingProduct()"
+                                     (change)="replaceVariantImage(root.clientKey, null, image, $event)">
+                            </label>
+
+                            @if (!image.isMain) {
+                              <button class="product-variant-image-action" type="button"
+                                      [disabled]="isSavingProduct()"
+                                      (click)="makeVariantImageMain(root.clientKey, null, image)">
+                                Сделать главным
+                              </button>
+                            }
+
+                            <button class="product-variant-image-action danger" type="button"
+                                    [attr.title]="image.isMain && root.images.length > 1 ? 'Сначала выберите другое главное изображение' : null"
+                                    (click)="deleteVariantImage(root.clientKey, null, image)">
+                              Удалить
+                            </button>
+                          </div>
+                        } @else {
+                          <label class="product-variant-image-empty"
+                                 [class.disabled]="isSavingProduct()">
+                            <span class="product-variant-image-plus" aria-hidden="true">+</span>
+                            <span>Выбрать</span>
+                            <input class="product-variant-image-file-input" type="file" accept="image/jpeg,image/png"
+                                   [disabled]="isSavingProduct()"
+                                   (change)="uploadVariantImage(root.clientKey, null, slotIndex, $event)">
+                          </label>
+                        }
+                      </article>
+                    }
+                  </div>
+
+                  <span class="product-variant-image-upload-hint">JPEG или PNG, не более 15 МБ. Файлы загрузятся после нажатия «Добавить товар».</span>
+                </div>
+
               }
             </article>
           } @empty {

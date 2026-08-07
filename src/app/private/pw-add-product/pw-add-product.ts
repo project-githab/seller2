@@ -1,6 +1,5 @@
-import { NgOptimizedImage } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, OnDestroy, signal } from '@angular/core';
 
 import {
   SellerProductAttributeDataType,
@@ -14,20 +13,14 @@ import { CpHeader } from '../../shared/private/cp-header/cp-header';
 import { CpMenuList } from '../../shared/private/cp-menu-list/cp-menu-list';
 import { SellerProductApi } from '../../_core/service/seller-product-api';
 import {
+  SellerCreateProductImageRequest,
+  SellerCreateProductVariantConfigurationRequest,
+  SellerCreateProductVariantNodeRequest,
   SellerProductAttributeValueRequest,
-  SellerProductEditorAttributeValue,
-  SellerProductEditorImage,
-  SellerProductEditorVariant,
-  SellerProductModerationStatus,
   SellerProductVariantDisplayType,
-  SellerProductVariantNodeRequest,
-  SellerProductVariantResponse,
-  SellerProductVariantSelectorResponse,
-  SellerSaveProductVariantConfigurationRequest,
-  SellerSaveProductVariantConfigurationResponse,
 } from '../../_core/model/seller-product.response';
-import { finalize, map, of, switchMap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { finalize } from 'rxjs';
+import { Router } from '@angular/router';
 
 type SellerProductCategoryChoice = {
   categoryId: string;
@@ -36,7 +29,7 @@ type SellerProductCategoryChoice = {
 
 type SellerProductAttributeTextField = 'valueText' | 'valueInteger' | 'valueDecimal';
 
-type SellerProductAttributeDraft = {
+type SellerProductAttributeState = {
   valueText: string;
   valueInteger: string;
   valueDecimal: string;
@@ -53,41 +46,50 @@ type SellerProductVariantOfferField = 'priceAmount' | 'stockQuantity';
 /**
  * Редактируемое описание одного уровня вариантов.
  */
-type SellerProductVariantSelectorDraft = {
+type SellerProductVariantSelectorState = {
   attributeId: string;
   displayType: SellerProductVariantDisplayType;
 };
 
 /**
+ * Изображение, выбранное в текущей форме.
+ *
+ * До нажатия «Добавить товар» файл находится
+ * только в памяти браузера, а previewUrl используется
+ * для локального показа миниатюры.
+ */
+type SellerProductVariantImage = {
+  clientImageKey: number;
+  isMain: boolean;
+  isSelectorPreview: boolean;
+  file: File;
+  previewUrl: string;
+  slotIndex: number;
+};
+
+/**
  * Редактируемый узел дерева вариантов.
  *
- * draftKey существует только в Angular и обеспечивает
- * стабильное отслеживание строки до сохранения на сервере.
+ * clientKey существует только в Angular и обеспечивает
+ * связь варианта с выбранными для него файлами.
  */
-type SellerProductVariantDraft = {
-  draftKey: number;
-  productVariantId: string | null;
+type SellerProductVariantState = {
+  clientKey: number;
   attributeOptionId: string;
   variantValue: string;
   priceAmount: string;
   stockQuantity: string;
-  images: SellerProductEditorImage[];
-  children: SellerProductVariantDraft[];
+  images: SellerProductVariantImage[];
+  children: SellerProductVariantState[];
 };
-
-/**
- * Общая форма варианта, которую можно восстановить
- * как из редактора, так и из ответа сохранения.
- */
-type SellerProductRestorableVariant = SellerProductEditorVariant | SellerProductVariantResponse;
 
 @Component({
   selector: 'app-pw-add-product',
-  imports: [CpHeader, CpMenuList, NgOptimizedImage],
+  imports: [CpHeader, CpMenuList],
   templateUrl: './pw-add-product.html',
   styleUrl: './pw-add-product.css',
 })
-export class PwAddProduct {
+export class PwAddProduct implements OnDestroy {
   protected readonly categories = signal<SellerProductCategoryNode[]>([]);
 
   // Управляет отдельным окном выбора категории.
@@ -155,6 +157,12 @@ export class PwAddProduct {
   protected readonly stockQuantity = signal('');
 
   /**
+   * Локальное состояние одиночного товара:
+   * цена, остаток и выбранные изображения.
+   */
+  protected readonly simpleProductVariant = signal<SellerProductVariantState | null>(null);
+
+  /**
    * Значения пяти видимых полей преимуществ товара.
    *
    * Сервер допускает до десяти необязательных преимуществ,
@@ -191,7 +199,7 @@ export class PwAddProduct {
         .join(' → ') ?? '',
   );
 
-  protected readonly attributeDrafts = signal<Record<string, SellerProductAttributeDraft>>({});
+  protected readonly attributeStates = signal<Record<string, SellerProductAttributeState>>({});
 
   protected readonly isLoadingCategories = signal(true);
 
@@ -201,9 +209,15 @@ export class PwAddProduct {
 
   protected readonly categoryDefinitionError = signal('');
 
-  protected readonly productCardId = signal<string | null>(null);
+  protected readonly createdProductCardId = signal<string | null>(null);
 
   protected readonly isSavingProduct = signal(false);
+
+  /**
+   * Семь постоянных мест для изображений:
+   * первое главное и шесть дополнительных.
+   */
+  protected readonly variantImageSlotIndexes = [0, 1, 2, 3, 4, 5, 6] as const;
 
   protected readonly productSaveError = signal('');
 
@@ -212,7 +226,7 @@ export class PwAddProduct {
   /**
    * Один или два уровня выбора вариантов товара.
    */
-  protected readonly variantSelectors = signal<SellerProductVariantSelectorDraft[]>([]);
+  protected readonly variantSelectors = signal<SellerProductVariantSelectorState[]>([]);
 
   /**
    * Корневые значения первого уровня вариантов.
@@ -220,7 +234,7 @@ export class PwAddProduct {
    * При двух уровнях каждый корень содержит
    * продаваемые конечные значения в children.
    */
-  protected readonly variantDrafts = signal<SellerProductVariantDraft[]>([]);
+  protected readonly variantStates = signal<SellerProductVariantState[]>([]);
 
   /**
    * Признак двухуровневой конфигурации вариантов.
@@ -235,73 +249,41 @@ export class PwAddProduct {
    */
   protected readonly concreteVariantCount = computed(() => {
     if (!this.hasSecondVariantSelector()) {
-      return this.variantDrafts().length;
+      return this.variantStates().length;
     }
 
-    return this.variantDrafts().reduce((total, root) => total + root.children.length, 0);
+    return this.variantStates().reduce((total, root) => total + root.children.length, 0);
   });
-
-  /**
-   * Показывает, что существующий черновик
-   * сейчас восстанавливается с сервера.
-   */
-  protected readonly isLoadingProductEditor = signal(false);
-
-  /**
-   * Значения характеристик, полученные
-   * при восстановлении существующего черновика.
-   *
-   * Они хранятся до завершения загрузки
-   * определения выбранной категории.
-   */
-  private readonly restoredAttributeValues = signal<SellerProductEditorAttributeValue[]>([]);
 
   /**
    * Последовательность создаёт уникальные локальные ключи
    * для ещё не сохранённых строк вариантов.
    */
-  private nextVariantDraftKey = 1;
+  private nextVariantClientKey = 1;
+
+  /**
+   * Создаёт уникальные локальные идентификаторы
+   * выбранных в браузере изображений.
+   */
+  private nextLocalImageKey = 1;
 
   productType: 'simple' | 'variant' = 'simple';
 
+  public ngOnDestroy(): void {
+    this.releaseAllVariantImagePreviews();
+  }
+
   /**
-   * Загружает категории и отслеживает изменение
-   * идентификатора черновика в адресе страницы.
+   * Подготавливает пустую форму
+   * и загружает категории товаров.
    */
   constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
     private readonly productCategoryApi: SellerProductCategoryApi,
     private readonly productApi: SellerProductApi,
+    private readonly router: Router,
   ) {
+    this.resetProductFormForNewProduct();
     this.loadCategories();
-
-    /**
-     * Angular сохраняет компонент при переходе между
-     * одинаковыми маршрутами, поэтому одного snapshot
-     * недостаточно. Подписка реагирует и на удаление draftId.
-     */
-    this.route.queryParamMap.subscribe((queryParameters) => {
-      const draftId = queryParameters.get('draftId');
-
-      if (draftId === null) {
-        this.resetProductFormForNewProduct();
-
-        return;
-      }
-
-      /**
-       * После первого сохранения draftId добавляется
-       * в адрес уже открытой формы. Повторная загрузка
-       * того же черновика в этом случае не требуется.
-       */
-      if (this.productCardId() === draftId) {
-        return;
-      }
-
-      this.resetProductFormForNewProduct();
-      this.loadProductEditor(draftId);
-    });
   }
 
   protected updateProductName(value: string): void {
@@ -363,30 +345,31 @@ export class PwAddProduct {
    * Значения второго уровня могут повторяться
    * у разных корней, но не внутри одного корня.
    */
-  protected isVariantOptionUsedByOtherDraft(
+  protected isVariantOptionUsedByOtherState(
     selectorIndex: number,
     attributeOptionId: string,
-    rootDraftKey: number,
-    childDraftKey: number | null,
+    rootClientKey: number,
+    childClientKey: number | null,
   ): boolean {
     if (!attributeOptionId) {
       return false;
     }
 
     if (selectorIndex === 0) {
-      return this.variantDrafts().some(
-        (root) => root.draftKey !== rootDraftKey && root.attributeOptionId === attributeOptionId,
+      return this.variantStates().some(
+        (root) => root.clientKey !== rootClientKey && root.attributeOptionId === attributeOptionId,
       );
     }
 
-    const root = this.variantDrafts().find((item) => item.draftKey === rootDraftKey);
+    const root = this.variantStates().find((item) => item.clientKey === rootClientKey);
 
     if (!root) {
       return false;
     }
 
     return root.children.some(
-      (child) => child.draftKey !== childDraftKey && child.attributeOptionId === attributeOptionId,
+      (child) =>
+        child.clientKey !== childClientKey && child.attributeOptionId === attributeOptionId,
     );
   }
 
@@ -449,12 +432,12 @@ export class PwAddProduct {
      * Новая характеристика селектора больше
      * не должна иметь общего значения карточки.
      */
-    this.updateAttributeDraft(attributeId, () => this.createEmptyAttributeDraft());
+    this.updateAttributeState(attributeId, () => this.createEmptyAttributeState());
 
     // После смены характеристики прежние значения
     // больше не принадлежат выбранному справочнику.
     if (index === 0) {
-      this.variantDrafts.update((roots) =>
+      this.variantStates.update((roots) =>
         roots.map((root) => ({
           ...root,
           attributeOptionId: '',
@@ -465,7 +448,7 @@ export class PwAddProduct {
       return;
     }
 
-    this.variantDrafts.update((roots) =>
+    this.variantStates.update((roots) =>
       roots.map((root) => ({
         ...root,
         children: root.children.map((child) => ({
@@ -541,20 +524,20 @@ export class PwAddProduct {
     ]);
 
     if (currentSelectors.length === 0) {
-      if (this.variantDrafts().length === 0) {
-        this.variantDrafts.set([this.createEmptyVariantDraft()]);
+      if (this.variantStates().length === 0) {
+        this.variantStates.set([this.createEmptyVariantState()]);
       }
 
       return;
     }
 
-    this.variantDrafts.update((currentRoots) =>
+    this.variantStates.update((currentRoots) =>
       currentRoots.map((root) => {
         if (root.children.length > 0) {
           return root;
         }
 
-        const firstChild = this.createEmptyVariantDraft({
+        const firstChild = this.createEmptyVariantState({
           priceAmount: root.priceAmount,
           stockQuantity: root.stockQuantity,
         });
@@ -581,7 +564,7 @@ export class PwAddProduct {
       return;
     }
 
-    const roots = this.variantDrafts();
+    const roots = this.variantStates();
 
     if (roots.some((root) => root.children.length > 1)) {
       this.productSaveError.set(
@@ -603,7 +586,7 @@ export class PwAddProduct {
 
     this.variantSelectors.update((currentSelectors) => currentSelectors.slice(0, 1));
 
-    this.variantDrafts.set(
+    this.variantStates.set(
       roots.map((root) => {
         const firstChild = root.children[0];
 
@@ -621,7 +604,7 @@ export class PwAddProduct {
    * Добавляет значение первого уровня вариантов.
    */
   protected addRootVariant(): void {
-    const currentRoots = this.variantDrafts();
+    const currentRoots = this.variantStates();
 
     if (currentRoots.length >= 50) {
       this.productSaveError.set('Можно добавить не более 50 значений первого уровня.');
@@ -629,50 +612,60 @@ export class PwAddProduct {
       return;
     }
 
-    const newRoot = this.createEmptyVariantDraft();
+    const newRoot = this.createEmptyVariantState();
 
     if (this.hasSecondVariantSelector()) {
-      newRoot.children = [this.createEmptyVariantDraft()];
+      newRoot.children = [this.createEmptyVariantState()];
     }
 
     this.productSaveError.set('');
-    this.variantDrafts.set([...currentRoots, newRoot]);
+    this.variantStates.set([...currentRoots, newRoot]);
   }
 
   /**
    * Удаляет значение первого уровня без изображений.
    */
-  protected removeRootVariant(rootDraftKey: number): void {
-    const currentRoots = this.variantDrafts();
+  /**
+   * Удаляет значение первого уровня,
+   * если в форме останется хотя бы один вариант.
+   */
+  protected removeRootVariant(rootClientKey: number): void {
+    const currentRoots = this.variantStates();
 
     if (currentRoots.length <= 1) {
-      this.productSaveError.set('У товара с вариантами должно остаться хотя бы одно значение.');
-
       return;
     }
 
-    const removedRoot = currentRoots.find((root) => root.draftKey === rootDraftKey);
+    const removedRoot = currentRoots.find((root) => root.clientKey === rootClientKey);
 
-    if (removedRoot && this.variantDraftContainsImages(removedRoot)) {
-      this.productSaveError.set('Сначала удалите изображения исключаемого варианта.');
+    if (removedRoot) {
+      const releaseImages = (variant: SellerProductVariantState): void => {
+        for (const image of variant.images) {
+          URL.revokeObjectURL(image.previewUrl);
+        }
 
-      return;
+        for (const child of variant.children) {
+          releaseImages(child);
+        }
+      };
+
+      releaseImages(removedRoot);
     }
 
     this.productSaveError.set('');
-    this.variantDrafts.set(currentRoots.filter((root) => root.draftKey !== rootDraftKey));
+    this.variantStates.set(currentRoots.filter((root) => root.clientKey !== rootClientKey));
   }
 
   /**
    * Добавляет конечный вариант второго уровня
    * к указанному значению первого уровня.
    */
-  protected addChildVariant(rootDraftKey: number): void {
+  protected addChildVariant(rootClientKey: number): void {
     if (!this.hasSecondVariantSelector()) {
       return;
     }
 
-    const root = this.variantDrafts().find((item) => item.draftKey === rootDraftKey);
+    const root = this.variantStates().find((item) => item.clientKey === rootClientKey);
 
     if (!root) {
       return;
@@ -694,9 +687,9 @@ export class PwAddProduct {
 
     this.productSaveError.set('');
 
-    this.updateRootVariant(rootDraftKey, (currentRoot) => ({
+    this.updateRootVariant(rootClientKey, (currentRoot) => ({
       ...currentRoot,
-      children: [...currentRoot.children, this.createEmptyVariantDraft()],
+      children: [...currentRoot.children, this.createEmptyVariantState()],
     }));
   }
 
@@ -704,22 +697,14 @@ export class PwAddProduct {
    * Удаляет конечный вариант второго уровня,
    * если у него отсутствуют изображения.
    */
-  protected removeChildVariant(rootDraftKey: number, childDraftKey: number): void {
-    const root = this.variantDrafts().find((item) => item.draftKey === rootDraftKey);
+  protected removeChildVariant(rootClientKey: number, childClientKey: number): void {
+    const root = this.variantStates().find((item) => item.clientKey === rootClientKey);
 
     if (!root) {
       return;
     }
 
-    if (root.children.length <= 1) {
-      this.productSaveError.set(
-        'У каждого значения первого уровня должен остаться хотя бы один конечный вариант.',
-      );
-
-      return;
-    }
-
-    const removedChild = root.children.find((child) => child.draftKey === childDraftKey);
+    const removedChild = root.children.find((child) => child.clientKey === childClientKey);
 
     if (removedChild && removedChild.images.length > 0) {
       this.productSaveError.set('Сначала удалите изображения исключаемого варианта.');
@@ -729,9 +714,9 @@ export class PwAddProduct {
 
     this.productSaveError.set('');
 
-    this.updateRootVariant(rootDraftKey, (currentRoot) => ({
+    this.updateRootVariant(rootClientKey, (currentRoot) => ({
       ...currentRoot,
-      children: currentRoot.children.filter((child) => child.draftKey !== childDraftKey),
+      children: currentRoot.children.filter((child) => child.clientKey !== childClientKey),
     }));
   }
 
@@ -740,13 +725,13 @@ export class PwAddProduct {
    * для корневого либо дочернего варианта.
    */
   protected updateVariantOption(
-    rootDraftKey: number,
-    childDraftKey: number | null,
+    rootClientKey: number,
+    childClientKey: number | null,
     attributeOptionId: string,
   ): void {
     if (!attributeOptionId) {
-      this.updateVariantDraft(rootDraftKey, childDraftKey, (currentDraft) => ({
-        ...currentDraft,
+      this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+        ...currentState,
         attributeOptionId: '',
         variantValue: '',
       }));
@@ -754,7 +739,7 @@ export class PwAddProduct {
       return;
     }
 
-    const selectorIndex = childDraftKey === null ? 0 : 1;
+    const selectorIndex = childClientKey === null ? 0 : 1;
 
     const option = this.variantSelectorOptions(selectorIndex).find(
       (item) => item.attributeOptionId === attributeOptionId,
@@ -768,8 +753,8 @@ export class PwAddProduct {
 
     this.productSaveError.set('');
 
-    this.updateVariantDraft(rootDraftKey, childDraftKey, (currentDraft) => ({
-      ...currentDraft,
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
       attributeOptionId: option.attributeOptionId,
       variantValue: option.optionValue,
     }));
@@ -779,15 +764,327 @@ export class PwAddProduct {
    * Обновляет цену либо остаток конечного варианта.
    */
   protected updateVariantOffer(
-    rootDraftKey: number,
-    childDraftKey: number | null,
+    rootClientKey: number,
+    childClientKey: number | null,
     field: SellerProductVariantOfferField,
     value: string,
   ): void {
-    this.updateVariantDraft(rootDraftKey, childDraftKey, (currentDraft) => ({
-      ...currentDraft,
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
       [field]: value,
     }));
+  }
+
+  /**
+   * Сохраняет выбранное изображение только
+   * в локальном состоянии Angular.
+   *
+   * На сервер файл будет отправлен вместе
+   * со всей формой после нажатия «Добавить товар».
+   */
+  protected uploadVariantImage(
+    rootClientKey: number,
+    childClientKey: number | null,
+    slotIndex: number,
+    source: Event | File,
+  ): void {
+    let file: File | undefined;
+
+    if (source instanceof File) {
+      file = source;
+    } else {
+      const input = source.target as HTMLInputElement;
+
+      file = input.files?.[0];
+
+      /**
+       * Позволяет повторно выбрать тот же файл,
+       * если продавец сначала удалил его из формы.
+       */
+      input.value = '';
+    }
+
+    if (!file) {
+      return;
+    }
+
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+      this.productSaveError.set('Можно выбирать только изображения JPEG или PNG.');
+
+      return;
+    }
+
+    if (file.size > 15 * 1024 * 1024) {
+      this.productSaveError.set('Размер изображения не должен превышать 15 МБ.');
+
+      return;
+    }
+
+    const simpleVariant = this.simpleProductVariant();
+
+    const root =
+      this.variantStates().find((item) => item.clientKey === rootClientKey) ??
+      (simpleVariant?.clientKey === rootClientKey ? simpleVariant : null);
+
+    if (!root) {
+      this.productSaveError.set('Не удалось найти вариант для выбранного изображения.');
+
+      return;
+    }
+
+    const concreteVariant =
+      childClientKey === null
+        ? root
+        : (root.children.find((child) => child.clientKey === childClientKey) ?? null);
+
+    if (!concreteVariant) {
+      this.productSaveError.set('Не удалось найти конечный вариант товара.');
+
+      return;
+    }
+
+    if (this.hasSecondVariantSelector() && childClientKey === null) {
+      this.productSaveError.set(
+        'Изображение необходимо выбрать для конечного варианта второго уровня.',
+      );
+
+      return;
+    }
+
+    if (this.variantImageForSlot(concreteVariant, slotIndex) !== null) {
+      this.productSaveError.set('Выбранное место изображения уже заполнено.');
+
+      return;
+    }
+
+    if (concreteVariant.images.length >= 7) {
+      this.productSaveError.set('Для одного варианта можно выбрать не более семи изображений.');
+
+      return;
+    }
+
+    const isMain = slotIndex === 0;
+
+    if (isMain && concreteVariant.images.some((image) => image.isMain)) {
+      this.productSaveError.set('Главное изображение уже выбрано.');
+
+      return;
+    }
+
+    const firstSelectorUsesImages = this.variantSelectors()[0]?.displayType === 'image';
+
+    /**
+     * Для визуального первого селектора одно главное
+     * изображение внутри каждого корневого значения
+     * становится его превью.
+     */
+    const selectorPreviewAlreadyExists = this.hasSecondVariantSelector()
+      ? root.children.some((child) => child.images.some((image) => image.isSelectorPreview))
+      : concreteVariant.images.some((image) => image.isSelectorPreview);
+
+    const isSelectorPreview = isMain && firstSelectorUsesImages && !selectorPreviewAlreadyExists;
+
+    const previewUrl = URL.createObjectURL(file);
+
+    const localImage: SellerProductVariantImage = {
+      clientImageKey: this.nextLocalImageKey,
+      isMain,
+      isSelectorPreview,
+      file,
+      previewUrl,
+      slotIndex,
+    };
+
+    this.nextLocalImageKey += 1;
+
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
+      images: [...currentState.images, localImage].sort(
+        (left, right) => left.slotIndex - right.slotIndex,
+      ),
+    }));
+
+    this.productSaveError.set('');
+    this.productSaveMessage.set(
+      'Изображение выбрано. Оно будет загружено после нажатия «Добавить товар».',
+    );
+  }
+
+  /**
+   * Возвращает изображение, занимающее указанное
+   * место в галерее варианта.
+   *
+   * Нулевое место всегда предназначено для главного.
+   */
+  protected variantImageForSlot(
+    state: SellerProductVariantState,
+    slotIndex: number,
+  ): SellerProductVariantImage | null {
+    return state.images.find((image) => image.slotIndex === slotIndex) ?? null;
+  }
+
+  /**
+   * Удаляет выбранное изображение
+   * только из локального состояния формы.
+   */
+  protected deleteVariantImage(
+    rootClientKey: number,
+    childClientKey: number | null,
+    image: SellerProductVariantImage,
+  ): void {
+    const concreteVariant = this.findConcreteVariantState(rootClientKey, childClientKey);
+
+    if (!concreteVariant) {
+      this.productSaveError.set('Не удалось найти вариант удаляемого изображения.');
+
+      return;
+    }
+
+    if (image.isMain && concreteVariant.images.length > 1) {
+      this.productSaveError.set('Сначала выберите другое главное изображение.');
+
+      return;
+    }
+
+    URL.revokeObjectURL(image.previewUrl);
+
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
+      images: currentState.images.filter(
+        (currentImage) => currentImage.clientImageKey !== image.clientImageKey,
+      ),
+    }));
+
+    this.productSaveError.set('');
+    this.productSaveMessage.set('Изображение удалено из формы.');
+  }
+
+  /**
+   * Назначает выбранное локальное изображение
+   * главным для конкретного варианта.
+   *
+   * Предыдущее главное изображение занимает
+   * освободившееся дополнительное место.
+   */
+  protected makeVariantImageMain(
+    rootClientKey: number,
+    childClientKey: number | null,
+    image: SellerProductVariantImage,
+  ): void {
+    if (image.isMain) {
+      return;
+    }
+
+    const concreteVariant = this.findConcreteVariantState(rootClientKey, childClientKey);
+
+    if (!concreteVariant) {
+      this.productSaveError.set('Не удалось найти вариант выбранного изображения.');
+
+      return;
+    }
+
+    const selectedSlotIndex = image.slotIndex;
+
+    const previousMainImage =
+      concreteVariant.images.find((currentImage) => currentImage.isMain) ?? null;
+
+    const selectedBecomesSelectorPreview =
+      previousMainImage?.isSelectorPreview ?? image.isSelectorPreview;
+
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
+      images: currentState.images
+        .map((currentImage) => {
+          if (currentImage.clientImageKey === image.clientImageKey) {
+            return {
+              ...currentImage,
+              isMain: true,
+              isSelectorPreview: selectedBecomesSelectorPreview,
+              slotIndex: 0,
+            };
+          }
+
+          if (
+            previousMainImage !== null &&
+            currentImage.clientImageKey === previousMainImage.clientImageKey
+          ) {
+            return {
+              ...currentImage,
+              isMain: false,
+              isSelectorPreview: false,
+              slotIndex: selectedSlotIndex,
+            };
+          }
+
+          return currentImage;
+        })
+        .sort((left, right) => left.slotIndex - right.slotIndex),
+    }));
+
+    this.productSaveError.set('');
+    this.productSaveMessage.set('Главное изображение изменено.');
+  }
+
+  /**
+   * Заменяет выбранный локальный файл,
+   * сохраняя его место и назначение.
+   */
+  protected replaceVariantImage(
+    rootClientKey: number,
+    childClientKey: number | null,
+    currentImage: SellerProductVariantImage,
+    event: Event,
+  ): void {
+    const input = event.target as HTMLInputElement;
+    const newFile = input.files?.[0];
+
+    input.value = '';
+
+    if (!newFile) {
+      return;
+    }
+
+    if (newFile.type !== 'image/jpeg' && newFile.type !== 'image/png') {
+      this.productSaveError.set('Можно выбирать только изображения JPEG или PNG.');
+
+      return;
+    }
+
+    if (newFile.size > 15 * 1024 * 1024) {
+      this.productSaveError.set('Размер изображения не должен превышать 15 МБ.');
+
+      return;
+    }
+
+    const concreteVariant = this.findConcreteVariantState(rootClientKey, childClientKey);
+
+    if (!concreteVariant) {
+      this.productSaveError.set('Не удалось найти вариант заменяемого изображения.');
+
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(newFile);
+
+    URL.revokeObjectURL(currentImage.previewUrl);
+
+    this.updateVariantState(rootClientKey, childClientKey, (currentState) => ({
+      ...currentState,
+      images: currentState.images.map((image) =>
+        image.clientImageKey === currentImage.clientImageKey
+          ? {
+              ...image,
+              file: newFile,
+              previewUrl,
+            }
+          : image,
+      ),
+    }));
+
+    this.productSaveError.set('');
+    this.productSaveMessage.set(
+      'Изображение заменено. Новый файл будет загружен после добавления товара.',
+    );
   }
 
   /**
@@ -813,34 +1110,20 @@ export class PwAddProduct {
   }
 
   /**
-   * Сохраняет товар как черновик
-   * без его добавления в каталог.
-   */
-  protected saveProductDraft(): void {
-    this.saveProduct(false);
-  }
-
-  /**
-   * Сохраняет все данные и завершает
-   * добавление товара.
-   *
-   * Сервер сам решает, опубликовать товар
-   * сразу или отправить его на модерацию.
+   * Проверяет форму и отправляет товар,
+   * варианты, предложения и изображения
+   * одним multipart-запросом.
    */
   protected addProduct(): void {
-    this.saveProduct(true);
-  }
+    if (this.isSavingProduct()) {
+      return;
+    }
 
-  /**
-   * Создаёт либо обновляет товар и при необходимости
-   * завершает его добавление.
-   */
-  private saveProduct(shouldAddProduct: boolean): void {
-    /**
-     * Не отправляем форму повторно и не разрешаем
-     * сохранение до завершения восстановления черновика.
-     */
-    if (this.isSavingProduct() || this.isLoadingProductEditor()) {
+    if (this.createdProductCardId() !== null) {
+      this.productSaveError.set(
+        `Товар №${this.createdProductCardId()} уже добавлен. Откройте новую форму для следующего товара.`,
+      );
+
       return;
     }
 
@@ -855,25 +1138,6 @@ export class PwAddProduct {
       return;
     }
 
-    const categoryId = this.selectedCategoryId();
-
-    const productName = this.productName().trim();
-
-    const brandName = this.brandName().trim();
-
-    /**
-     * Используем уже очищенный и проверенный
-     * список преимуществ товара.
-     */
-    const productBullets = this.buildProductBullets();
-
-    /**
-     * Для одиночного товара подготавливаем
-     * общую цену и доступный остаток.
-     *
-     * Десятичная запятая заменяется точкой,
-     * поскольку именно такой формат хранит сервер.
-     */
     const simpleOffer =
       this.productType === 'simple'
         ? {
@@ -883,191 +1147,59 @@ export class PwAddProduct {
           }
         : null;
 
-    /**
-     * Для товара с вариантами подготавливаем
-     * селекторы, дерево значений, цены и остатки.
-     */
     const variantConfiguration =
       this.productType === 'variant' ? this.buildVariantConfiguration() : null;
 
-    const attributeValues = this.buildProductAttributeValues();
-
-    const existingProductCardId = this.productCardId();
-
-    /**
-     * Хранит результат добавления товара:
-     * публикацию либо передачу на модерацию.
-     */
-    let completedModerationStatus: SellerProductModerationStatus | null = null;
+    const productImages = this.buildCreateProductImages();
 
     this.isSavingProduct.set(true);
 
-    /**
-     * После частично успешного запроса ID сохраняется
-     * в состоянии компонента. Это предотвращает создание
-     * нескольких одинаковых черновиков при повторе.
-     */
-    const productCardIdRequest =
-      existingProductCardId === null
-        ? this.productApi
-            .createProductDraft({
-              categoryId,
-              productName,
-              brandName,
-            })
-            .pipe(
-              map((response) => {
-                this.productCardId.set(response.productCardId);
+    this.productApi
+      .createProduct(
+        {
+          categoryId: this.selectedCategoryId(),
+          productType: this.productType,
+          productName: this.productName().trim(),
+          brandName: this.brandName().trim(),
+          bullets: this.buildProductBullets(),
 
-                /**
-                 * Сохраняем ID черновика в адресе страницы.
-                 * replaceUrl не создаёт лишнюю запись
-                 * в истории переходов браузера.
-                 */
-                void this.router.navigate([], {
-                  relativeTo: this.route,
-                  queryParams: {
-                    draftId: response.productCardId,
-                  },
-                  queryParamsHandling: 'merge',
-                  replaceUrl: true,
-                });
+          attributes: {
+            items: this.buildProductAttributeValues(),
+          },
 
-                /**
-                 * Сохраняем нормализованные сервером
-                 * значения обратно в состояние формы.
-                 */
-                this.productName.set(response.productName);
-
-                this.brandName.set(response.brandName);
-
-                return response.productCardId;
-              }),
-            )
-        : of(existingProductCardId);
-
-    productCardIdRequest
+          simpleOffer,
+          variantConfiguration,
+          images: productImages.metadata,
+        },
+        productImages.files,
+      )
       .pipe(
-        /**
-         * Название, бренд и заполненные преимущества
-         * обновляются и для нового, и для ранее
-         * созданного черновика.
-         */
-        switchMap((productCardId) =>
-          this.productApi
-            .saveProductDetails(productCardId, {
-              productName,
-              brandName,
-              bullets: productBullets,
-            })
-            .pipe(map(() => productCardId)),
-        ),
-
-        /**
-         * Сначала сохраняем одно общее предложение
-         * либо полную конфигурацию вариантов.
-         *
-         * Варианты сохраняются раньше характеристик,
-         * чтобы обязательная характеристика могла быть
-         * подтверждена сохранённым селектором.
-         */
-        switchMap((productCardId) => {
-          if (simpleOffer !== null) {
-            return this.productApi
-              .saveProductOffer(productCardId, simpleOffer)
-              .pipe(map(() => productCardId));
-          }
-
-          if (variantConfiguration !== null) {
-            return this.productApi
-              .saveProductVariantConfiguration(productCardId, variantConfiguration)
-              .pipe(
-                map((response) => {
-                  this.applySavedVariantConfiguration(response);
-
-                  return productCardId;
-                }),
-              );
-          }
-
-          return of(productCardId);
-        }),
-
-        /**
-         * Общие характеристики сохраняются после
-         * предложения или конфигурации вариантов.
-         */
-        switchMap((productCardId) =>
-          this.productApi
-            .saveProductAttributes(productCardId, {
-              items: attributeValues,
-            })
-            .pipe(map(() => productCardId)),
-        ),
-
-        /**
-         * Кнопка «Сохранить черновик» завершает цепочку
-         * после сохранения данных.
-         *
-         * Кнопка «Добавить товар» дополнительно просит
-         * сервер применить правила публикации продавца.
-         */
-        switchMap((productCardId) => {
-          if (!shouldAddProduct) {
-            return of(productCardId);
-          }
-
-          return this.productApi.addProduct(productCardId).pipe(
-            map((response) => {
-              completedModerationStatus = response.moderationStatus;
-
-              return response.productCardId;
-            }),
-          );
-        }),
-
-        /**
-         * Состояние загрузки сбрасывается как после
-         * успешного ответа, так и после ошибки.
-         */
         finalize(() => {
           this.isSavingProduct.set(false);
         }),
       )
       .subscribe({
-        next: (productCardId) => {
-          if (!shouldAddProduct) {
+        next: (response) => {
+          this.createdProductCardId.set(response.productCardId);
+
+          void this.router.navigate(['/inventory']);
+
+          if (response.moderationStatus === 'pending') {
             this.productSaveMessage.set(
-              existingProductCardId === null
-                ? `Черновик товара №${productCardId} сохранён.`
-                : `Изменения товара №${productCardId} сохранены.`,
+              `Товар №${response.productCardId} создан и отправлен на модерацию.`,
             );
 
             return;
           }
 
-          if (completedModerationStatus === 'pending') {
-            this.productSaveMessage.set(`Товар №${productCardId} отправлен на модерацию.`);
-
-            return;
-          }
-
-          if (completedModerationStatus === 'approved') {
-            this.productSaveMessage.set(`Товар №${productCardId} добавлен и опубликован.`);
-
-            return;
-          }
-
-          this.productSaveError.set('Сервер вернул неизвестный статус добавленного товара.');
+          this.productSaveMessage.set(`Товар №${response.productCardId} создан и опубликован.`);
         },
 
         error: (error: unknown) => {
           this.productSaveError.set(
             this.readRequestError(
               error,
-              shouldAddProduct
-                ? 'Не удалось добавить товар.'
-                : 'Не удалось сохранить черновик товара.',
+              'Не удалось добавить товар. Проверьте данные и попробуйте ещё раз.',
             ),
           );
         },
@@ -1076,7 +1208,7 @@ export class PwAddProduct {
 
   // Открывает выбор категории с корневого уровня.
   protected openCategoryPicker(): void {
-    if (this.productCardId() !== null || this.isSavingProduct() || this.isLoadingProductEditor()) {
+    if (this.isSavingProduct()) {
       return;
     }
 
@@ -1144,17 +1276,54 @@ export class PwAddProduct {
     this.loadCategoryLevel(parentCategoryId);
   }
 
+  /**
+   * Освобождает локальные адреса всех изображений,
+   * выбранных в обоих режимах формы.
+   */
+  private releaseAllVariantImagePreviews(): void {
+    const previewUrls = new Set<string>();
+
+    const collectVariantImages = (variant: SellerProductVariantState): void => {
+      for (const image of variant.images) {
+        previewUrls.add(image.previewUrl);
+      }
+
+      for (const child of variant.children) {
+        collectVariantImages(child);
+      }
+    };
+
+    const simpleVariant = this.simpleProductVariant();
+
+    if (simpleVariant !== null) {
+      collectVariantImages(simpleVariant);
+    }
+
+    for (const root of this.variantStates()) {
+      collectVariantImages(root);
+    }
+
+    for (const previewUrl of previewUrls) {
+      URL.revokeObjectURL(previewUrl);
+    }
+  }
+
   protected selectCategory(categoryId: string): void {
+    this.releaseAllVariantImagePreviews();
+
     this.selectedCategoryId.set(categoryId);
     this.categoryFormDefinition.set(null);
-    this.attributeDrafts.set({});
+    this.attributeStates.set({});
     this.categoryDefinitionError.set('');
+
     this.productType = 'simple';
     this.variantSelectors.set([]);
-    this.variantDrafts.set([]);
+    this.variantStates.set([]);
+    this.simpleProductVariant.set(this.createEmptyVariantState());
 
     if (!categoryId) {
       this.isLoadingCategoryDefinition.set(false);
+
       return;
     }
 
@@ -1184,8 +1353,8 @@ export class PwAddProduct {
     return labels[dataType];
   }
 
-  protected attributeDraft(attributeId: string): SellerProductAttributeDraft {
-    return this.attributeDrafts()[attributeId] ?? this.createEmptyAttributeDraft();
+  protected attributeState(attributeId: string): SellerProductAttributeState {
+    return this.attributeStates()[attributeId] ?? this.createEmptyAttributeState();
   }
 
   protected updateAttributeText(
@@ -1193,8 +1362,8 @@ export class PwAddProduct {
     field: SellerProductAttributeTextField,
     value: string,
   ): void {
-    this.updateAttributeDraft(attributeId, (currentDraft) => ({
-      ...currentDraft,
+    this.updateAttributeState(attributeId, (currentState) => ({
+      ...currentState,
       [field]: value,
     }));
   }
@@ -1210,15 +1379,15 @@ export class PwAddProduct {
       valueBoolean = false;
     }
 
-    this.updateAttributeDraft(attributeId, (currentDraft) => ({
-      ...currentDraft,
+    this.updateAttributeState(attributeId, (currentState) => ({
+      ...currentState,
       valueBoolean,
     }));
   }
 
   protected updateSingleAttributeOption(attributeId: string, optionId: string): void {
-    this.updateAttributeDraft(attributeId, (currentDraft) => ({
-      ...currentDraft,
+    this.updateAttributeState(attributeId, (currentState) => ({
+      ...currentState,
       attributeOptionIds: optionId ? [optionId] : [],
     }));
   }
@@ -1228,8 +1397,8 @@ export class PwAddProduct {
     optionId: string,
     selected: boolean,
   ): void {
-    this.updateAttributeDraft(attributeId, (currentDraft) => {
-      const selectedOptionIds = new Set(currentDraft.attributeOptionIds);
+    this.updateAttributeState(attributeId, (currentState) => {
+      const selectedOptionIds = new Set(currentState.attributeOptionIds);
 
       if (selected) {
         selectedOptionIds.add(optionId);
@@ -1238,14 +1407,14 @@ export class PwAddProduct {
       }
 
       return {
-        ...currentDraft,
+        ...currentState,
         attributeOptionIds: [...selectedOptionIds],
       };
     });
   }
 
   protected isAttributeOptionSelected(attributeId: string, optionId: string): boolean {
-    return this.attributeDraft(attributeId).attributeOptionIds.includes(optionId);
+    return this.attributeState(attributeId).attributeOptionIds.includes(optionId);
   }
 
   /**
@@ -1258,9 +1427,17 @@ export class PwAddProduct {
   protected setProductType(type: 'simple' | 'variant'): void {
     this.productType = type;
 
+    if (type === 'simple' && this.simpleProductVariant() === null) {
+      this.simpleProductVariant.set(this.createEmptyVariantState());
+    }
+
     if (type === 'variant') {
       if (this.variantSelectors().length === 0) {
         this.addVariantSelector();
+      }
+
+      if (this.variantStates().length === 0) {
+        this.variantStates.set([this.createEmptyVariantState()]);
       }
 
       /**
@@ -1273,7 +1450,7 @@ export class PwAddProduct {
           continue;
         }
 
-        this.updateAttributeDraft(selector.attributeId, () => this.createEmptyAttributeDraft());
+        this.updateAttributeState(selector.attributeId, () => this.createEmptyAttributeState());
       }
 
       setTimeout(() => {
@@ -1286,14 +1463,15 @@ export class PwAddProduct {
   }
 
   /**
-   * Подготавливает чистую форму нового товара
-   * при переходе с редактирования черновика.
+   * Подготавливает чистую форму
+   * для добавления нового товара.
    */
   private resetProductFormForNewProduct(): void {
-    this.productCardId.set(null);
+    this.releaseAllVariantImagePreviews();
+    this.createdProductCardId.set(null);
     this.selectedCategoryId.set('');
     this.categoryFormDefinition.set(null);
-    this.attributeDrafts.set({});
+    this.attributeStates.set({});
 
     this.productName.set('');
     this.brandName.set('');
@@ -1303,110 +1481,20 @@ export class PwAddProduct {
 
     this.productType = 'simple';
     this.variantSelectors.set([]);
-    this.variantDrafts.set([]);
-    this.restoredAttributeValues.set([]);
+    this.variantStates.set([]);
 
     this.categoryPickerOpen.set(false);
     this.categoryNavigationPath.set([]);
     this.resetCategorySearch();
 
-    this.isLoadingProductEditor.set(false);
     this.isLoadingCategoryDefinition.set(false);
     this.categoryDefinitionError.set('');
     this.productSaveError.set('');
     this.productSaveMessage.set('');
 
-    this.nextVariantDraftKey = 1;
-  }
-
-  /**
-   * Загружает существующий черновик и восстанавливает
-   * его основные поля и выбранную категорию.
-   *
-   * Значения характеристик будут применены после
-   * загрузки определения этой категории.
-   */
-  private loadProductEditor(productCardId: string): void {
-    if (!/^[1-9]\d*$/.test(productCardId)) {
-      this.productSaveError.set('Некорректный идентификатор черновика.');
-
-      return;
-    }
-
-    this.isLoadingProductEditor.set(true);
-    this.productSaveError.set('');
-    this.productSaveMessage.set('');
-
-    this.productApi.getProductEditor(productCardId).subscribe({
-      next: (response) => {
-        this.productCardId.set(response.productCardId);
-
-        this.productName.set(response.productName);
-
-        this.brandName.set(response.brandName);
-
-        /**
-         * Восстанавливаем сохранённые преимущества.
-         * Если их меньше пяти, добавляем пустые поля
-         * для существующей пяти строчной формы.
-         */
-        const restoredBullets = [...response.bullets];
-
-        while (restoredBullets.length < 5) {
-          restoredBullets.push('');
-        }
-
-        this.productBullets.set(restoredBullets);
-
-        /**
-         * Наличие серверных селекторов однозначно
-         * определяет товар с вариантами.
-         */
-        if (response.variantSelectors.length > 0) {
-          this.productType = 'variant';
-          this.priceAmount.set('');
-          this.stockQuantity.set('');
-
-          this.restoreVariantConfiguration(
-            response.variantSelectors,
-            response.variants,
-            this.collectEditorVariantImages(response.variants),
-          );
-        } else {
-          /**
-           * Одиночный товар хранится как одна корневая
-           * вариация с одним предложением продавца.
-           */
-          const simpleVariant = response.variants.length === 1 ? response.variants[0] : undefined;
-
-          const simpleOffer = simpleVariant?.parentVariantId === null ? simpleVariant.offer : null;
-
-          this.productType = 'simple';
-          this.variantSelectors.set([]);
-          this.variantDrafts.set([]);
-          this.priceAmount.set(simpleOffer?.priceAmount ?? '');
-          this.stockQuantity.set(simpleOffer === null ? '' : String(simpleOffer.stockQuantity));
-        }
-
-        this.selectedCategoryId.set(response.categoryId);
-
-        this.restoredAttributeValues.set(response.attributeValues);
-
-        this.isLoadingProductEditor.set(false);
-
-        this.loadCategoryFormDefinition(response.categoryId);
-
-        this.productSaveMessage.set(`Черновик товара №${response.productCardId} загружен.`);
-      },
-
-      error: (error: unknown) => {
-        this.isLoadingProductEditor.set(false);
-
-        this.productSaveError.set(
-          this.readRequestError(error, 'Не удалось загрузить черновик товара.'),
-        );
-      },
-    });
+    this.nextVariantClientKey = 1;
+    this.nextLocalImageKey = 1;
+    this.simpleProductVariant.set(this.createEmptyVariantState());
   }
 
   // Нормализует поисковую строку перед отправкой серверу.
@@ -1536,7 +1624,12 @@ export class PwAddProduct {
 
         this.categoryFormDefinition.set(response);
 
-        this.attributeDrafts.set(this.createAttributeDrafts(response.items));
+        const currentAttributeStates = this.attributeStates();
+
+        this.attributeStates.set({
+          ...this.createAttributeStates(response.items),
+          ...currentAttributeStates,
+        });
 
         this.isLoadingCategoryDefinition.set(false);
       },
@@ -1548,7 +1641,7 @@ export class PwAddProduct {
 
         this.categoryFormDefinition.set(null);
 
-        this.attributeDrafts.set({});
+        this.attributeStates.set({});
 
         this.isLoadingCategoryDefinition.set(false);
 
@@ -1574,7 +1667,7 @@ export class PwAddProduct {
 
   /**
    * Проверяет основные поля товара и характеристики
-   * перед созданием серверного черновика.
+   * * перед отправкой товара на сервер.
    *
    * Метод возвращает пустую строку, если форма
    * заполнена корректно, либо текст первой ошибки.
@@ -1678,6 +1771,107 @@ export class PwAddProduct {
       }
     }
 
+    const imageValidationError = this.validateProductImages();
+
+    if (imageValidationError) {
+      return imageValidationError;
+    }
+
+    return '';
+  }
+
+  /**
+   * Проверяет локальные изображения
+   * перед единым созданием товара.
+   */
+  private validateProductImages(): string {
+    const validateConcreteVariantImages = (
+      state: SellerProductVariantState,
+      subject: string,
+    ): string => {
+      if (state.images.length < 1) {
+        return `Выберите главное изображение ${subject}.`;
+      }
+
+      if (state.images.length > 7) {
+        return `Для ${subject} можно выбрать не более семи изображений.`;
+      }
+
+      const usedSlots = new Set<number>();
+
+      for (const image of state.images) {
+        const slotIndex = image.slotIndex;
+
+        if (slotIndex < 0 || slotIndex > 6 || usedSlots.has(slotIndex)) {
+          return `Проверьте расположение изображений ${subject}.`;
+        }
+
+        if (image.isMain !== (slotIndex === 0)) {
+          return `Проверьте главное изображение ${subject}.`;
+        }
+
+        usedSlots.add(slotIndex);
+      }
+
+      if (!usedSlots.has(0)) {
+        return `Выберите главное изображение ${subject}.`;
+      }
+
+      return '';
+    };
+
+    if (this.productType === 'simple') {
+      const simpleVariant = this.simpleProductVariant();
+
+      if (simpleVariant === null) {
+        return 'Выберите главное изображение товара.';
+      }
+
+      return validateConcreteVariantImages(simpleVariant, 'товара');
+    }
+
+    const roots = this.variantStates();
+    const hasSecondSelector = this.hasSecondVariantSelector();
+    const firstSelectorUsesImages = this.variantSelectors()[0]?.displayType === 'image';
+
+    for (let rootIndex = 0; rootIndex < roots.length; rootIndex += 1) {
+      const root = roots[rootIndex];
+      const rootName = root.variantValue.trim() || `№${rootIndex + 1}`;
+
+      const concreteVariants = hasSecondSelector ? root.children : [root];
+
+      for (let concreteIndex = 0; concreteIndex < concreteVariants.length; concreteIndex += 1) {
+        const concreteVariant = concreteVariants[concreteIndex];
+
+        const concreteName = hasSecondSelector
+          ? `${rootName} → ${concreteVariant.variantValue.trim() || `№${concreteIndex + 1}`}`
+          : rootName;
+
+        const validationError = validateConcreteVariantImages(
+          concreteVariant,
+          `варианта «${concreteName}»`,
+        );
+
+        if (validationError) {
+          return validationError;
+        }
+      }
+
+      const selectorPreviewCount = concreteVariants.reduce(
+        (count, concreteVariant) =>
+          count + concreteVariant.images.filter((image) => image.isSelectorPreview).length,
+        0,
+      );
+
+      if (firstSelectorUsesImages && selectorPreviewCount !== 1) {
+        return `Выберите одно изображение-превью для варианта «${rootName}».`;
+      }
+
+      if (!firstSelectorUsesImages && selectorPreviewCount !== 0) {
+        return `Проверьте изображения варианта «${rootName}».`;
+      }
+    }
+
     return '';
   }
 
@@ -1700,13 +1894,13 @@ export class PwAddProduct {
    * когда характеристика не является обязательной.
    */
   private validateProductAttribute(attribute: SellerProductCategoryAttribute): string {
-    const draft = this.attributeDraft(attribute.attributeId);
+    const state = this.attributeState(attribute.attributeId);
 
     const requiredMessage = `Заполните обязательную характеристику «${attribute.attributeName}».`;
 
     switch (attribute.dataType) {
       case 'text': {
-        if (attribute.isRequired && !draft.valueText.trim()) {
+        if (attribute.isRequired && !state.valueText.trim()) {
           return requiredMessage;
         }
 
@@ -1714,7 +1908,7 @@ export class PwAddProduct {
       }
 
       case 'integer': {
-        const valueInteger = draft.valueInteger.trim();
+        const valueInteger = state.valueInteger.trim();
 
         if (!valueInteger) {
           return attribute.isRequired ? requiredMessage : '';
@@ -1728,7 +1922,7 @@ export class PwAddProduct {
       }
 
       case 'decimal': {
-        const valueDecimal = draft.valueDecimal.trim();
+        const valueDecimal = state.valueDecimal.trim();
 
         if (!valueDecimal) {
           return attribute.isRequired ? requiredMessage : '';
@@ -1742,21 +1936,21 @@ export class PwAddProduct {
       }
 
       case 'boolean':
-        if (attribute.isRequired && draft.valueBoolean === null) {
+        if (attribute.isRequired && state.valueBoolean === null) {
           return requiredMessage;
         }
 
         return '';
 
       case 'select':
-        if (attribute.isRequired && draft.attributeOptionIds.length !== 1) {
+        if (attribute.isRequired && state.attributeOptionIds.length !== 1) {
           return requiredMessage;
         }
 
         return '';
 
       case 'multiselect':
-        if (attribute.isRequired && draft.attributeOptionIds.length === 0) {
+        if (attribute.isRequired && state.attributeOptionIds.length === 0) {
           return requiredMessage;
         }
 
@@ -1799,7 +1993,7 @@ export class PwAddProduct {
       }
     }
 
-    const roots = this.variantDrafts();
+    const roots = this.variantStates();
 
     if (roots.length < 1 || roots.length > 50) {
       return 'Добавьте от 1 до 50 значений первого уровня вариантов.';
@@ -1927,10 +2121,10 @@ export class PwAddProduct {
   }
 
   /**
-   * Создаёт полную структуру запроса вариантов
-   * из текущего состояния Angular-формы.
+   * Создаёт конфигурацию нового вариантного товара
+   * для единого multipart-запроса.
    */
-  private buildVariantConfiguration(): SellerSaveProductVariantConfigurationRequest {
+  private buildVariantConfiguration(): SellerCreateProductVariantConfigurationRequest {
     const hasSecondSelector = this.hasSecondVariantSelector();
 
     return {
@@ -1938,182 +2132,118 @@ export class PwAddProduct {
         attributeId: selector.attributeId,
         displayType: selector.displayType,
       })),
-      variants: this.variantDrafts().map((root) =>
-        this.buildVariantNodeRequest(root, hasSecondSelector),
+
+      variants: this.variantStates().map((root) =>
+        this.buildCreateProductVariantNode(root, hasSecondSelector),
       ),
     };
   }
 
   /**
-   * Преобразует один корень и его потомков
-   * в рекурсивную модель HTTP-запроса.
+   * Преобразует один локальный узел вариантов.
+   *
+   * clientKey передаётся как clientVariantKey
+   * только для связи файлов с создаваемым вариантом.
    */
-  private buildVariantNodeRequest(
-    draft: SellerProductVariantDraft,
+  private buildCreateProductVariantNode(
+    state: SellerProductVariantState,
     hasSecondSelector: boolean,
-  ): SellerProductVariantNodeRequest {
-    const request: SellerProductVariantNodeRequest = {
-      attributeOptionId: draft.attributeOptionId,
-      children: [],
-      offer: null,
-    };
-
-    if (draft.productVariantId !== null) {
-      request.productVariantId = draft.productVariantId;
-    }
-
+  ): SellerCreateProductVariantNodeRequest {
     if (hasSecondSelector) {
-      request.children = draft.children.map((child) => this.buildVariantNodeRequest(child, false));
-
-      return request;
+      return {
+        clientVariantKey: state.clientKey,
+        attributeOptionId: state.attributeOptionId,
+        children: state.children.map((child) => this.buildCreateProductVariantNode(child, false)),
+        offer: null,
+      };
     }
 
-    request.offer = {
-      stockQuantity: Number(draft.stockQuantity.trim()),
-      priceAmount: draft.priceAmount.trim().replace(',', '.'),
-      oldPriceAmount: null,
+    return {
+      clientVariantKey: state.clientKey,
+      attributeOptionId: state.attributeOptionId,
+      children: [],
+      offer: {
+        stockQuantity: Number(state.stockQuantity.trim()),
+        priceAmount: state.priceAmount.trim().replace(',', '.'),
+        oldPriceAmount: null,
+      },
+    };
+  }
+
+  /**
+   * Собирает метаданные и файлы изображений
+   * в одинаковом стабильном порядке.
+   */
+  private buildCreateProductImages(): {
+    metadata: SellerCreateProductImageRequest[];
+    files: File[];
+  } {
+    const metadata: SellerCreateProductImageRequest[] = [];
+    const files: File[] = [];
+
+    const appendVariantImages = (
+      state: SellerProductVariantState,
+      clientVariantKey: number | null,
+    ): void => {
+      const orderedImages = [...state.images].sort(
+        (left, right) => left.slotIndex - right.slotIndex,
+      );
+
+      for (const image of orderedImages) {
+        const slotIndex = image.slotIndex;
+
+        metadata.push({
+          clientVariantKey,
+          slotIndex,
+          isSelectorPreview: image.isSelectorPreview,
+        });
+
+        files.push(image.file);
+      }
     };
 
-    return request;
-  }
+    if (this.productType === 'simple') {
+      const simpleVariant = this.simpleProductVariant();
 
-  /**
-   * Применяет нормализованный ответ сохранения,
-   * не теряя уже загруженные изображения вариантов.
-   */
-  private applySavedVariantConfiguration(
-    response: SellerSaveProductVariantConfigurationResponse,
-  ): void {
-    this.restoreVariantConfiguration(
-      response.selectors,
-      response.variants,
-      this.collectDraftVariantImages(),
-    );
-  }
+      if (simpleVariant !== null) {
+        appendVariantImages(simpleVariant, null);
+      }
 
-  /**
-   * Восстанавливает селекторы и иерархию вариантов
-   * из плоского серверного списка по parentVariantId.
-   */
-  private restoreVariantConfiguration(
-    selectors: SellerProductVariantSelectorResponse[],
-    variants: SellerProductRestorableVariant[],
-    imagesByVariantId: ReadonlyMap<string, SellerProductEditorImage[]>,
-  ): void {
-    const orderedSelectors = [...selectors].sort(
-      (left, right) => left.selectorLevel - right.selectorLevel,
-    );
+      return {
+        metadata,
+        files,
+      };
+    }
 
-    this.variantSelectors.set(
-      orderedSelectors.map((selector) => ({
-        attributeId: selector.attributeId,
-        displayType: selector.displayType,
-      })),
-    );
+    const hasSecondSelector = this.hasSecondVariantSelector();
 
-    const childrenByParentId = new Map<string, SellerProductRestorableVariant[]>();
+    for (const root of this.variantStates()) {
+      if (!hasSecondSelector) {
+        appendVariantImages(root, root.clientKey);
 
-    for (const variant of variants) {
-      if (variant.parentVariantId === null) {
         continue;
       }
 
-      const currentChildren = childrenByParentId.get(variant.parentVariantId) ?? [];
-
-      currentChildren.push(variant);
-      childrenByParentId.set(variant.parentVariantId, currentChildren);
-    }
-
-    for (const children of childrenByParentId.values()) {
-      children.sort((left, right) => left.sortOrder - right.sortOrder);
-    }
-
-    const roots = variants
-      .filter((variant) => variant.parentVariantId === null)
-      .sort((left, right) => left.sortOrder - right.sortOrder)
-      .map((root) => {
-        const rootDraft = this.createVariantDraftFromResponse(root, imagesByVariantId);
-
-        if (orderedSelectors.length === 2) {
-          rootDraft.children = (childrenByParentId.get(root.productVariantId) ?? []).map((child) =>
-            this.createVariantDraftFromResponse(child, imagesByVariantId),
-          );
-        }
-
-        return rootDraft;
-      });
-
-    this.variantDrafts.set(roots);
-  }
-
-  /**
-   * Создаёт редактируемый вариант из одной строки
-   * ответа Go API.
-   */
-  private createVariantDraftFromResponse(
-    variant: SellerProductRestorableVariant,
-    imagesByVariantId: ReadonlyMap<string, SellerProductEditorImage[]>,
-  ): SellerProductVariantDraft {
-    return this.createEmptyVariantDraft({
-      productVariantId: variant.productVariantId,
-      attributeOptionId: variant.attributeOptionId ?? '',
-      variantValue: variant.variantValue,
-      priceAmount: variant.offer?.priceAmount ?? '',
-      stockQuantity: variant.offer === null ? '' : String(variant.offer.stockQuantity),
-      images: [...(imagesByVariantId.get(variant.productVariantId) ?? [])],
-    });
-  }
-
-  /**
-   * Собирает изображения из ответа редактора
-   * по идентификаторам вариантов.
-   */
-  private collectEditorVariantImages(
-    variants: SellerProductEditorVariant[],
-  ): Map<string, SellerProductEditorImage[]> {
-    const imagesByVariantId = new Map<string, SellerProductEditorImage[]>();
-
-    for (const variant of variants) {
-      imagesByVariantId.set(variant.productVariantId, [...variant.images]);
-    }
-
-    return imagesByVariantId;
-  }
-
-  /**
-   * Собирает изображения из текущего дерева перед
-   * применением ответа сохранения без поля images.
-   */
-  private collectDraftVariantImages(): Map<string, SellerProductEditorImage[]> {
-    const imagesByVariantId = new Map<string, SellerProductEditorImage[]>();
-
-    const collectDraft = (draft: SellerProductVariantDraft): void => {
-      if (draft.productVariantId !== null) {
-        imagesByVariantId.set(draft.productVariantId, [...draft.images]);
+      for (const child of root.children) {
+        appendVariantImages(child, child.clientKey);
       }
+    }
 
-      for (const child of draft.children) {
-        collectDraft(child);
-      }
+    return {
+      metadata,
+      files,
     };
-
-    for (const root of this.variantDrafts()) {
-      collectDraft(root);
-    }
-
-    return imagesByVariantId;
   }
 
   /**
    * Создаёт пустой или частично заполненный
    * локальный вариант с уникальным ключом.
    */
-  private createEmptyVariantDraft(
-    input: Partial<Omit<SellerProductVariantDraft, 'draftKey'>> = {},
-  ): SellerProductVariantDraft {
-    const draft: SellerProductVariantDraft = {
-      draftKey: this.nextVariantDraftKey,
-      productVariantId: input.productVariantId ?? null,
+  private createEmptyVariantState(
+    input: Partial<Omit<SellerProductVariantState, 'clientKey'>> = {},
+  ): SellerProductVariantState {
+    const state: SellerProductVariantState = {
+      clientKey: this.nextVariantClientKey,
       attributeOptionId: input.attributeOptionId ?? '',
       variantValue: input.variantValue ?? '',
       priceAmount: input.priceAmount ?? '',
@@ -2122,29 +2252,62 @@ export class PwAddProduct {
       children: [...(input.children ?? [])],
     };
 
-    this.nextVariantDraftKey += 1;
+    this.nextVariantClientKey += 1;
 
-    return draft;
+    return state;
+  }
+
+  /**
+   * Находит корневой или дочерний вариант
+   * по его локальным ключам.
+   */
+  private findConcreteVariantState(
+    rootClientKey: number,
+    childClientKey: number | null,
+  ): SellerProductVariantState | null {
+    const simpleVariant = this.simpleProductVariant();
+
+    const root =
+      this.variantStates().find((item) => item.clientKey === rootClientKey) ??
+      (simpleVariant?.clientKey === rootClientKey ? simpleVariant : null);
+
+    if (!root) {
+      return null;
+    }
+
+    if (childClientKey === null) {
+      return root;
+    }
+
+    return root.children.find((child) => child.clientKey === childClientKey) ?? null;
   }
 
   /**
    * Неизменяемо обновляет корневой либо дочерний
    * вариант по локальному ключу.
    */
-  private updateVariantDraft(
-    rootDraftKey: number,
-    childDraftKey: number | null,
-    update: (currentDraft: SellerProductVariantDraft) => SellerProductVariantDraft,
+  private updateVariantState(
+    rootClientKey: number,
+    childClientKey: number | null,
+    update: (currentState: SellerProductVariantState) => SellerProductVariantState,
   ): void {
-    this.updateRootVariant(rootDraftKey, (currentRoot) => {
-      if (childDraftKey === null) {
+    const simpleVariant = this.simpleProductVariant();
+
+    if (childClientKey === null && simpleVariant?.clientKey === rootClientKey) {
+      this.simpleProductVariant.set(update(simpleVariant));
+
+      return;
+    }
+
+    this.updateRootVariant(rootClientKey, (currentRoot) => {
+      if (childClientKey === null) {
         return update(currentRoot);
       }
 
       return {
         ...currentRoot,
         children: currentRoot.children.map((child) =>
-          child.draftKey === childDraftKey ? update(child) : child,
+          child.clientKey === childClientKey ? update(child) : child,
         ),
       };
     });
@@ -2154,21 +2317,21 @@ export class PwAddProduct {
    * Неизменяемо обновляет один корневой вариант.
    */
   private updateRootVariant(
-    rootDraftKey: number,
-    update: (currentRoot: SellerProductVariantDraft) => SellerProductVariantDraft,
+    rootClientKey: number,
+    update: (currentRoot: SellerProductVariantState) => SellerProductVariantState,
   ): void {
-    this.variantDrafts.update((currentRoots) =>
-      currentRoots.map((root) => (root.draftKey === rootDraftKey ? update(root) : root)),
+    this.variantStates.update((currentRoots) =>
+      currentRoots.map((root) => (root.clientKey === rootClientKey ? update(root) : root)),
     );
   }
 
   /**
    * Проверяет изображения корня и всех его потомков.
    */
-  private variantDraftContainsImages(draft: SellerProductVariantDraft): boolean {
+  private variantStateContainsImages(state: SellerProductVariantState): boolean {
     return (
-      draft.images.length > 0 ||
-      draft.children.some((child) => this.variantDraftContainsImages(child))
+      state.images.length > 0 ||
+      state.children.some((child) => this.variantStateContainsImages(child))
     );
   }
 
@@ -2188,11 +2351,11 @@ export class PwAddProduct {
         continue;
       }
 
-      const draft = this.attributeDraft(attribute.attributeId);
+      const state = this.attributeState(attribute.attributeId);
 
       switch (attribute.dataType) {
         case 'text': {
-          const valueText = draft.valueText.trim();
+          const valueText = state.valueText.trim();
 
           if (valueText) {
             items.push({
@@ -2205,7 +2368,7 @@ export class PwAddProduct {
         }
 
         case 'integer': {
-          const valueInteger = draft.valueInteger.trim();
+          const valueInteger = state.valueInteger.trim();
 
           if (valueInteger) {
             items.push({
@@ -2218,7 +2381,7 @@ export class PwAddProduct {
         }
 
         case 'decimal': {
-          const valueDecimal = draft.valueDecimal.trim();
+          const valueDecimal = state.valueDecimal.trim();
 
           if (valueDecimal) {
             items.push({
@@ -2231,10 +2394,10 @@ export class PwAddProduct {
         }
 
         case 'boolean':
-          if (draft.valueBoolean !== null) {
+          if (state.valueBoolean !== null) {
             items.push({
               attributeId: attribute.attributeId,
-              valueBoolean: draft.valueBoolean,
+              valueBoolean: state.valueBoolean,
             });
           }
 
@@ -2242,10 +2405,10 @@ export class PwAddProduct {
 
         case 'select':
         case 'multiselect':
-          if (draft.attributeOptionIds.length > 0) {
+          if (state.attributeOptionIds.length > 0) {
             items.push({
               attributeId: attribute.attributeId,
-              attributeOptionIds: [...draft.attributeOptionIds],
+              attributeOptionIds: [...state.attributeOptionIds],
             });
           }
 
@@ -2257,53 +2420,22 @@ export class PwAddProduct {
   }
 
   /**
-   * Создаёт состояние полей для всех характеристик
-   * выбранной категории.
-   *
-   * При открытии существующего черновика начальные
-   * значения заменяются данными, полученными с сервера.
+   * Создаёт пустое состояние полей
+   * для всех характеристик выбранной категории.
    */
-  private createAttributeDrafts(
+  private createAttributeStates(
     attributes: SellerProductCategoryAttribute[],
-  ): Record<string, SellerProductAttributeDraft> {
-    const drafts: Record<string, SellerProductAttributeDraft> = {};
+  ): Record<string, SellerProductAttributeState> {
+    const states: Record<string, SellerProductAttributeState> = {};
 
-    /**
-     * Сначала создаём пустое значение для каждой
-     * характеристики текущей категории.
-     */
     for (const attribute of attributes) {
-      drafts[attribute.attributeId] = this.createEmptyAttributeDraft();
+      states[attribute.attributeId] = this.createEmptyAttributeState();
     }
 
-    /**
-     * Затем переносим сохранённые серверные значения
-     * только в существующие поля текущей категории.
-     */
-    for (const savedValue of this.restoredAttributeValues()) {
-      if (!drafts[savedValue.attributeId]) {
-        continue;
-      }
-
-      drafts[savedValue.attributeId] = {
-        valueText: savedValue.valueText ?? '',
-        valueInteger: savedValue.valueInteger ?? '',
-        valueDecimal: savedValue.valueDecimal ?? '',
-        valueBoolean: savedValue.valueBoolean,
-        attributeOptionIds: [...savedValue.attributeOptionIds],
-      };
-    }
-
-    /**
-     * Значения уже применены и больше не должны
-     * переноситься при выборе другой категории.
-     */
-    this.restoredAttributeValues.set([]);
-
-    return drafts;
+    return states;
   }
 
-  private createEmptyAttributeDraft(): SellerProductAttributeDraft {
+  private createEmptyAttributeState(): SellerProductAttributeState {
     return {
       valueText: '',
       valueInteger: '',
@@ -2313,13 +2445,13 @@ export class PwAddProduct {
     };
   }
 
-  private updateAttributeDraft(
+  private updateAttributeState(
     attributeId: string,
-    update: (currentDraft: SellerProductAttributeDraft) => SellerProductAttributeDraft,
+    update: (currentState: SellerProductAttributeState) => SellerProductAttributeState,
   ): void {
-    this.attributeDrafts.update((currentDrafts) => ({
-      ...currentDrafts,
-      [attributeId]: update(currentDrafts[attributeId] ?? this.createEmptyAttributeDraft()),
+    this.attributeStates.update((currentStates) => ({
+      ...currentStates,
+      [attributeId]: update(currentStates[attributeId] ?? this.createEmptyAttributeState()),
     }));
   }
 

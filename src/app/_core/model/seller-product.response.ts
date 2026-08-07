@@ -1,48 +1,8 @@
 /**
- * Возможные состояния модерации карточки товара.
- */
-export type SellerProductModerationStatus = 'draft' | 'pending' | 'approved' | 'rejected';
-
-/**
- * Основные данные, необходимые серверу
- * для первоначального создания черновика товара.
- */
-export interface SellerCreateProductDraftRequest {
-  categoryId: string;
-  productName: string;
-  brandName: string;
-}
-
-/**
- * Созданный сервером черновик товара.
+ * Значение одной характеристики нового товара.
  *
- * Все идентификаторы передаются строками,
- * чтобы не потерять точность числовых ID JavaScript.
- */
-export interface SellerCreateProductDraftResponse {
-  productCardId: string;
-  categoryId: string;
-  productName: string;
-  brandName: string;
-  moderationStatus: SellerProductModerationStatus;
-}
-
-/**
- * Результат завершения добавления товара.
- *
- * Статус approved означает немедленную публикацию,
- * а pending — передачу товара на модерацию.
- */
-export interface SellerAddProductResponse {
-  productCardId: string;
-  moderationStatus: SellerProductModerationStatus;
-}
-
-/**
- * Значение одной характеристики товара.
- *
- * Конкретное поле значения выбирается по типу
- * характеристики, полученному для категории.
+ * Конкретное поле значения выбирается
+ * в соответствии с типом характеристики категории.
  */
 export interface SellerProductAttributeValueRequest {
   attributeId: string;
@@ -54,48 +14,23 @@ export interface SellerProductAttributeValueRequest {
 }
 
 /**
- * Полный набор заполненных характеристик,
- * сохраняемый для одной карточки товара.
+ * Цена и доступный остаток
+ * одного продаваемого варианта.
  */
-export interface SellerSaveProductAttributesRequest {
-  items: SellerProductAttributeValueRequest[];
-}
-
-/**
- * Текстовые данные существующей карточки товара.
- *
- * Массив bullets позднее будет заполняться
- * из полей преимуществ товара в форме продавца.
- */
-export interface SellerSaveProductDetailsRequest {
-  productName: string;
-  brandName: string;
-  bullets: string[];
-}
-
-/**
- * Цена и доступный остаток одиночного товара.
- *
- * Старая цена необязательна и передаётся как null,
- * если продавец её не указал.
- */
-export interface SellerSaveProductOfferRequest {
+export interface SellerCreateProductOfferRequest {
   stockQuantity: number;
   priceAmount: string;
   oldPriceAmount: string | null;
 }
 
 /**
- * Способ отображения значений селектора вариантов.
- *
- * Значение image используется, например, для цвета
- * с визуальным переключением по изображениям товара.
+ * Способ отображения значений
+ * селектора вариантов товара.
  */
 export type SellerProductVariantDisplayType = 'image' | 'text';
 
 /**
- * Описание одного уровня вариантов,
- * отправляемое на Go-сервер.
+ * Один уровень выбора вариантов товара.
  */
 export interface SellerProductVariantSelectorRequest {
   attributeId: string;
@@ -103,154 +38,69 @@ export interface SellerProductVariantSelectorRequest {
 }
 
 /**
- * Один узел дерева вариантов товара.
- *
- * Идентификатор отсутствует у нового варианта
- * и передаётся при изменении существующего.
- *
- * Для конечного варианта заполняется offer.
- * Для родительского варианта заполняется children.
+ * Характеристики нового товара внутри
+ * единого запроса создания.
  */
-export interface SellerProductVariantNodeRequest {
-  productVariantId?: string;
-  attributeOptionId: string;
-  children: SellerProductVariantNodeRequest[];
-  offer: SellerSaveProductOfferRequest | null;
+export interface SellerCreateProductAttributesRequest {
+  items: SellerProductAttributeValueRequest[];
 }
 
 /**
- * Полная конфигурация вариантов товара,
- * сохраняемая одним запросом.
+ * Один узел дерева вариантов нового товара.
+ *
+ * clientVariantKey существует только в Angular
+ * и связывает выбранные файлы с создаваемым вариантом.
  */
-export interface SellerSaveProductVariantConfigurationRequest {
+export interface SellerCreateProductVariantNodeRequest {
+  clientVariantKey: number;
+  attributeOptionId: string;
+  children: SellerCreateProductVariantNodeRequest[];
+  offer: SellerCreateProductOfferRequest | null;
+}
+
+/**
+ * Полная конфигурация вариантного товара.
+ */
+export interface SellerCreateProductVariantConfigurationRequest {
   selectors: SellerProductVariantSelectorRequest[];
-  variants: SellerProductVariantNodeRequest[];
+  variants: SellerCreateProductVariantNodeRequest[];
 }
 
 /**
- * Сохранённый сервером селектор вариантов.
- */
-export interface SellerProductVariantSelectorResponse {
-  productVariationSelectorId: string;
-  attributeId: string;
-  selectorLevel: number;
-  selectorName: string;
-  displayType: SellerProductVariantDisplayType;
-}
-
-/**
- * Сохранённый сервером вариант товара.
+ * Расположение одного файла изображения
+ * в форме нового товара.
  *
- * Ответ является плоским списком, а связь
- * с родительским вариантом задаёт parentVariantId.
+ * Порядок элементов массива совпадает
+ * с порядком файлов images в FormData.
  */
-export interface SellerProductVariantResponse {
-  productVariantId: string;
-  parentVariantId: string | null;
-  attributeId: string;
-  attributeOptionId: string;
-  variantValue: string;
-  sortOrder: number;
-  offer: SellerProductOfferResponse | null;
-}
-
-/**
- * Результат сохранения полной конфигурации вариантов.
- */
-export interface SellerSaveProductVariantConfigurationResponse {
-  selectors: SellerProductVariantSelectorResponse[];
-  variants: SellerProductVariantResponse[];
-}
-
-/**
- * Сохранённое предложение продавца
- * для одной вариации товара.
- */
-export interface SellerProductOfferResponse {
-  productVariantId: string;
-  productOfferId: string;
-  stockQuantity: number;
-  priceAmount: string;
-  oldPriceAmount: string | null;
-}
-
-/**
- * Сохранённое значение одной характеристики,
- * возвращаемое редактором черновика.
- */
-export interface SellerProductEditorAttributeValue {
-  attributeId: string;
-  attributeOptionIds: string[];
-  valueText: string | null;
-  valueInteger: string | null;
-  valueDecimal: string | null;
-  valueBoolean: boolean | null;
-}
-
-/**
- * Изображение товара, ранее сохранённое
- * на сервере для конкретной вариации.
- */
-export interface SellerProductEditorImage {
-  imageId: string;
-  sortOrder: number;
-  isMain: boolean;
+export interface SellerCreateProductImageRequest {
+  clientVariantKey: number | null;
+  slotIndex: number;
   isSelectorPreview: boolean;
-  productPageUrl: string;
-  catalogUrl: string;
-  thumbnailUrl: string;
 }
 
 /**
- * Результат загрузки одного изображения
- * для конкретного конечного варианта товара.
+ * Полное JSON-описание нового товара.
+ *
+ * Файлы изображений передаются отдельными
+ * частями того же multipart-запроса.
  */
-export interface SellerUploadProductVariantImageResponse {
-  imageId: string;
-  sortOrder: number;
-  productPageUrl: string;
-  catalogUrl: string;
-  thumbnailUrl: string;
-}
-
-/**
- * Вариация товара вместе с предложением
- * продавца и загруженными изображениями.
- */
-export interface SellerProductEditorVariant {
-  productVariantId: string;
-  parentVariantId: string | null;
-  attributeId: string | null;
-  attributeOptionId: string | null;
-  variantValue: string;
-  sortOrder: number;
-  offer: SellerProductOfferResponse | null;
-  images: SellerProductEditorImage[];
-}
-
-/**
- * Полное состояние существующего черновика,
- * возвращаемое Go API для продолжения редактирования.
- */
-export interface SellerProductEditorResponse {
-  productCardId: string;
+export interface SellerCreateProductRequest {
   categoryId: string;
+  productType: 'simple' | 'variant';
   productName: string;
   brandName: string;
-  moderationStatus: SellerProductModerationStatus;
-  updatedAt: string;
   bullets: string[];
-  attributeValues: SellerProductEditorAttributeValue[];
+  attributes: SellerCreateProductAttributesRequest;
+  simpleOffer: SellerCreateProductOfferRequest | null;
+  variantConfiguration: SellerCreateProductVariantConfigurationRequest | null;
+  images: SellerCreateProductImageRequest[];
+}
 
-  /**
-   * Уровни вариантов товара, например:
-   * «Цвет» или «Цвет → Размер».
-   */
-  variantSelectors: SellerProductVariantSelectorResponse[];
-
-  /**
-   * Плоский список родительских и конечных
-   * вариантов существующего товара.
-   */
-  variants: SellerProductEditorVariant[];
+/**
+ * Результат атомарного создания товара.
+ */
+export interface SellerCreateProductResponse {
+  productCardId: string;
+  moderationStatus: 'pending' | 'approved';
 }
